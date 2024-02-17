@@ -1,8 +1,8 @@
 import { useState } from 'react'
-import reactLogo from './assets/react.svg'
+import reactLogo from './components/react.svg'
 import viteLogo from '/vite.svg'
 
-import HomePageWidget from './assets/HomePage/HomePageWidget'
+import HomePageWidget from './components/HomePage/HomePageWidget'
 
 import './App.css'
 
