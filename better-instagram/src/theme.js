@@ -5,10 +5,12 @@
 import { extendTheme } from "@mui/joy/styles"
 
 export const theme = extendTheme({
+  /*
   fontFamily: {
-    display: "Gothic A1", // applies to `h1`–`h4`
-    body: "Gothic A1", // applies to `title-*` and `body-*`
+    display: "Inter", // applies to `h1`–`h4`
+    body: "Inter", // applies to `title-*` and `body-*`
   },
+  */
   colorSchemes: {
     light: {
       palette: {
