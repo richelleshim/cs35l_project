@@ -2,7 +2,11 @@ import { useState } from 'react'
 import reactLogo from './components/react.svg'
 import viteLogo from '/vite.svg'
 
+// import homepagewidget
 import HomePageWidget from './components/HomePage/HomePageWidget'
+
+// import from MUI
+import { Stack } from "@mui/joy";
 
 import './App.css'
 
@@ -11,27 +15,17 @@ function App() {
 
   return (
     <>
-      <HomePageWidget></HomePageWidget>
-      <div>
-        <a href="https://vitejs.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
+        <Stack direction="row" spacing={3}>
+            <Stack direction="column" spacing={3} alignItems="flex-start" justifyContent="center">
+              <HomePageWidget name="Greg Heffley" major="Computer Science" year="24"></HomePageWidget>
+              <HomePageWidget name="Jennifer Lee" major="Cognitive Science" year="26"></HomePageWidget>
+            </Stack>
+            <Stack direction="column" spacing={3} alignItems="flex-start" justifyContent="center">
+              <HomePageWidget name="Richelle Shim" major="Chicano Studies" year="26"></HomePageWidget>
+              <HomePageWidget name="Chaidhat" major="Colarado Studies" year="26"></HomePageWidget>
+            </Stack>
+        </Stack>
       <h1>Bruingram</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
     </>
   )
 }
