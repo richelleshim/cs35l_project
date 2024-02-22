@@ -1,7 +1,7 @@
 import { useState } from 'react'
 
 // import all custom styling from MUI
-import { Card, Stack, Typography, AspectRatio, Grid, IconButton, Divider } from "@mui/joy";
+import { Card, Stack, Typography, AspectRatio, Grid, IconButton } from "@mui/joy";
 import { FavoriteRounded, FavoriteBorderRounded, SchoolOutlined, BackpackOutlined } from '@mui/icons-material';
 
 function LikeIcon ({ liked }) {

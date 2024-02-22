@@ -1,17 +1,11 @@
 // import homepagewidget
-import HomePage from './components/HomePage/HomePage'
+import HomePageWidget from './HomePageWidget'
 
-import './App.css'
+// import from MUI
+import { Stack, Box } from "@mui/joy";
 
-function App() {
-  return <HomePage></HomePage>;
-}
-/*
-function App() {
-  const [count, setCount] = useState(0)
-
-  return (
-    <>
+function HomePage() {
+    return <>
       <Box sx={{ pb: 5 }}>
         <img
           src="public/Bruingram.png"
@@ -36,9 +30,7 @@ function App() {
             <HomePageWidget name="Elizabeth Moh" desc='👍' major="Calligraphy Sciences" year="26" imageSrc="elizabeth"></HomePageWidget>
           </Stack>
       </Stack>
-    </>
-  )
+    </>;
 }
-*/
 
-export default App
+export default HomePage;
