@@ -1,12 +1,17 @@
 import FavoritesPage from './pages/FavoritesPage'
-import HomePage from './components/HomePage/HomePage'
+import HomePage from './pages/HomePage'
+import ProfilePage from './pages/ProfilePage'
+import AuthPage from './pages/AuthPage'
 
 import { Stack } from "@mui/joy";
 
 function App() {
   return <Stack direction="column"  alignItems="center" >
         <FavoritesPage />
-      </Stack>;
+        <HomePage />
+        <ProfilePage />
+        <AuthPage />
+  </Stack>;
 }
 
 

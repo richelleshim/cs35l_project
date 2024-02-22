@@ -1,5 +1,5 @@
 import { Container, Stack, Box, Input } from "@mui/joy";
-import AuthForm from "./AuthForm";
+import AuthForm from "../components/Auth/AuthForm";
 
 const AuthPage = () => {
   return (

@@ -4,7 +4,7 @@ import ModalClose from '@mui/joy/ModalClose';
 import Modal from '@mui/joy/Modal';
 import Sheet from '@mui/joy/Sheet';
 import AspectRatio from '@mui/joy/AspectRatio';
-import greg from '../images/greg.svg'
+import greg from '../../../assets/images/greg.svg'
 import Box from '@mui/joy/Box';
 import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
 import IconButton from '@mui/joy/IconButton';
