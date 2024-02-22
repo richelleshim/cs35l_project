@@ -14,10 +14,6 @@
     "@emotion/styled": "^11.11.0",
     "@mui/icons-material": "^5.15.10",
     "@mui/joy": "^5.0.0-beta.28",
-<<<<<<< HEAD
-=======
-    "@mui/material": "^5.15.10",
->>>>>>> origin/main
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-router-dom": "^6.22.1"

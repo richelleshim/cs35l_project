@@ -1,16 +1,12 @@
-import { useState } from 'react'
-import { Route, Routes } from 'react-router-dom'
-import HomePage from './pages/Homepage/HomePage'
-import AuthPage from './pages/AuthPage/AuthPage'
-import ProfilePage from './components/pages/ProfilePage'
-import './App.css'
-
 import FavoritesPage from './pages/FavoritesPage'
+import HomePage from './components/HomePage/HomePage'
+
+import { Stack } from "@mui/joy";
 
 function App() {
-  return (
-    <FavoritesPage />
-  )
+  return <Stack direction="column"  alignItems="center" >
+        <FavoritesPage />
+      </Stack>;
 }
 
 
