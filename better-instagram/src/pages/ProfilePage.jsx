@@ -1,4 +1,4 @@
-import Cards from '../Cards'
+import Cards from '../components/Profile/Cards'
 
 function ProfilePage() {
     return (
