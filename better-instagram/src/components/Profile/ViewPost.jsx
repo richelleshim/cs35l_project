@@ -13,9 +13,41 @@ import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos';
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
 import List from '@mui/joy/List';
 import ListItem from '@mui/joy/ListItem';
+import Avatar from '@mui/joy/Avatar'
+import Stack from '@mui/joy/Stack';
+import { ModalDialog } from '@mui/joy';
+import Input from '@mui/joy/Input';
+import Button from '@mui/joy/Button';
 
 export default function ViewPost({close, image, caption, goBack, goForward, likeClick, liked}){
+    const[isExpanded, setIsExpanded] = useState(false);
+    const[isFavorited, setIsFavorited] = useState(false);
+
+    const onClick =()=>{
+        setIsExpanded(!isExpanded)
+        console.log(isExpanded)
+    }
+
+    const toggleFavorite=()=>{
+        setIsFavorited(!isFavorited);
+    }
+
+    const captionStyle = {
+        marginTop: '2%', 
+        marginLeft: '2%',
+        overflow: "hidden",
+        display: "-webkit-box",
+        WebkitLineClamp: "2",
+        WebkitBoxOrient: "vertical"
+    }
+
+    const captionStyleFull = {
+        marginTop: '2%', 
+        marginLeft: '2%',
+    }
+
     return(
+        
         <Modal 
             open={true} 
             onClose={close}
@@ -23,64 +55,110 @@ export default function ViewPost({close, image, caption, goBack, goForward, like
                 display: 'flex', 
                 justifyContent:'center', 
                 alignItems: 'center'
-
             }}>
-            <Sheet
-                variant='s'
+            <Box sx={{outline: 'none !important'}}>
+            
+            <Box
                 sx={{
-                    width: 450,
-                    height: 580,
-                    borderRadius: 'md',
-                    p: 1.5      
+                    bgcolor: '#FFFFFF',
+                    borderRadius: 10,
+                    p: 1.5,
+                    height: '90vh',
+                    width: '60vh',
+                    overflowY: 'auto',
+                    
+                    
                 }}>
-                <ModalClose variant="plain" sx={{ m: 1 }} />
-                <Box sx={{ display: 'flex', alignItems: 'center', mb: 2}}>
-                    <AspectRatio ratio='1' sx={{ height:50,  width:50 }}>
-                        <img src={greg}/>
-                    </AspectRatio>
-                    <Typography style={{marginLeft:10}} fontWeight='bold'>
-                        @jolly_greg
-                    </Typography>
-                </Box>
                 
+
+
                 <Box sx={{borderRadius: 8, overflow: 'hidden'}}>
                     <AspectRatio ratio='1'>
                         <img src={image}/>
                     </AspectRatio>
                 </Box>
 
-                <IconButton
-                        size='lg'
-                        sx={{position:'absolute', top:545}}
-                        color='interit'
-                        onClick={likeClick}>
-                        {liked ? <FavoriteIcon style={{color:'#ed1d24'}}/> : <FavoriteBorderIcon/>}
-                </IconButton>
+                <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', mt: 2}}>
+                    <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
+                        <Avatar src={greg} sx={{size: 'lg'}}/>
 
-                <Typography sx={{marginLeft:7, marginTop: 3.25}}>
-                    {caption}
-                </Typography> 
-                <IconButton
+                        <Typography fontWeight='bold'>
+                            @jolly_greg
+                        </Typography>
+                    </Box>
+                    
+                    <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
+                        
+
+                        <Button 
+                            variant="solid"
+                            sx={{
+                                backgroundColor:isFavorited ? '#bfbfbf' : '#ed1d24',
+                                '&:hover': {backgroundColor: isFavorited ? '#bfbfbf' : '#ed1d24'},
+                                outline: 'none !important'}}
+                            onClick={toggleFavorite}>
+                                {isFavorited ? 'Unfavorite Profile' : 'Favorite Profile'}
+                        </Button>
+                        <IconButton
+                            size='lg'
+                            color='inherit'
+                            onClick={likeClick}
+                            sx={{outline: 'none !important'}}>
+                            {liked ? <FavoriteIcon sx={{color:'#ed1d24'}}/> : <FavoriteBorderIcon/>}
+                        </IconButton> 
+                    </Box>
+                </Box>
+
+                <div onClick={onClick}>
+                <Typography sx={isExpanded ? captionStyleFull : captionStyle}>
+                            {caption}
+                </Typography>
+                </div>
+
+                <Input 
+                    placeholder="Add a comment" 
                     sx={{
-                        position:'absolute', left:-50, top:300
-                    }}
-                    color=''
-                    onClick={goBack}>
-                    <ArrowBackIosIcon/>
-                </IconButton>
-                <IconButton
-                    sx={{
-                        position:'absolute', left:500, top:300
-                    }}
-                    color=''
-                    onClick={goForward}>
-                    <ArrowForwardIosIcon/>
-                </IconButton> 
-                <List sx={{overflow: 'auto'}}>
-                    <ListItem>Item 1</ListItem>
-                    <ListItem>Item 2</ListItem>
-                </List>   
-            </Sheet>  
+                        marginTop: '10px',
+                        borderRadius: '20px'
+                    }}/>
+
+                <Stack>
+                    <Box sx={{display: 'flex', alignItems: 'center', marginTop:'20px'}}>
+                        <Avatar sx={{marginRight: '15px'}}/>
+                        I love greg
+                    </Box>
+                    <Box sx={{display: 'flex', alignItems: 'center', marginTop:'20px'}}>
+                        <Avatar sx={{marginRight: '15px'}}/>
+                        me too
+                    </Box>
+                </Stack>
+            </Box>
+
+            <Box
+                sx={{
+                    position: 'absolute',
+                    top: '50%',
+                    left: '50%', 
+                    transform: 'translate(-50%, -50%)',                      
+                    display: 'flex',   
+                    justifyContent: 'space-between',    
+                    width: '550px'
+                }}>
+                    <IconButton 
+                        color=''
+                        onClick={goBack}
+                        sx={{outline: 'none !important'}}>
+                        <ArrowBackIosIcon/>
+                    </IconButton>
+                    <IconButton
+                        color=''
+                        onClick={goForward}
+                        sx={{outline: 'none !important'}}>
+                        <ArrowForwardIosIcon/>
+                    </IconButton> 
+                </Box>
+            </Box>
         </Modal>
    )   
 }
+

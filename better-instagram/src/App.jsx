@@ -6,6 +6,8 @@ import AuthPage from './pages/AuthPage'
 import { Stack } from "@mui/joy";
 
 function App() {
+<<<<<<< HEAD
+=======
   return <Stack direction="column"  alignItems="center" >
         <FavoritesPage />
         <HomePage />
@@ -13,11 +15,15 @@ function App() {
         <AuthPage />
   </Stack>;
 }
+>>>>>>> 56c6c7be679f41b5ad3cb1754cc6661126b613f3
 
 
 /*
 function App() {
   return (
+<<<<<<< HEAD
+    <ProfilePage />
+=======
 <<<<<<< HEAD
     <div>
       <a href="https://vitejs.dev" target="_blank">
@@ -56,6 +62,7 @@ function App() {
         Click on the Vite and React logos to learn more
       </p>
     </>
+>>>>>>> 56c6c7be679f41b5ad3cb1754cc6661126b613f3
   )
 }
 <<<<<<< HEAD

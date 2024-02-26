@@ -7,9 +7,14 @@ import post4 from '../../../assets/images/post4.jpg'
 import post5 from '../../../assets/images/post5.jpg'
 import ViewPost from './ViewPost';
 import { useState } from 'react'
+import Avatar from '@mui/joy/Box'
+import Stack from '@mui/joy/Stack';
+import PromptCard from './PromptCard';
+import './ProfilePage.css';
+import Masonry, {ResponsiveMasonry} from 'react-responsive-masonry'
 
 const images = [
-    { image: post1, caption: 'Greg watching sunset' },
+    { image: post1, caption: 'Greg watching sunset watching sunset watching sunset watching sunset watching sunset watching sunset watching sunset watching sunset watching sunset.' },
     { image: post2, caption: 'Greg stargazing' },
     { image: post3, caption: 'Greg at the beach' },
     { image: post4, caption: 'Greg in the mountains' },
@@ -41,31 +46,23 @@ export default function Cards(){
     }
 
     return(
-        <>
-            <Grid container
-            spacing={2}
-            columns={{ xs: 1, sm: 2, md: 3}}
-            sx={{ 
-                flexGrow: 1, 
-                justifyContent: 'center',
-                maxWidth: 1000
-            }}
-            >
-                {images.map((item, index) =>(
-                    <Grid key={index}> 
-                        <CardItem image={item.image} onCardClick={()=>click(index)}/>
-                        {viewPost && <ViewPost 
-                            close={()=>click(null)} 
-                            image={images[currentIndex].image} 
-                            caption={images[currentIndex].caption} 
-                            goBack={goBack} 
-                            goForward={goForward}
-                            likeClick={()=>toggleLike(currentIndex)}
-                            liked={likes[currentIndex]}
-                            />} 
-                    </Grid>
-                ))}                
-            </Grid>              
-        </>    
+
+        <div className="postLayout"> 
+            {images.map((item, index) =>(
+                <div> 
+                    <CardItem image={item.image} onCardClick={()=>click(index)}/>
+                    {viewPost && <ViewPost 
+                        close={()=>click(null)} 
+                        image={images[currentIndex].image} 
+                        caption={images[currentIndex].caption} 
+                        goBack={goBack} 
+                        goForward={goForward}
+                        likeClick={()=>toggleLike(currentIndex)}
+                        liked={likes[currentIndex]}
+                        />} 
+                </div>
+            ))} 
+        </div>             
     )   
 }
+
