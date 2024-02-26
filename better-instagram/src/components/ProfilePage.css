@@ -1,5 +1,6 @@
-.profilePic{
-    width: 100px;
-    border-radius: 100%;
-    object-fit: fill;
+.postLayout {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 10px;
 }
+
