@@ -6,12 +6,13 @@ import post3 from '../../../assets/images/post3.jpg'
 import post4 from '../../../assets/images/post4.jpg'
 import post5 from '../../../assets/images/post5.jpg'
 import ViewPost from './ViewPost';
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import Avatar from '@mui/joy/Box'
 import Stack from '@mui/joy/Stack';
-import PromptCard from './PromptCard';
 import './ProfilePage.css';
-import Masonry, {ResponsiveMasonry} from 'react-responsive-masonry'
+import {firestore, storage} from '../../../firebase/firebase';
+import { getDocs, collection} from 'firebase/firestore'
+
 
 const images = [
     { image: post1, caption: 'Greg watching sunset watching sunset watching sunset watching sunset watching sunset watching sunset watching sunset watching sunset watching sunset.' },
@@ -21,7 +22,42 @@ const images = [
     { image: post5, caption: 'Greg in the desert'}
 ];
 
+
+
 export default function Cards(){
+    const[likesList, setLikesList] = useState([]);
+    const likesCollectionRef = collection(firestore, 'likes')
+    
+    useEffect(()=>{
+        const getLikesList = async () => {
+            try{
+                const data = await getDocs(likesCollectionRef);
+                const filteredData = data.docs.map((doc) => ({
+                    ...doc.data(),
+                    id: doc.id
+                }))
+                console.log(filteredData);
+                setLikesList(filteredData);
+            } catch(err){
+                console.error(err)
+            }
+        };
+
+        getLikesList();
+    }, []);
+
+    const likeUnlike = async (userID, postID) => {
+        const isLiked = likesList.find((likedPost) => likedPost.postID == postID && likedPost.userID == userID);
+        if (isLiked) {
+            const deleteLike = doc(firestore, 'likes', isLiked.id)
+            await deleteDoc(deleteLike);
+        } else {
+            await addDoc(likesCollectionRef, {
+                userID : userID, 
+                postID : postID})
+        }
+    }
+
     const [viewPost, setViewPost] = useState(false);
     const [currentIndex, setCurrentIndex] = useState(null);
     const [likes, setLikes] = useState(Array(images.length).fill(false))
