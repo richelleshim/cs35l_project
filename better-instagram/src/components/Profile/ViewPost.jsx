@@ -69,8 +69,6 @@ export default function ViewPost({close, image, caption, goBack, goForward, like
                     
                     
                 }}>
-                
-
 
                 <Box sx={{borderRadius: 8, overflow: 'hidden'}}>
                     <AspectRatio ratio='1'>
@@ -97,7 +95,7 @@ export default function ViewPost({close, image, caption, goBack, goForward, like
                                 '&:hover': {backgroundColor: isFavorited ? '#bfbfbf' : '#ed1d24'},
                                 outline: 'none !important'}}
                             onClick={toggleFavorite}>
-                                {isFavorited ? 'Unfavorite Profile' : 'Favorite Profile'}
+                                {isFavorited ? 'Unfollow' : 'Follow'}
                         </Button>
                         <IconButton
                             size='lg'
@@ -147,13 +145,13 @@ export default function ViewPost({close, image, caption, goBack, goForward, like
                     <IconButton 
                         color=''
                         onClick={goBack}
-                        sx={{outline: 'none !important'}}>
+                        sx={{outline: 'none !important',  color:'#FFFFFF'}}>
                         <ArrowBackIosIcon/>
                     </IconButton>
                     <IconButton
                         color=''
                         onClick={goForward}
-                        sx={{outline: 'none !important'}}>
+                        sx={{outline: 'none !important', color:'#FFFFFF'}}>
                         <ArrowForwardIosIcon/>
                     </IconButton> 
                 </Box>
