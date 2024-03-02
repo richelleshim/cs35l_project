@@ -1,12 +1,12 @@
 import { useEffect, useState } from 'react'
 import { collection, getDocs, query, where } from 'firebase/firestore'
 import { firestore } from '../../firebase/firebase'
-import useUserProfileStore from "../store/useProfileStore"
+import useUserProfile from "../store/userProfileStore"
 
 const useGetUserProfileByUsername = (username) => {
     const [isLoading, setIsLoading] = useState(true); //starts true because running immediately
     //extra: showToast hook for showing errors (add later if we want)
-    const {userProfile, setUserProfile} = useUserProfileStore() //can just call like this w/o arguments to get all values 
+    const {userProfile, setUserProfile} = useUserProfile() //can just call like this w/o arguments to get all values 
 
     useEffect(() => {
         const getUserProfile = async() => {
