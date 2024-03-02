@@ -4,9 +4,15 @@ import AddPostButton from '../components/Profile/AddPost'
 
 
 function ProfilePage() {
+    const addedPost = () => {
+        window.location.reload(); 
+    }
+
     return (
         <>
-            <AddPostButton />
+            <AddPostButton 
+            addedPost={() => {addedPost()}}
+            />
             <Cards />
         </>
         
