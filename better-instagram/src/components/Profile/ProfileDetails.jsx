@@ -1,21 +1,21 @@
 import * as React from 'react';
 import Avatar from '@mui/joy/Avatar';
-import AvatarGroup from '@mui/joy/AvatarGroup';
+//import AvatarGroup from '@mui/joy/AvatarGroup';
 import Box from '@mui/joy/Box';
 import Button from '@mui/joy/Button';
 import Card from '@mui/joy/Card';
 import CardContent from '@mui/joy/CardContent';
 import CardActions from '@mui/joy/CardActions';
-import IconButton from '@mui/joy/IconButton';
 import Typography from '@mui/joy/Typography';
-import FavoriteBorder from '@mui/icons-material/FavoriteBorder';
 
-export default function BottomActionsCard() {
+export default function ProfileDetailsCard() {
   return (
     <Card
       variant="outlined"
       sx={{
-        width: 1000,
+        width: 1500,
+        paddingTop: 11,
+        paddingBottom: 6,
         // to make the card resizable
         overflow: 'auto',
         resize: 'horizontal',
@@ -29,7 +29,7 @@ export default function BottomActionsCard() {
           flexDirection: 'column',
         }}
       >
-        <Avatar src="/static/images/avatar/1.jpg" size=""/>
+        <Avatar src="/static/images/avatar/.jpg" sx={{ width: 190, height: 190,}}/>
       </Box>
       <CardContent
         sx={{
@@ -39,23 +39,22 @@ export default function BottomActionsCard() {
           flexDirection: 'column',
           textAlign: 'center', // Center align the text
         }}>
-        <Typography level="title-lg">NYC Coders</Typography>
-        <Typography level="body-sm">
-          Insert bio here
+        <Typography level="title-lg" sx={{ fontSize: '2.2rem' }}>Greg Heffley</Typography>
+        <Typography level="title-md">@jolly_greg</Typography>
+        <Typography level="title-sm" sx={{paddingTop:0.5}}>Major <Typography level="title-sm">'Grad Year</Typography> </Typography>
+        <Typography level="body-sm"sx={{padding:2}}>
+          Author of Diary of a Wimpy Kid
         </Typography>
       </CardContent>
       <CardActions sx={{
           display: 'flex',
           justifyContent: 'center', // Center align the buttons horizontally
         }}>
-        <IconButton variant="outlined" color="neutral" >
-          <FavoriteBorder />
-        </IconButton>
         <Button variant="outlined" color="neutral">
-          View
+          Edit
         </Button>
         <Button variant="solid" color="primary">
-         <a href = "mailto: abc@example.com">Contact</a>
+         <a href = "mailto: jollygreg@heffley.com" style={{ color: 'inherit', textDecoration: 'none' }}>Contact</a>
         </Button>
       </CardActions>
     </Card>
