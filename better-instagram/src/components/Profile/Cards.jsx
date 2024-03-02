@@ -14,19 +14,17 @@ import {firestore, storage} from '../../../firebase/firebase';
 import { getDocs, collection} from 'firebase/firestore'
 
 
-const images = [
-    { image: post1, caption: 'Greg watching sunset watching sunset watching sunset watching sunset watching sunset watching sunset watching sunset watching sunset watching sunset.' },
-    { image: post2, caption: 'Greg stargazing' },
-    { image: post3, caption: 'Greg at the beach' },
-    { image: post4, caption: 'Greg in the mountains' },
-    { image: post5, caption: 'Greg in the desert'}
-];
-
 
 
 export default function Cards(){
     const[likesList, setLikesList] = useState([]);
+    const[postsList, setPostsList] = useState([]);
     const likesCollectionRef = collection(firestore, 'likes')
+    const postsCollectionRef = collection(firestore, 'posts')
+
+    const [viewPost, setViewPost] = useState(false);
+    const [currentIndex, setCurrentIndex] = useState(null);
+    const [likes, setLikes] = useState([]);
     
     useEffect(()=>{
         const getLikesList = async () => {
@@ -36,13 +34,25 @@ export default function Cards(){
                     ...doc.data(),
                     id: doc.id
                 }))
-                console.log(filteredData);
                 setLikesList(filteredData);
             } catch(err){
                 console.error(err)
             }
         };
+        const getPostsList = async () => {
+            try{
+                const data = await getDocs(postsCollectionRef);
+                const filteredData = data.docs.map((doc) => ({
+                    ...doc.data(),
+                    id: doc.id
+                }))
+                setPostsList(filteredData);
+            } catch(err){
+                console.error(err)
+            }
+        };
 
+        getPostsList();
         getLikesList();
     }, []);
 
@@ -58,21 +68,17 @@ export default function Cards(){
         }
     }
 
-    const [viewPost, setViewPost] = useState(false);
-    const [currentIndex, setCurrentIndex] = useState(null);
-    const [likes, setLikes] = useState(Array(images.length).fill(false))
-
     const click=(index)=>{
         setViewPost(!viewPost);
         setCurrentIndex(index)
     }
 
     const goBack=()=>{
-        setCurrentIndex(currentIndex == 0 ? images.length-1 : currentIndex - 1);
+        setCurrentIndex(currentIndex == 0 ? postsList.length-1 : currentIndex - 1);
     }
 
     const goForward=()=>{
-        setCurrentIndex(currentIndex == images.length-1 ? 0 : currentIndex + 1)
+        setCurrentIndex(currentIndex == postsList.length-1 ? 0 : currentIndex + 1)
     }
 
     const toggleLike=(index)=>{
@@ -81,24 +87,25 @@ export default function Cards(){
         setLikes(updateLikes);
     }
 
-    return(
 
+
+    return <>
         <div className="postLayout"> 
-            {images.map((item, index) =>(
-                <div> 
-                    <CardItem image={item.image} onCardClick={()=>click(index)}/>
+            {postsList.map((_, index) => {
+                return <>
+                    <CardItem image={postsList[index].image} onCardClick={()=>click(index)}/>
                     {viewPost && <ViewPost 
                         close={()=>click(null)} 
-                        image={images[currentIndex].image} 
-                        caption={images[currentIndex].caption} 
+                        image={postsList[currentIndex].image} 
+                        caption={postsList[currentIndex].caption} 
                         goBack={goBack} 
                         goForward={goForward}
                         likeClick={()=>toggleLike(currentIndex)}
                         liked={likes[currentIndex]}
                         />} 
-                </div>
-            ))} 
+                </>;
+            })}
         </div>             
-    )   
+    </>;
 }
 
