@@ -4,8 +4,9 @@ import AddPost from '../components/Profile/AddPost'
 
 
 function ProfilePage() {
+
     return (
-        <>
+        <>          
             <AddPost />
             <Cards />
         </>
@@ -13,3 +14,4 @@ function ProfilePage() {
     );
 }
 export default ProfilePage;
+
