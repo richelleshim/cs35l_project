@@ -2,6 +2,16 @@ import { Box, Button, Modal, Textarea, IconButton, Typography } from '@mui/joy';
 import { useRef, useState } from 'react';
 
 export function PostWidget({ close }) {
+  const [selectedFile, setSelectedFile] = useState(null);
+  const inputRef = useRef(null);
+
+  const handleFileInputChange = (event) => {
+    const file = event.target.files[0];
+    if (file) {
+      setSelectedFile(URL.createObjectURL(file));
+    }
+  };
+
   return <Modal
     open={true}
     onClose={close}
@@ -41,7 +51,21 @@ export function PostWidget({ close }) {
           justifyContent: 'center',
         }}
       >
-        <Button onClick={() => inputRef.current.click()}>Add image</Button>
+        <Box sx={{ display: 'flex', gap: 2, flexWrap: 'wrap' }}>
+          <input
+            type="file"
+            ref={inputRef}
+            style={{ display: 'none' }}
+            onChange={handleFileInputChange}
+          />
+        </Box>
+        {/* Render selected image */}
+        {selectedFile && 
+          <img style={{width: "100%"}} src={selectedFile} alt="Selected image" />
+        }
+        {!selectedFile && 
+          <Button onClick={() => inputRef.current.click()}>Add image</Button>
+        }
       </Box>
 
       <Textarea
@@ -53,6 +77,9 @@ export function PostWidget({ close }) {
           minWidth: '300px',
         }}
       />
+        {selectedFile && 
+          <Button sx={{m: 2}} onClick={() => inputRef.current.click()}>Post!</Button>
+        }
     </Box>
   </Modal>;
 
@@ -60,15 +87,6 @@ export function PostWidget({ close }) {
 
 export default function AddPostButton() {
   const [openModal, setOpenModal] = useState(false);
-  const [selectedFile, setSelectedFile] = useState(null);
-  const inputRef = useRef(null);
-
-  const handleFileInputChange = (event) => {
-    const file = event.target.files[0];
-    if (file) {
-      setSelectedFile(URL.createObjectURL(file));
-    }
-  };
 
   const handleClose = () =>{
     setSelectedFile(null);
@@ -80,26 +98,7 @@ export default function AddPostButton() {
 
   return (
     <>
-      <Button onClick={() => {click()}}>Create post</Button>
-      <Box sx={{ display: 'flex', gap: 2, flexWrap: 'wrap' }}>
-        <input
-          type="file"
-          ref={inputRef}
-          style={{ display: 'none' }}
-          onChange={handleFileInputChange}
-        />
-      </Box>
-
-      {/* Render selected image */}
-      {selectedFile && (
-        <Box display="flex" justifyContent="center" alignItems="center" mt={5} w={'full'} position={'relative'}>
-          <img src={selectedFile} alt="Selected image" />
-         <IconButton onClick={handleClose}>
-          x
-         </IconButton> 
-        </Box>
-      )}
-
+      <Button sx={{m: 5}} onClick={() => {click()}}>Create post</Button>
       {openModal && <PostWidget
         close={()=>{click()}}
       />}
