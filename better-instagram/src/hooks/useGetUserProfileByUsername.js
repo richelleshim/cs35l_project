@@ -32,7 +32,7 @@ const useGetUserProfileByUsername = (username) => {
             }
         };
         getUserProfile();
-    }, [setUserProfile, username]); //add showToast here with the changes in in with callback
+    }, [setUserProfile, username]); //add showToast here if needed
 
     return { isLoading, userProfile };
 };
