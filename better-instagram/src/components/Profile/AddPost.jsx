@@ -23,8 +23,6 @@ export function PostWidget({ close, addedPost }) {
 
   // post the post to backend
   const post = async (event) => {
-      addedPost();
-      return;
     // TODO: we can sterlize the input or smth
     console.log(caption)
     // addPost
