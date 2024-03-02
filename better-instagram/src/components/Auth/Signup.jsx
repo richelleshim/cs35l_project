@@ -1,17 +1,19 @@
 import { Input, Stack, Button, Box } from "@mui/joy";
 import { useState } from "react";
-import { IconButton } from "@mui/material";
-import { Visibility, VisibilityOff } from "@mui/icons-material";
+import { IconButton, CircularProgress, Alert } from "@mui/material";
+import { Visibility, VisibilityOff, Error } from "@mui/icons-material";
+import useSignUpWithEmailandPassword from "../../hooks/useSignUpWithEmailandPassword";
+
 const Signup = () => {
   const [inputs, setInputs] = useState({
     email: "",
     password: "",
     fullName: "",
     username: "",
-    confirmPassword: "",
   });
 
   const [showPassword, setShowPassword] = useState(false);
+  const { loading, error, signup } = useSignUpWithEmailandPassword();
 
   return (
     <>
@@ -47,8 +49,18 @@ const Signup = () => {
               onChange={(e) =>
                 setInputs({ ...inputs, password: e.target.value })
               }
+              endDecorator={
+                <IconButton
+                  color="neutral"
+                  variant="soft"
+                  size="small"
+                  onClick={() => setShowPassword(!showPassword)}
+                >
+                  {showPassword ? <Visibility /> : <VisibilityOff />}{" "}
+                </IconButton>
+              }
             />
-            <Input
+            {/* <Input
               placeholder="Confirm Password"
               fontSize="14"
               type={showPassword ? "text" : "password"}
@@ -66,14 +78,21 @@ const Signup = () => {
                   {showPassword ? <Visibility /> : <VisibilityOff />}{" "}
                 </IconButton>
               }
-            />
+            /> */}
           </Stack>
         </Stack>
       </Box>
-
-      <Stack direction="row"></Stack>
-
-      <Button color="primary" size="sm" fontSize={14}>
+      {error && (
+        <Alert icon={<Error fontSize={12} severity="error" />}>
+          {error.message}
+        </Alert>
+      )}
+      <Button
+        color="primary"
+        size="sm"
+        fontSize={14}
+        onClick={() => signup(inputs)}
+      >
         Sign Up
       </Button>
     </>
