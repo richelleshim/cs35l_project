@@ -12,10 +12,10 @@ const AuthPage = () => {
         justifyContent={"center"}
         alignItems={"center"}
         px={4}
-        borderColor={"gray"}
+        // borderColor={"gray"}
         height="100vh"
       >
-        <Container padding={0} borderColor={"red"}>
+        <Container padding={0}>
           <Stack
             direction="row"
             alignItems={"stretch"}
@@ -24,7 +24,7 @@ const AuthPage = () => {
             <Box padding={0} margin={0}>
               <img
                 src="/authenticationBruin.png"
-                alt="phone img"
+                alt="bruin img"
                 height={400}
               />
             </Box>
