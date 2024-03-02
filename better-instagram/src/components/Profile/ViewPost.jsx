@@ -19,9 +19,31 @@ import { ModalDialog } from '@mui/joy';
 import Input from '@mui/joy/Input';
 import Button from '@mui/joy/Button';
 
+// post image loading -chai
+import { useEffect } from 'react'
+import { getStorage, ref, getDownloadURL } from "firebase/storage";
+
 export default function ViewPost({close, image, caption, goBack, goForward, likeClick, liked}){
     const[isExpanded, setIsExpanded] = useState(false);
     const[isFavorited, setIsFavorited] = useState(false);
+    const [imgSrc, setImgSrc] = useState('');
+
+    // load the image based off of the image key
+    const updateImage = async () => {
+        const storage = getStorage();
+        getDownloadURL(ref(storage, image))
+            .then((url) => {
+                // `url` is the download URL for 'images/stars.jpg'
+
+                // Or inserted into an <img> element
+                setImgSrc(url);
+            })
+            .catch((error) => {
+                // Handle any errors
+            });
+    };
+
+    updateImage();
 
     const onClick =()=>{
         setIsExpanded(!isExpanded)
@@ -72,7 +94,10 @@ export default function ViewPost({close, image, caption, goBack, goForward, like
 
                 <Box sx={{borderRadius: 8, overflow: 'hidden'}}>
                     <AspectRatio ratio='1'>
-                        <img src={image}/>
+                        <img 
+                            id={"viewimg"+image}
+                            src={imgSrc}
+                        />
                     </AspectRatio>
                 </Box>
 
