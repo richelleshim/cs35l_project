@@ -25,7 +25,6 @@ import { getStorage, ref, getDownloadURL } from "firebase/storage";
 
 export default function ViewPost({close, image, caption, goBack, goForward, likeClick, liked}){
     const[isExpanded, setIsExpanded] = useState(false);
-    const[isFavorited, setIsFavorited] = useState(false);
     const [imgSrc, setImgSrc] = useState('');
 
     // load the image based off of the image key
@@ -45,10 +44,6 @@ export default function ViewPost({close, image, caption, goBack, goForward, like
     const onClick =()=>{
         setIsExpanded(!isExpanded)
         console.log(isExpanded)
-    }
-
-    const toggleFavorite=()=>{
-        setIsFavorited(!isFavorited);
     }
 
     const captionStyle = {
@@ -107,17 +102,6 @@ export default function ViewPost({close, image, caption, goBack, goForward, like
                     </Box>
                     
                     <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
-                        
-
-                        <Button 
-                            variant="solid"
-                            sx={{
-                                backgroundColor:isFavorited ? '#bfbfbf' : '#ed1d24',
-                                '&:hover': {backgroundColor: isFavorited ? '#bfbfbf' : '#ed1d24'},
-                                outline: 'none !important'}}
-                            onClick={toggleFavorite}>
-                                {isFavorited ? 'Unfollow' : 'Follow'}
-                        </Button>
                         <IconButton
                             size='lg'
                             color='inherit'
