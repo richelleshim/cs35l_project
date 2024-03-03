@@ -2,7 +2,7 @@ import { Input, Stack, Button, Box } from "@mui/joy";
 import { useState } from "react";
 import { IconButton, CircularProgress, Alert } from "@mui/material";
 import { Visibility, VisibilityOff, Error } from "@mui/icons-material";
-import useSignUpWithEmailandPassword from "../../hooks/useSignUpWithEmailandPassword";
+// import useSignUpWithEmailandPassword from "../../hooks/useSignUpWithEmailandPassword";
 
 const Signup = () => {
   const [inputs, setInputs] = useState({
