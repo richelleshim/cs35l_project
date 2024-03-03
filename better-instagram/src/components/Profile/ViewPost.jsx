@@ -33,9 +33,6 @@ export default function ViewPost({close, image, caption, goBack, goForward, like
         const storage = getStorage();
         getDownloadURL(ref(storage, image))
             .then((url) => {
-                // `url` is the download URL for 'images/stars.jpg'
-
-                // Or inserted into an <img> element
                 setImgSrc(url);
             })
             .catch((error) => {
@@ -69,7 +66,6 @@ export default function ViewPost({close, image, caption, goBack, goForward, like
     }
 
     return(
-        
         <Modal 
             open={true} 
             onClose={close}

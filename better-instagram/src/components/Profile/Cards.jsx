@@ -7,10 +7,8 @@ import post4 from '../../../assets/images/post4.jpg'
 import post5 from '../../../assets/images/post5.jpg'
 import ViewPost from './ViewPost';
 import { useState, useEffect } from 'react'
-import Avatar from '@mui/joy/Box'
-import Stack from '@mui/joy/Stack';
 import './ProfilePage.css';
-import {firestore, storage} from '../../../firebase/firebase';
+import {firestore} from '../../../firebase/firebase';
 import { getDocs, collection} from 'firebase/firestore'
 
 
