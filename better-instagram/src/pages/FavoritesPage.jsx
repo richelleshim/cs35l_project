@@ -5,6 +5,7 @@ import Box from '@mui/joy/Box';
 import { styled } from '@mui/joy/styles';
 import { AspectRatio, Card, CardContent, Typography, Sheet, IconButton } from '@mui/joy';
 import { Favorite, FavoriteBorder } from '@mui/icons-material';
+import NavBar from '../components/NavBar/NavBar';
 
 const Title = styled('h2')({
   fontFamily: 'Lobster, cursive',
@@ -92,6 +93,8 @@ const FavoritesPage = () => {
   ];
 
   return (
+    <>
+    <NavBar/>
     <div className="FavoritesPage">
        <Favorite sx={{ position: 'absolute', top: '25px', left: '25px', fontSize: 45, color: 'black' }} />
        <Title>Bruinstagram</Title>
@@ -118,6 +121,7 @@ const FavoritesPage = () => {
         ))}
         </Stack>
     </div>
+    </>
   );
 };
 

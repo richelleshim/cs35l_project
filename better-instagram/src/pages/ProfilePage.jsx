@@ -10,6 +10,8 @@ function ProfilePage() {
 
     return (
         <>
+            <NavBar/>
+            <ProfileDetails />
             <AddPostButton 
             addedPost={() => {addedPost()}}
             />

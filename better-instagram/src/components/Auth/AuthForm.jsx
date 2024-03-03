@@ -13,8 +13,10 @@ import GoogleIcon from "@mui/icons-material/Google";
 import Login from "./Login";
 import Signup from "./Signup";
 
+
 const AuthForm = () => {
   const [isLogin, setIsLogin] = useState(true);
+  
   return (
     <Stack spacing={10}>
       <Box p={5} sx={{ border: "4px black" }}>
