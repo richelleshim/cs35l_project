@@ -1,19 +1,13 @@
-import FavoritesPage from './pages/FavoritesPage'
-import HomePage from './pages/HomePage'
-import ProfilePage from './pages/ProfilePage'
-import AuthPage from './pages/AuthPage'
-import EditProfilePage from './pages/EditProfilePage'
+import React from "react";
+import { ReactDOM } from "react";
+import './index.css'
 
-import { Stack } from "@mui/joy";
 
 function App() {
-  return <Stack direction="column"  alignItems="center" >
-        <FavoritesPage />
-        <HomePage />
-        <ProfilePage />
-        <AuthPage />
-        <EditProfilePage />
-  </Stack>;
+  return 
+      <div>
+      <h1>hello</h1>
+      </div>
 }
 
 

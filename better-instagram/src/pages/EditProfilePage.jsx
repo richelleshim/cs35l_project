@@ -13,7 +13,7 @@ import {
 import Stack from '@mui/material/Stack';
 import CloseIcon from '@mui/icons-material/Close';
 import { useState, useRef } from 'react';
-import { getStorage, ref, getDownloadURL } from "firebase/storage";
+import { storage, ref, getDownloadURL } from "firebase/storage";
 
 const EditProfilePage =()=>{
     const [inputs, setInputs] = useState({
@@ -24,9 +24,9 @@ const EditProfilePage =()=>{
         year: ''
 
     })
-    const [imgSrc, setImgSrc] = useState('');
+    const [imgSrc, setImgSrc] = useState('')
+    const fileRef = useRef(null);
 
-    // load the image based off of the image key
     const updateImage = (e) => {
         const file = e.target.files[0]
         const reader = new FileReader()
@@ -37,18 +37,43 @@ const EditProfilePage =()=>{
         reader.readAsDataURL(file)
     };
 
-
-    //const authUser = useAuthStore((state) => state.user)
-    //useGetUserProfileByUsername ??
-
-    /**/
-    console.log(imgSrc)
-
-    const handleEditProfile =()=>{
-        console.log(inputs)
+    const deleteImage =()=>{
+        setImgSrc('')
+        fileRef.current.value = ''
     }
 
-    const fileRef = useRef(null)
+    const[isUpdating, setIsUpdating] = useState(false)
+    
+    const handleEditProfile = async()=>{
+        console.log('submit')
+        /*
+        if(isUpdating) return
+        setIsUpdating(true)
+
+        const storageRef = ref(storage, 'profilePics/${userIDpath}')
+        const userDocRef = doc(firestore, 'profiles', userID)
+
+        let URL = ''
+        try{
+            if(imgSrc){
+                await uploadString(storageRef, imgSrc, 'data_url')
+                URL = await getDownloadURL(ref(storage, 'profilePics/${userIDpath}'))
+            }
+
+            const updatedUser = {
+                ...authUser,
+                name: inputs.name || ogName, 
+                username: inputs.username || ogUsername,
+                bio: inputs.bio || ogBio,
+                profilePicURL: URL || ogprofilepic,
+            }
+
+            await updateDoc(userDocRef, updatedUser)
+
+        } catch(error){
+
+        }*/
+    }
 
     return(
         <>
@@ -69,10 +94,11 @@ const EditProfilePage =()=>{
                         </Box>
                         <Stack direction={'column'}>
                             <Button onClick={() => fileRef.current.click()}>Change Photo</Button>
-                            <Button sx={{ color: '#464646', bgcolor: 'transparent',  '&:hover': { bgcolor: '#bfbfbf' }}}>Remove Photo</Button>
+                            <Button sx={{ color: '#464646', bgcolor: 'transparent',  '&:hover': { bgcolor: '#bfbfbf' }}}
+                                onClick={deleteImage}
+                            >Remove Photo</Button>
                             <input type="file" ref={fileRef} style={{ display: 'none' }} onChange={updateImage}/>
                         </Stack>
-                        
                     </Stack>
                 </FormControl>
 
