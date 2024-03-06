@@ -36,7 +36,9 @@ const Login = () => {
           onChange={(e) => setInputs({ ...inputs, password: e.target.value })}
         />
       </FormControl>
-      <Button sx={{ mt: 1 /* margin top */ }}>Log in</Button>
+      <Button onClick={() => login(inputs)} sx={{ mt: 1 /* margin top */ }}>
+        Log in
+      </Button>
       <Divider inset="none" />
       <Button color="neutral" variant="soft">
         <Stack direction="row" spacing={1} alignItems={"center"}>

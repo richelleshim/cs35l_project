@@ -11,7 +11,7 @@ import Button from "@mui/joy/Button";
 import Link from "@mui/joy/Link";
 import { Box, Stack } from "@mui/joy";
 import Login from "./Login";
-import SignUp from "./SignUp";
+import SignUp from "./Signup";
 
 export default function AuthForm() {
   const [isLogin, setIsLogin] = useState(true);
@@ -34,11 +34,9 @@ export default function AuthForm() {
         }}
         variant="outlined"
       >
-        <div>
-          <Stack>
-            <img src="/Bruingram.png" alt="Bruingram" />
-          </Stack>
-        </div>
+        <Stack>
+          <img src="/Bruingram.png" alt="Bruingram" />
+        </Stack>
 
         {isLogin ? <Login /> : <SignUp />}
         <Typography

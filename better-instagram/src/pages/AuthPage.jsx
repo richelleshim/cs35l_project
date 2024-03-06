@@ -2,7 +2,7 @@ import { Box, Grid, Sheet, Stack } from "@mui/joy";
 import AuthForm from "../components/Auth/AuthForm";
 const AuthPage = () => {
   return (
-    <div>
+    <>
       <Grid
         container
         spacing={0}
@@ -11,20 +11,32 @@ const AuthPage = () => {
         justifyContent="center"
         sx={{ minHeight: "100vh" }}
       >
-        <Stack
-          direction="row"
-          alignContent={"center"}
-          justifyContent={"centered"}
+        <Box
+          display="flex"
+          justifyContent="center"
+          alignItems="center"
+          minHeight="100vh"
+          alignContent="center"
         >
-          <Box padding={0} margin={0}>
-            <img src="/authenticationBruin.png" alt="bruin img" height={400} />
-          </Box>
-          <Box height="25vh">
-            <AuthForm />
-          </Box>
-        </Stack>
+          <Stack
+            direction="row"
+            alignContent={"center"}
+            justifyContent={"centered"}
+          >
+            <Box padding={0} margin={0}>
+              <img
+                src="/authenticationBruin.png"
+                alt="bruin img"
+                height={400}
+              />
+            </Box>
+            <Box height="25vh">
+              <AuthForm />
+            </Box>
+          </Stack>
+        </Box>
       </Grid>
-    </div>
+    </>
   );
 };
 
