@@ -1,15 +1,26 @@
 import Cards from '../components/Profile/Cards'
-import AddPost from '../components/Profile/AddPost'
+import AddPostButton from '../components/Profile/AddPost'
+import NavBar from '../components/NavBar/NavBar';
+import ProfileDetails from '../components/Profile/ProfileDetails'
 
 
 
 function ProfilePage() {
+    const addedPost = () => {
+        window.location.reload(); 
+    }
+
     return (
         <>
-            <AddPost />
+            <NavBar/>
+            <ProfileDetails />
+            <AddPostButton 
+            addedPost={() => {addedPost()}}
+            />
             <Cards />
         </>
         
     );
 }
 export default ProfilePage;
+

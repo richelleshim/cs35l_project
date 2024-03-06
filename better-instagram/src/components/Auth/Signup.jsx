@@ -8,6 +8,12 @@ import {
   Typography,
 } from "@mui/joy";
 import { useState } from "react";
+<<<<<<< HEAD
+=======
+import { IconButton, CircularProgress, Alert } from "@mui/material";
+import { Visibility, VisibilityOff, Error } from "@mui/icons-material";
+// import useSignUpWithEmailandPassword from "../../hooks/useSignUpWithEmailandPassword";
+>>>>>>> 49f54343171e4c61022c8a8f88a67ab5869da83c
 
 const SignUp = () => {
   const [showPassword, setShowPassword] = useState(false);

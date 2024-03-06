@@ -3,9 +3,11 @@ import HomePageWidget from '../components/Home/HomePageWidget'
 
 // import from MUI
 import { Stack, Box } from "@mui/joy";
+import NavBar from '../components/NavBar/NavBar';
 
 function HomePage() {
     return <>
+      <NavBar/>
       <Box sx={{ pb: 5 }}>
         <img
           src="public/Bruingram.png"
