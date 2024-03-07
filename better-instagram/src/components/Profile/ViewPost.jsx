@@ -50,6 +50,19 @@ export default function ViewPost({
   const [commentInput, setCommentInput] = useState('')
 
   useEffect(()=>{
+
+    const updateImage = async () => {
+        const storage = getStorage();
+        getDownloadURL(ref(storage, image))
+          .then((url) => {
+            setImgSrc(url);
+          })
+          .catch((error) => {
+            // Handle any errors
+          });
+      };
+    updateImage();
+    
     const getCommentsList= async () => {
         try{
             const data = await getDocs(orderedCommentsQuery);
@@ -100,6 +113,7 @@ const handlePostComment = async()=>{
 }
 
   // load the image based off of the image key
+  /*
   const updateImage = async () => {
     const storage = getStorage();
     getDownloadURL(ref(storage, image))
@@ -110,8 +124,8 @@ const handlePostComment = async()=>{
         // Handle any errors
       });
   };
+  updateImage();*/
 
-  updateImage();
 
   const onClick = () => {
     setIsExpanded(!isExpanded);
