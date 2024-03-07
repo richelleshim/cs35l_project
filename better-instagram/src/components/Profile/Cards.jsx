@@ -94,6 +94,7 @@ export default function Cards(){
                     <CardItem image={postsList[index].image} onCardClick={()=>click(index)}/>
                     {viewPost && <ViewPost 
                         close={()=>click(null)} 
+                        postId={postsList[currentIndex].id}
                         image={postsList[currentIndex].image} 
                         caption={postsList[currentIndex].caption} 
                         goBack={goBack} 
