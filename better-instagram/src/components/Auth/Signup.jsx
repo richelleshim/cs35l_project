@@ -9,7 +9,7 @@ import {
 import { useState } from "react";
 import { CircularProgress, Alert } from "@mui/material";
 import { Visibility, VisibilityOff, Error } from "@mui/icons-material";
-//import useSignUpWithEmailAndPassword from "../../hooks/useSignUpWithEmailAndPassword";
+import useSignUpWithEmailAndPassword from "../../hooks/useSignUpWithEmailandPassword";
 
 const SignUp = () => {
   const [showPassword, setShowPassword] = useState(false);
