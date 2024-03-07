@@ -5,6 +5,12 @@ import { useState, useEffect } from 'react'
 import './ProfilePage.css';
 import {firestore} from '../../firebase/firebase';
 import { getDocs, collection} from 'firebase/firestore'
+import {
+    getStorage,
+    ref,
+    getDownloadURL,
+    deleteObject,
+  } from "firebase/storage";
 
 
 
@@ -12,6 +18,7 @@ import { getDocs, collection} from 'firebase/firestore'
 export default function Cards(){
     const[likesList, setLikesList] = useState([]);
     const[postsList, setPostsList] = useState([]);
+    const[imageUrlList, setImageUrlList] = useState([])
     const likesCollectionRef = collection(firestore, 'likes')
     const postsCollectionRef = collection(firestore, 'posts')
 
@@ -80,6 +87,24 @@ export default function Cards(){
         setLikes(updateLikes);
     }
 
+    const loadImages = async ()=> {
+        const storage = getStorage()
+        const urlList = []
+        
+        for (const image of postsList.image){
+            try{
+                const url = await getDownloadURL(ref(storage, image))
+                urlList.push(url)
+            } catch (error){
+                console.error(err)
+            }
+        }
+        
+        setImageUrlList(urlList)
+    }
+    loadImages();
+    console.log(postsList.image)
+
 
 
     return <>
@@ -96,7 +121,7 @@ export default function Cards(){
                         goForward={goForward}
                         likeClick={()=>toggleLike(currentIndex)}
                         liked={likes[currentIndex]}
-                        />} 
+                    />} 
                 </>;
             })}
         </div>             
