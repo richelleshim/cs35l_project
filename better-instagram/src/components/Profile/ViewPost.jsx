@@ -7,8 +7,10 @@ import AspectRatio from '@mui/joy/AspectRatio';
 import greg from '../../../assets/images/greg.svg'
 import Box from '@mui/joy/Box';
 import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
+import DeleteOutlinedIcon from '@mui/icons-material/DeleteOutlined';
 import IconButton from '@mui/joy/IconButton';
 import FavoriteIcon from '@mui/icons-material/Favorite';
+import DeleteIcon from '@mui/icons-material/Delete';
 import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos';
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
 import List from '@mui/joy/List';
@@ -20,10 +22,11 @@ import Input from '@mui/joy/Input';
 import Button from '@mui/joy/Button';
 
 // post image loading -chai
-import { useEffect } from 'react'
-import { getStorage, ref, getDownloadURL } from "firebase/storage";
+import { getStorage, ref, getDownloadURL, deleteObject } from "firebase/storage";
+import { doc, deleteDoc } from "firebase/firestore";
+import { firestore, storage } from "../../../firebase/firebase";
 
-export default function ViewPost({close, image, caption, goBack, goForward, likeClick, liked}){
+export default function ViewPost({close, postId, image, caption, goBack, goForward, likeClick, liked}){
     const[isExpanded, setIsExpanded] = useState(false);
     const [imgSrc, setImgSrc] = useState('');
 
@@ -43,7 +46,24 @@ export default function ViewPost({close, image, caption, goBack, goForward, like
 
     const onClick =()=>{
         setIsExpanded(!isExpanded)
-        console.log(isExpanded)
+    }
+
+    const deletePost = async() => {
+        const storage = getStorage();
+        await deleteDoc(doc(firestore, "posts", postId));
+
+        // Create a reference to the file to delete
+        const desertRef = ref(storage, `images/${postId}.png`);
+
+        // Delete the file
+        deleteObject(desertRef).then(() => {
+            // File deleted successfully
+        }).catch((error) => {
+            // Uh-oh, an error occurred!
+        });
+
+        setIsExpanded(false);
+        window.location.reload();
     }
 
     const captionStyle = {
@@ -101,7 +121,14 @@ export default function ViewPost({close, image, caption, goBack, goForward, like
                         </Typography>
                     </Box>
                     
-                    <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
+                    <Box sx={{ display: 'flex', alignItems: 'center', gap: 0 }}>
+                        <IconButton
+                            size='lg'
+                            color='inherit'
+                            onClick={deletePost}
+                            sx={{outline: 'none !important'}}>
+                            <DeleteOutlinedIcon/>
+                        </IconButton> 
                         <IconButton
                             size='lg'
                             color='inherit'
