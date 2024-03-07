@@ -1,10 +1,5 @@
 import Grid from '@mui/joy/Grid';
 import CardItem from './CardItem'
-import post1 from '../../../assets/images/post1.jpeg'
-import post2 from '../../../assets/images/post2.jpeg'
-import post3 from '../../../assets/images/post3.jpg'
-import post4 from '../../../assets/images/post4.jpg'
-import post5 from '../../../assets/images/post5.jpg'
 import ViewPost from './ViewPost';
 import { useState, useEffect } from 'react'
 import './ProfilePage.css';
