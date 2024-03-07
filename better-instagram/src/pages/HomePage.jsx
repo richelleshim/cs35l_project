@@ -10,7 +10,17 @@ function HomePage() {
     <>
       <Stack direction="row">
         <NavBar />
-        <Box sx={{ pb: 5, pt: 5 }}>
+        <Box
+          component="main"
+          sx={{
+            flexGrow: 1,
+            p: 3,
+            width: { sm: `calc(100% - ${240}px)` }, // Adjust the width based on the navbar's width
+            marginLeft: { sm: `${240}px` },
+            pb: 5,
+            pt: 5, // Add a left margin to the content based on the navbar's width
+          }}
+        >
           <Stack direction="column" alignItems="flex-start" spacing={3}>
             <Stack
               direction="row"
