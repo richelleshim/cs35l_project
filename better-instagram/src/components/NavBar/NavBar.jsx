@@ -19,7 +19,6 @@ const NavBar = () => {
        <ListItemButton onClick={()=>navigate('/home')}
          role="menuitem"
          component="a"
-         href="#horizontal-list"
          aria-label="Home"
        >
          <Home />
@@ -30,7 +29,6 @@ const NavBar = () => {
      <ListItemButton onClick={()=>navigate('/favorites')}
          role="menuitem"
          component="a"
-         href="#horizontal-list"
          aria-label="Favorite"
        >
          <FavoriteRounded />
@@ -41,7 +39,6 @@ const NavBar = () => {
      <ListItemButton onClick={()=>navigate('/profile')}
          role="menuitem"
          component="a"
-         href="#horizontal-list"
          aria-label="Profile"
        >
          <Person />
