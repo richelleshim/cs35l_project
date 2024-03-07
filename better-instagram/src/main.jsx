@@ -8,11 +8,13 @@ import HomePage from './pages/HomePage.jsx'
 import ProfilePage from './pages/ProfilePage.jsx'
 import FavoritesPage from './pages/FavoritesPage.jsx'
 import { Children } from 'react';
-import { Box } from '@mui/joy';
+import { Box, Typography } from '@mui/joy';
+import useAuthStore from "./store/authStore";
 
 
 
 function Wrapper({ children }) {
+  let username = useAuthStore((state) => state.user)
   return <>
     <Box sx={{
       alignItems: 'center',
@@ -27,8 +29,8 @@ function Wrapper({ children }) {
         justifyContent: 'center',
         margin: "auto"
       }}>
-
         <RouterProvider router={router}/>
+        <Typography level="h1">Username: {username}</Typography>
       </Box>
     </Box>
   </>;
