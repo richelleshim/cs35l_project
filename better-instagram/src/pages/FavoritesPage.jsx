@@ -104,41 +104,44 @@ const FavoritesPage = () => {
 
   return (
     <>
-      <NavBar />
-      <div className="FavoritesPage">
-        <Favorite
-          sx={{
-            position: "absolute",
-            top: "25px",
-            right: "25px",
-            fontSize: 45,
-            color: "black",
-          }}
-        />
-        {/* <Title>Bruinstagram</Title> */}
-        <img src="./Bruingram.png" />
-        <Stack spacing={3}>
-          {users.map((user, index) => (
-            <UserCard key={index} user={user} />
-          ))}
+      <Stack direction="row">
+        <NavBar />
 
-          {users.map((user, index) => (
-            <UserCard key={index} user={user} />
-          ))}
+        <div className="FavoritesPage">
+          <Favorite
+            sx={{
+              position: "absolute",
+              top: "25px",
+              right: "25px",
+              fontSize: 45,
+              color: "black",
+            }}
+          />
+          {/* <Title>Bruinstagram</Title> */}
+          {/* <img src="./Bruingram.png" /> */}
+          <Stack spacing={3}>
+            {users.map((user, index) => (
+              <UserCard key={index} user={user} />
+            ))}
 
-          {users.map((user, index) => (
-            <UserCard key={index} user={user} />
-          ))}
+            {users.map((user, index) => (
+              <UserCard key={index} user={user} />
+            ))}
 
-          {users.map((user, index) => (
-            <UserCard key={index} user={user} />
-          ))}
+            {users.map((user, index) => (
+              <UserCard key={index} user={user} />
+            ))}
 
-          {users.map((user, index) => (
-            <UserCard key={index} user={user} />
-          ))}
-        </Stack>
-      </div>
+            {users.map((user, index) => (
+              <UserCard key={index} user={user} />
+            ))}
+
+            {users.map((user, index) => (
+              <UserCard key={index} user={user} />
+            ))}
+          </Stack>
+        </div>
+      </Stack>
     </>
   );
 };

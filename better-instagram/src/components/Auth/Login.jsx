@@ -1,23 +1,37 @@
-import { AddAlert } from "@mui/icons-material";
+import { Visibility, VisibilityOff } from "@mui/icons-material";
 import {
-  Alert,
   Button,
   Divider,
   FormControl,
   FormLabel,
-  Input,
-  Stack,
-  Typography,
+  IconButton,
+  Input
 } from "@mui/joy";
 import React, { useState } from "react";
-import useLogin from "../../hooks/useLogin";
+import { useNavigate } from "react-router-dom";
+import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
 
 const Login = () => {
   const [inputs, setInputs] = useState({
     email: "",
     password: "",
   });
-  const { loading, error, login } = useLogin();
+  const [loginError, setLoginError] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
+
+  const navigate = useNavigate();
+
+  const login = async ({ email, password }) => {
+    const auth = getAuth();
+    try {
+      await signInWithEmailAndPassword(auth, email, password);
+      // take to home page if successful
+      navigate("/home");
+    } catch (error) {
+      // display error message if unsuccessful
+      setLoginError("Login Failed");
+    }
+  };
 
   return (
     <>
@@ -36,26 +50,29 @@ const Login = () => {
         <Input
           placeholder="Password"
           fontSize="14"
-          type="password"
+          type={showPassword ? "text" : "password"}
           value={inputs.password}
           onChange={(e) => setInputs({ ...inputs, password: e.target.value })}
+          endDecorator={
+            <IconButton
+              color="neutral"
+              variant="soft"
+              size="small"
+              onClick={() => setShowPassword(!showPassword)}
+            >
+              {showPassword ? <Visibility /> : <VisibilityOff />}{" "}
+            </IconButton>
+          }
         />
       </FormControl>
-      {error && (
-        <Alert status="error" fontSize={13} p={2} borderRadius={4}>
-          <AddAlert fontSize={12} />
-          {error.message}
-        </Alert>
-      )}
-      <Button
-        onClick={() => {
-          login(inputs);
-        }}
-        isLoading={loading}
-        sx={{ mt: 1 /* margin top */ }}
-      >
+      <Button onClick={() => login(inputs)} sx={{ mt: 1 /* margin top */ }}>
         Log in
       </Button>
+      {loginError && (
+        <Stack spacing={2}>
+          <Typography color="danger">{loginError}</Typography>
+        </Stack>
+      )}
       <Divider inset="none" />
       {/* <Button color="neutral" variant="soft">
         <Stack direction="row" spacing={1} alignItems={"center"}>

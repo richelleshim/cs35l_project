@@ -2,7 +2,6 @@ import { useSignInWithGoogle } from "react-firebase-hooks/auth";
 import { auth, firestore } from "../../firebase/firebase";
 import useAuthStore from "../../store/authStore";
 import { doc, getDoc, setDoc } from "firebase/firestore";
-import { Sheet } from "@mui/joy";
 import { Button, Stack, Typography } from "@mui/material";
 
 const GoogleAuth = ({ prefix }) => {

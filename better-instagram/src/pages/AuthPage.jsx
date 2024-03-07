@@ -1,4 +1,4 @@
-import { Box, Grid, Sheet, Stack } from "@mui/joy";
+import { Box, Grid, Stack } from "@mui/joy";
 import AuthForm from "../components/Auth/AuthForm";
 const AuthPage = () => {
   return (
