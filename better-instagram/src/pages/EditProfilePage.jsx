@@ -1,19 +1,12 @@
 import {
     Button,
-    Box,
-    Typography,
-    FormControl,
+    Box, FormControl,
     FormLabel,
     Input,
-    Avatar,
-    IconButton,
-    Grid,
-    Modal
-  } from '@mui/joy';
+    Avatar
+} from '@mui/joy';
 import Stack from '@mui/material/Stack';
-import CloseIcon from '@mui/icons-material/Close';
 import { useState, useRef } from 'react';
-import { storage, ref, getDownloadURL } from "firebase/storage";
 
 const EditProfilePage =()=>{
     const [inputs, setInputs] = useState({
