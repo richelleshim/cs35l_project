@@ -1,4 +1,11 @@
-import { Button, FormControl, FormLabel, IconButton, Input } from "@mui/joy";
+import {
+  Button,
+  FormControl,
+  FormLabel,
+  IconButton,
+  Input,
+  Stack,
+} from "@mui/joy";
 import { useState } from "react";
 import { Visibility, VisibilityOff } from "@mui/icons-material";
 import useSignUpWithEmailAndPassword from "../../hooks/useSignUpWithEmailandPassword";
@@ -12,6 +19,8 @@ const SignUp = () => {
     password: "",
     fullName: "",
     username: "",
+    major: "",
+    year: "",
   });
 
   return (
@@ -64,6 +73,26 @@ const SignUp = () => {
               {showPassword ? <Visibility /> : <VisibilityOff />}{" "}
             </IconButton>
           }
+        />
+      </FormControl>
+      <FormControl>
+        <FormLabel>Major</FormLabel>
+        <Input
+          placeholder="Major"
+          fontSize="14"
+          type="text"
+          value={inputs.major}
+          onChange={(e) => setInputs({ ...inputs, major: e.target.value })}
+        />
+      </FormControl>
+      <FormControl>
+        <FormLabel>Year</FormLabel>
+        <Input
+          placeholder="Year"
+          fontSize="14"
+          type="text"
+          value={inputs.year}
+          onChange={(e) => setInputs({ ...inputs, year: e.target.value })}
         />
       </FormControl>
       <Button

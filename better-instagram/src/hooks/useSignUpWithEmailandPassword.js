@@ -20,7 +20,9 @@ const useSignUpWithEmailAndPassword = () => {
       !inputs.email ||
       !inputs.password ||
       !inputs.username ||
-      !inputs.fullName
+      !inputs.fullName ||
+      !inputs.major ||
+      !inputs.year
     ) {
       console.log("Error Please fill all the fields");
       return;
@@ -56,6 +58,8 @@ const useSignUpWithEmailAndPassword = () => {
           followers: [],
           following: [],
           posts: [],
+          major: inputs.major,
+          year: inputs.year,
           createdAt: Date.now(),
         };
         await setDoc(doc(firestore, "users", newUser.user.uid), userDoc);
