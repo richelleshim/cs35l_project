@@ -1,17 +1,9 @@
 import React from "react";
 import { useState } from "react";
-import { useColorScheme } from "@mui/joy/styles";
-import Sheet from "@mui/joy/Sheet";
-import CssBaseline from "@mui/joy/CssBaseline";
-import Typography from "@mui/joy/Typography";
-import FormControl from "@mui/joy/FormControl";
-import FormLabel from "@mui/joy/FormLabel";
-import Input from "@mui/joy/Input";
-import Button from "@mui/joy/Button";
-import Link from "@mui/joy/Link";
+import { CssBaseline, Typography, Sheet } from "@mui/joy";
 import { Box, Stack } from "@mui/joy";
 import Login from "./Login";
-import SignUp from "./SignUp";
+import SignUp from "./Signup";
 import GoogleAuth from "./GoogleSignIn";
 
 export default function AuthForm() {

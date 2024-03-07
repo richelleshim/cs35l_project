@@ -3,12 +3,10 @@ import {
   FormControl,
   FormLabel,
   IconButton,
-  Input,
-  Typography,
+  Input
 } from "@mui/joy";
 import { useState } from "react";
-import { CircularProgress, Alert } from "@mui/material";
-import { Visibility, VisibilityOff, Error } from "@mui/icons-material";
+import { Visibility, VisibilityOff } from "@mui/icons-material";
 //import useSignUpWithEmailAndPassword from "../../hooks/useSignUpWithEmailAndPassword";
 
 const SignUp = () => {
