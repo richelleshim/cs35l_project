@@ -6,17 +6,18 @@ import ListItem from '@mui/joy/ListItem';
 import Typography from '@mui/joy/Typography';
 import Sheet from '@mui/joy/Sheet';
 
-export default function ExampleFilterStatusCheckbox() {
-  const [status, setStatus] = React.useState({
-    declinedPayment: true,
-    deliveryError: true,
-    wrongAddress: false,
-  });
-
+export default function FilterButton() {
   const [showCheckboxes, setShowCheckboxes] = React.useState(false);
-
+  const [status, setStatus] = React.useState({
+    major: false,
+    gradYear: false,
+  });
   const handleFilterButtonClick = () => {
     setShowCheckboxes(!showCheckboxes);
+    setStatus({
+        major: false,
+        gradYear: false,
+      });
   };
 
   return (
@@ -40,9 +41,9 @@ export default function ExampleFilterStatusCheckbox() {
               label="Major"
               
               overlay
-              checked={status.declinedPayment}
+              checked={status.major}
               onChange={(event) =>
-                setStatus({ ...status, declinedPayment: event.target.checked })
+                setStatus({ ...status, major: event.target.checked })
               }
               sx={{ color: 'inherit' }}
             />
@@ -55,9 +56,9 @@ export default function ExampleFilterStatusCheckbox() {
               label="Graduation Year"
               
               overlay
-              checked={status.deliveryError}
+              checked={status.gradYear}
               onChange={(event) =>
-                setStatus({ ...status, deliveryError: event.target.checked })
+                setStatus({ ...status, gradYear: event.target.checked })
               }
             />
             <Typography sx={{ ml: 'auto' }}>
@@ -73,9 +74,8 @@ export default function ExampleFilterStatusCheckbox() {
           
           onClick={() =>
             setStatus({
-              declinedPayment: false,
-              deliveryError: false,
-              wrongAddress: false,
+              major: false,
+              gradYear: false,
             })
           }
           sx={{ px: 1.5, mt: 1 }}
