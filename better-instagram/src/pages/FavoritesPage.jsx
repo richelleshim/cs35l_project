@@ -96,7 +96,7 @@ const FavoritesPage = () => {
     <>
     <NavBar/>
     <div className="FavoritesPage">
-       <Favorite sx={{ position: 'absolute', top: '25px', left: '25px', fontSize: 45, color: 'black' }} />
+       <Favorite sx={{ position: 'absolute', top: '25px', right: '25px', fontSize: 45, color: 'black' }} />
        <Title>Bruinstagram</Title>
         <Stack spacing={3}>
 

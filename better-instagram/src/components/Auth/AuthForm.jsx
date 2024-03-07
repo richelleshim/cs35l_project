@@ -1,66 +1,90 @@
-import {
-  Container,
-  Stack,
-  Box,
-  Input,
-  Button,
-  Typography,
-  Divider,
-} from "@mui/joy";
+import React from "react";
 import { useState } from "react";
-import GoogleIcon from "@mui/icons-material/Google";
-// import GitHubIcon from "@mui/icons-material/GitHub";
+import { useColorScheme } from "@mui/joy/styles";
+import Sheet from "@mui/joy/Sheet";
+import CssBaseline from "@mui/joy/CssBaseline";
+import Typography from "@mui/joy/Typography";
+import FormControl from "@mui/joy/FormControl";
+import FormLabel from "@mui/joy/FormLabel";
+import Input from "@mui/joy/Input";
+import Button from "@mui/joy/Button";
+import Link from "@mui/joy/Link";
+import { Box, Stack } from "@mui/joy";
 import Login from "./Login";
-import Signup from "./Signup";
+import SignUp from "./Signup";
 
-
-const AuthForm = () => {
+export default function AuthForm() {
   const [isLogin, setIsLogin] = useState(true);
-  
+
   return (
-    <Stack spacing={10}>
-      <Box p={5} sx={{ border: "4px black" }}>
-        <Stack spacing={2} alignItems={"center"}>
-          <Container alignItems="center">
-            <img src="/Bruingram.png" alt="Bruingram" height={40} />
-          </Container>
-
-          {isLogin ? <Login /> : <Signup />}
-          {/* <Button color="neutral" variant="soft"> */}
-          {/* <Divider>
-            <Typography></Typography>
-          </Divider> */}
-          {/* <Stack direction="row" spacing={1}>
-              <GoogleIcon width={"5px"} height={"5px"} />
-              <Typography color="white" fontSize={14}>
-                Log In With Google
-              </Typography>
-            </Stack>
-          </Button> */}
-          {/* <Button color="neutral" variant="soft">
-          <Stack direction="row" spacing={1}>
-            <GitHubIcon width={"5px"} height={"5px"} />
-            <Typography color="white" fontSize={14}>
-              Log In With GitHub
-            </Typography>
-          </Stack>
-        </Button> */}
+    <main>
+      <CssBaseline />
+      <Sheet
+        sx={{
+          width: 300,
+          mx: "auto", // margin left & right
+          my: 4, // margin top & bottom
+          py: 3, // padding top & bottom
+          px: 2, // padding left & right
+          display: "flex",
+          flexDirection: "column",
+          gap: 2,
+          borderRadius: "sm",
+          boxShadow: "md",
+        }}
+        variant="outlined"
+      >
+        <Stack>
+          <img src="/Bruingram.png" alt="Bruingram" />
         </Stack>
-        <Box p={5} sx={{ border: "1px black" }}>
-          <Stack alignItems={"center"} justifyContent={"center"}>
-            <Box mx={2} fontSize={14}>
-              <Typography>
-                {isLogin ? "Don't have an account?" : "Have an account?"}
-                <Box onClick={() => setIsLogin(!isLogin)}>
-                  {isLogin ? "Sign Up" : "Log in"}
-                </Box>
-              </Typography>
-            </Box>
-          </Stack>
-        </Box>
-      </Box>
-    </Stack>
-  );
-};
 
-export default AuthForm;
+        {isLogin ? <Login /> : <SignUp />}
+        <Typography
+          endDecorator={
+            <Typography onClick={() => setIsLogin(!isLogin)}>
+              {!isLogin ? (
+                <Box
+                  sx={{
+                    "&:hover": {
+                      cursor: "pointer",
+                    },
+                  }}
+                >
+                  <Typography
+                    color="0018F9"
+                    sx={{ textDecoration: "underline" }}
+                  >
+                    Log In
+                  </Typography>
+                </Box>
+              ) : (
+                <Box
+                  sx={{
+                    "&:hover": {
+                      cursor: "pointer",
+                    },
+                  }}
+                >
+                  <Typography
+                    color="0018F9"
+                    sx={{ textDecoration: "underline" }}
+                  >
+                    Sign Up
+                  </Typography>
+                </Box>
+              )}
+            </Typography>
+          }
+          fontSize="sm"
+          sx={{ alignSelf: "center" }}
+        >
+          {isLogin ? (
+            <Typography>Don't have an account?</Typography>
+          ) : (
+            <Typography>Have an account?</Typography>
+          )}
+        </Typography>
+      </Sheet>
+    </main>
+  );
+}

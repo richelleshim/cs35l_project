@@ -1,5 +1,6 @@
 import * as React from 'react';
 import Avatar from '@mui/joy/Avatar';
+import Grid from '@mui/joy/Grid';
 import AvatarGroup from '@mui/joy/AvatarGroup';
 import Box from '@mui/joy/Box';
 import Button from '@mui/joy/Button';
@@ -12,15 +13,7 @@ import FavoriteBorder from '@mui/icons-material/FavoriteBorder';
 
 export default function BottomActionsCard() {
   return (
-    <Card
-      variant="outlined"
-      sx={{
-        width: 1000,
-        // to make the card resizable
-        overflow: 'auto',
-        resize: 'horizontal',
-      }}
-    >
+    <Grid>
       <Box
         sx={{
           display: 'flex',
@@ -39,9 +32,16 @@ export default function BottomActionsCard() {
           flexDirection: 'column',
           textAlign: 'center', // Center align the text
         }}>
-        <Typography level="title-lg">NYC Coders</Typography>
+        <Typography level="title-lg">Name</Typography>
+        <Typography level="title-sm">@username</Typography>
         <Typography level="body-sm">
           Insert bio here
+        </Typography>
+        <Typography level="body-sm">
+          Major
+        </Typography>
+        <Typography level="body-sm">
+          Year
         </Typography>
       </CardContent>
       <CardActions sx={{
@@ -52,12 +52,9 @@ export default function BottomActionsCard() {
           <FavoriteBorder />
         </IconButton>
         <Button variant="outlined" color="neutral">
-          View
+          Edit Profile
         </Button>
-        <Button variant="solid" color="primary">
-         <a href = "mailto: abc@example.com">Contact</a>
-        </Button>
-      </CardActions>
-    </Card>
+       </CardActions>
+       </Grid>
   );
 }
