@@ -1,25 +1,27 @@
-import { Container, Stack, Box, Input } from "@mui/joy";
+import { Box, Grid, Stack } from "@mui/joy";
 import AuthForm from "../components/Auth/AuthForm";
-
 const AuthPage = () => {
   return (
     <>
-      <Box padding={2}>
-        <img src="/Bruingram.png" alt="Bruingram" height={30} />
-      </Box>
-      <Box
-        display="flex"
-        justifyContent={"center"}
-        alignItems={"center"}
-        px={4}
-        // borderColor={"gray"}
-        height="100vh"
+      <Grid
+        container
+        spacing={0}
+        direction="column"
+        alignItems="center"
+        justifyContent="center"
+        sx={{ minHeight: "100vh" }}
       >
-        <Container padding={0}>
+        <Box
+          display="flex"
+          justifyContent="center"
+          alignItems="center"
+          minHeight="100vh"
+          alignContent="center"
+        >
           <Stack
             direction="row"
-            alignItems={"stretch"}
-            justifyContent={"center"}
+            alignContent={"center"}
+            justifyContent={"centered"}
           >
             <Box padding={0} margin={0}>
               <img
@@ -32,8 +34,8 @@ const AuthPage = () => {
               <AuthForm />
             </Box>
           </Stack>
-        </Container>
-      </Box>
+        </Box>
+      </Grid>
     </>
   );
 };

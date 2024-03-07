@@ -1,83 +1,111 @@
-import { Input, Stack, Button, Box } from "@mui/joy";
+import {
+  Button,
+  FormControl,
+  FormLabel,
+  IconButton,
+  Input,
+  Stack,
+} from "@mui/joy";
 import { useState } from "react";
-import { IconButton } from "@mui/material";
 import { Visibility, VisibilityOff } from "@mui/icons-material";
-const Signup = () => {
+import useSignUpWithEmailAndPassword from "../../hooks/useSignUpWithEmailandPassword";
+
+const SignUp = () => {
+  const [showPassword, setShowPassword] = useState(false);
+  const { loading, error, signup } = useSignUpWithEmailAndPassword();
+
   const [inputs, setInputs] = useState({
     email: "",
     password: "",
     fullName: "",
     username: "",
-    confirmPassword: "",
+    major: "",
+    year: "",
   });
-
-  const [showPassword, setShowPassword] = useState(false);
 
   return (
     <>
-      <Box>
-        <Stack spacing={1}>
-          <Input
-            placeholder="Full Name"
-            fontSize="14"
-            type="text"
-            value={inputs.fullName}
-            onChange={(e) => setInputs({ ...inputs, fullName: e.target.value })}
-          />
-          <Input
-            placeholder="Email"
-            fontSize="14"
-            type="email"
-            value={inputs.email}
-            onChange={(e) => setInputs({ ...inputs, email: e.target.value })}
-          />
-          <Input
-            placeholder="Username"
-            fontSize="14"
-            type="text"
-            value={inputs.username}
-            onChange={(e) => setInputs({ ...inputs, username: e.target.value })}
-          />
-          <Stack spacing={2}>
-            <Input
-              placeholder="Password"
-              fontSize="14"
-              type="password"
-              value={inputs.password}
-              onChange={(e) =>
-                setInputs({ ...inputs, password: e.target.value })
-              }
-            />
-            <Input
-              placeholder="Confirm Password"
-              fontSize="14"
-              type={showPassword ? "text" : "password"}
-              value={inputs.confirmPassword}
-              onChange={(e) =>
-                setInputs({ ...inputs, confirmPassword: e.target.value })
-              }
-              endDecorator={
-                <IconButton
-                  color="neutral"
-                  variant="soft"
-                  size="small"
-                  onClick={() => setShowPassword(!showPassword)}
-                >
-                  {showPassword ? <Visibility /> : <VisibilityOff />}{" "}
-                </IconButton>
-              }
-            />
-          </Stack>
-        </Stack>
-      </Box>
-
-      <Stack direction="row"></Stack>
-
-      <Button color="primary" size="sm" fontSize={14}>
+      <FormControl>
+        <FormLabel>Email</FormLabel>
+        <Input
+          placeholder="Email"
+          fontSize="14"
+          type="email"
+          value={inputs.email}
+          onChange={(e) => setInputs({ ...inputs, email: e.target.value })}
+        />
+      </FormControl>
+      <FormControl>
+        <FormLabel>Full Name</FormLabel>
+        <Input
+          placeholder="Full Name"
+          fontSize="14"
+          type="text"
+          value={inputs.fullName}
+          onChange={(e) => setInputs({ ...inputs, fullName: e.target.value })}
+        />
+      </FormControl>
+      <FormControl>
+        <FormLabel>Username</FormLabel>
+        <Input
+          placeholder="Username"
+          fontSize="14"
+          type="text"
+          value={inputs.username}
+          onChange={(e) => setInputs({ ...inputs, username: e.target.value })}
+        />
+      </FormControl>
+      <FormControl>
+        <FormLabel>Password</FormLabel>
+        <Input
+          placeholder="Password"
+          fontSize="14"
+          type={showPassword ? "text" : "password"}
+          value={inputs.password}
+          onChange={(e) => setInputs({ ...inputs, password: e.target.value })}
+          endDecorator={
+            <IconButton
+              color="neutral"
+              variant="soft"
+              size="small"
+              onClick={() => setShowPassword(!showPassword)}
+            >
+              {showPassword ? <Visibility /> : <VisibilityOff />}{" "}
+            </IconButton>
+          }
+        />
+      </FormControl>
+      <FormControl>
+        <FormLabel>Major</FormLabel>
+        <Input
+          placeholder="Major"
+          fontSize="14"
+          type="text"
+          value={inputs.major}
+          onChange={(e) => setInputs({ ...inputs, major: e.target.value })}
+        />
+      </FormControl>
+      <FormControl>
+        <FormLabel>Year</FormLabel>
+        <Input
+          placeholder="Year"
+          fontSize="14"
+          type="text"
+          value={inputs.year}
+          onChange={(e) => setInputs({ ...inputs, year: e.target.value })}
+        />
+      </FormControl>
+      <Button
+        color="primary"
+        size="sm"
+        fontSize={14}
+        onClick={() => signup(inputs)}
+        isLoading={loading}
+      >
         Sign Up
       </Button>
     </>
   );
 };
 
-export default Signup;
+export default SignUp;

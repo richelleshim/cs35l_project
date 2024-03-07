@@ -1,17 +1,16 @@
 import Grid from '@mui/joy/Grid';
 import CardItem from './CardItem'
-import post1 from '../../../assets/images/post1.jpeg'
-import post2 from '../../../assets/images/post2.jpeg'
-import post3 from '../../../assets/images/post3.jpg'
-import post4 from '../../../assets/images/post4.jpg'
-import post5 from '../../../assets/images/post5.jpg'
 import ViewPost from './ViewPost';
 import { useState, useEffect } from 'react'
-import Avatar from '@mui/joy/Box'
-import Stack from '@mui/joy/Stack';
 import './ProfilePage.css';
-import {firestore, storage} from '../../../firebase/firebase';
+import {firestore} from '../../firebase/firebase';
 import { getDocs, collection} from 'firebase/firestore'
+import {
+    getStorage,
+    ref,
+    getDownloadURL,
+    deleteObject,
+  } from "firebase/storage";
 
 
 
@@ -19,6 +18,7 @@ import { getDocs, collection} from 'firebase/firestore'
 export default function Cards(){
     const[likesList, setLikesList] = useState([]);
     const[postsList, setPostsList] = useState([]);
+    const[imageUrlList, setImageUrlList] = useState([])
     const likesCollectionRef = collection(firestore, 'likes')
     const postsCollectionRef = collection(firestore, 'posts')
 
@@ -87,6 +87,24 @@ export default function Cards(){
         setLikes(updateLikes);
     }
 
+    const loadImages = async ()=> {
+        const storage = getStorage()
+        const urlList = []
+        
+        for (const image of postsList.image){
+            try{
+                const url = await getDownloadURL(ref(storage, image))
+                urlList.push(url)
+            } catch (error){
+                console.error(err)
+            }
+        }
+        
+        setImageUrlList(urlList)
+    }
+    loadImages();
+    console.log(postsList.image)
+
 
 
     return <>
@@ -96,13 +114,14 @@ export default function Cards(){
                     <CardItem image={postsList[index].image} onCardClick={()=>click(index)}/>
                     {viewPost && <ViewPost 
                         close={()=>click(null)} 
+                        postId={postsList[currentIndex].id}
                         image={postsList[currentIndex].image} 
                         caption={postsList[currentIndex].caption} 
                         goBack={goBack} 
                         goForward={goForward}
                         likeClick={()=>toggleLike(currentIndex)}
                         liked={likes[currentIndex]}
-                        />} 
+                    />} 
                 </>;
             })}
         </div>             

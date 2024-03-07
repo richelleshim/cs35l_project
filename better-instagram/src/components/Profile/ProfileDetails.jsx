@@ -1,62 +1,64 @@
-import * as React from 'react';
-import Avatar from '@mui/joy/Avatar';
-//import AvatarGroup from '@mui/joy/AvatarGroup';
-import Box from '@mui/joy/Box';
-import Button from '@mui/joy/Button';
-import Card from '@mui/joy/Card';
-import CardContent from '@mui/joy/CardContent';
-import CardActions from '@mui/joy/CardActions';
-import Typography from '@mui/joy/Typography';
+import * as React from "react";
+import Avatar from "@mui/joy/Avatar";
+import Grid from "@mui/joy/Grid";
+import Box from "@mui/joy/Box";
+import Button from "@mui/joy/Button";
+import CardContent from "@mui/joy/CardContent";
+import CardActions from "@mui/joy/CardActions";
+import IconButton from "@mui/joy/IconButton";
+import Typography from "@mui/joy/Typography";
+import FavoriteBorder from "@mui/icons-material/FavoriteBorder";
+import useAuthStore from "../../store/authStore";
 
-export default function ProfileDetailsCard() {
+export default function BottomActionsCard() {
+  let userObj = useAuthStore((state) => state.user);
+  console.log(userObj)
+
   return (
-    <Card
-      variant="outlined"
-      sx={{
-        width: 1500,
-        paddingTop: 11,
-        paddingBottom: 6,
-        // to make the card resizable
-        overflow: 'auto',
-        resize: 'horizontal',
-      }}
-    >
+    <Grid>
       <Box
         sx={{
-          display: 'flex',
-          justifyContent: 'center', // Center align the content horizontally
-          alignItems: 'center',
-          flexDirection: 'column',
+          display: "flex",
+          justifyContent: "center", // Center align the content horizontally
+          alignItems: "center",
+          flexDirection: "column",
         }}
       >
-        <Avatar src="/static/images/avatar/.jpg" sx={{ width: 190, height: 190,}}/>
+        <Avatar src="/static/images/avatar/1.jpg" size="" 
+          sx={{
+            width: 200,
+            height: 200,
+          }}
+        />
       </Box>
       <CardContent
         sx={{
-          display: 'flex',
-          justifyContent: 'center', // Center align the content horizontally
-          alignItems: 'center',
-          flexDirection: 'column',
-          textAlign: 'center', // Center align the text
-        }}>
-        <Typography level="title-lg" sx={{ fontSize: '2.2rem' }}>Greg Heffley</Typography>
-        <Typography level="title-md">@jolly_greg</Typography>
-        <Typography level="title-sm" sx={{paddingTop:0.5}}>Major <Typography level="title-sm">'Grad Year</Typography> </Typography>
-        <Typography level="body-sm"sx={{padding:2}}>
-          Author of Diary of a Wimpy Kid
-        </Typography>
+          display: "flex",
+          justifyContent: "center", // Center align the content horizontally
+          alignItems: "center",
+          flexDirection: "column",
+          textAlign: "center", // Center align the text
+        }}
+      >
+        <Typography level="h1">{userObj.fullName}</Typography>
+        <Typography level="h2">@{userObj.username}</Typography>
+        <Typography level="p">Insert bio here</Typography>
+        <Typography level="p">Major</Typography>
+        <Typography level="p">Year</Typography>
       </CardContent>
-      <CardActions sx={{
-          display: 'flex',
-          justifyContent: 'center', // Center align the buttons horizontally
-        }}>
+      <CardActions
+        sx={{
+          display: "flex",
+          justifyContent: "center", // Center align the buttons horizontally
+        }}
+      >
+        <IconButton variant="outlined" color="neutral">
+          <FavoriteBorder />
+        </IconButton>
         <Button variant="outlined" color="neutral">
-          Edit
-        </Button>
-        <Button variant="solid" color="primary">
-         <a href = "mailto: jollygreg@heffley.com" style={{ color: 'inherit', textDecoration: 'none' }}>Contact</a>
+          Edit Profile
         </Button>
       </CardActions>
-    </Card>
+    </Grid>
   );
 }
