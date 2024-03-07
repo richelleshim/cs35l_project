@@ -8,8 +8,12 @@ import CardActions from "@mui/joy/CardActions";
 import IconButton from "@mui/joy/IconButton";
 import Typography from "@mui/joy/Typography";
 import FavoriteBorder from "@mui/icons-material/FavoriteBorder";
+import useAuthStore from "../../store/authStore";
 
 export default function BottomActionsCard() {
+  let userObj = useAuthStore((state) => state.user);
+  console.log(userObj)
+
   return (
     <Grid>
       <Box
@@ -20,7 +24,12 @@ export default function BottomActionsCard() {
           flexDirection: "column",
         }}
       >
-        <Avatar src="/static/images/avatar/1.jpg" size="" />
+        <Avatar src="/static/images/avatar/1.jpg" size="" 
+          sx={{
+            width: 200,
+            height: 200,
+          }}
+        />
       </Box>
       <CardContent
         sx={{
@@ -31,11 +40,11 @@ export default function BottomActionsCard() {
           textAlign: "center", // Center align the text
         }}
       >
-        <Typography level="title-lg">Name</Typography>
-        <Typography level="title-sm">@username</Typography>
-        <Typography level="body-sm">Insert bio here</Typography>
-        <Typography level="body-sm">Major</Typography>
-        <Typography level="body-sm">Year</Typography>
+        <Typography level="h1">{userObj.fullName}</Typography>
+        <Typography level="h2">@{userObj.username}</Typography>
+        <Typography level="p">Insert bio here</Typography>
+        <Typography level="p">Major</Typography>
+        <Typography level="p">Year</Typography>
       </CardContent>
       <CardActions
         sx={{
