@@ -8,7 +8,7 @@ import post5 from '../../../assets/images/post5.jpg'
 import ViewPost from './ViewPost';
 import { useState, useEffect } from 'react'
 import './ProfilePage.css';
-import {firestore} from '../../../firebase/firebase';
+import {firestore} from '../../firebase/firebase';
 import { getDocs, collection} from 'firebase/firestore'
 
 

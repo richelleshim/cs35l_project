@@ -11,7 +11,8 @@ import Button from "@mui/joy/Button";
 import Link from "@mui/joy/Link";
 import { Box, Stack } from "@mui/joy";
 import Login from "./Login";
-import SignUp from "./Signup";
+import SignUp from "./SignUp";
+import GoogleAuth from "./GoogleSignIn";
 
 export default function AuthForm() {
   const [isLogin, setIsLogin] = useState(true);
@@ -84,6 +85,7 @@ export default function AuthForm() {
             <Typography>Have an account?</Typography>
           )}
         </Typography>
+        <GoogleAuth prefix={isLogin ? "Log in" : "Sign up"} />
       </Sheet>
     </main>
   );

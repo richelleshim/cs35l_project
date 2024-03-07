@@ -1,4 +1,6 @@
+import { AddAlert } from "@mui/icons-material";
 import {
+  Alert,
   Button,
   Divider,
   FormControl,
@@ -8,12 +10,15 @@ import {
   Typography,
 } from "@mui/joy";
 import React, { useState } from "react";
+import useLogin from "../../hooks/useLogin";
 
 const Login = () => {
   const [inputs, setInputs] = useState({
     email: "",
     password: "",
   });
+  const { loading, error, login } = useLogin();
+
   return (
     <>
       <FormControl>
@@ -36,18 +41,30 @@ const Login = () => {
           onChange={(e) => setInputs({ ...inputs, password: e.target.value })}
         />
       </FormControl>
-      <Button onClick={() => login(inputs)} sx={{ mt: 1 /* margin top */ }}>
+      {error && (
+        <Alert status="error" fontSize={13} p={2} borderRadius={4}>
+          <AddAlert fontSize={12} />
+          {error.message}
+        </Alert>
+      )}
+      <Button
+        onClick={() => {
+          login(inputs);
+        }}
+        isLoading={loading}
+        sx={{ mt: 1 /* margin top */ }}
+      >
         Log in
       </Button>
       <Divider inset="none" />
-      <Button color="neutral" variant="soft">
+      {/* <Button color="neutral" variant="soft">
         <Stack direction="row" spacing={1} alignItems={"center"}>
           <img src="./googe_logo.png" height={"25px"} />
           <Typography color="white" fontSize={14}>
             Log In With Google
           </Typography>
         </Stack>
-      </Button>
+      </Button> */}
     </>
   );
 };

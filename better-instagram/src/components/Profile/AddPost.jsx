@@ -1,6 +1,6 @@
 import { Box, Button, Modal, Textarea, IconButton, Typography } from '@mui/joy';
 import { useRef, useState } from 'react';
-import {firestore} from '../../../firebase/firebase';
+import {firestore} from '../../firebase/firebase';
 import { getDocs, setDoc, addDoc, collection} from 'firebase/firestore'
 import { getStorage, ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
 

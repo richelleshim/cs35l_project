@@ -1,12 +1,9 @@
 import { useEffect, useState } from 'react'
 import { collection, getDocs, query, where } from 'firebase/firestore'
-import { firestore } from '../../firebase/firebase'
-import useUserProfile from "../store/userProfileStore"
+import { firestore } from '../firebase/firebase'
 
 const useGetUserProfileByUsername = (username) => {
-    const [isLoading, setIsLoading] = useState(true); //starts true because running immediately
-    //extra: showToast hook for showing errors (add later if we want)
-    //const {userProfile, setUserProfile} = useUserProfile() //can just call like this w/o arguments to get all values 
+    const [isLoading, setIsLoading] = useState(true); 
     const { userProfile, setUserProfile } = useUserProfileStore()
     useEffect(() => {
         const getUserProfile = async() => {
@@ -14,7 +11,6 @@ const useGetUserProfileByUsername = (username) => {
                 const q = query(collection(firestore, "users"), where("username", "==", username));
                 const querySnapshot = await getDocs(q);
 
-                //if user not found:
                 if(querySnapshot.empty) return setUserProfile(null);
 
                 let userDoc;
@@ -26,13 +22,12 @@ const useGetUserProfileByUsername = (username) => {
                 console.log(userDoc);
 
             } catch (error) {
-                //some error message with showToast?
             } finally {
                 setIsLoading(false);
             }
         };
         getUserProfile();
-    }, [setUserProfile, username]); //add showToast here if needed
+    }, [setUserProfile, username]);
 
     return { isLoading, userProfile };
 };
