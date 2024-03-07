@@ -11,7 +11,7 @@ import Button from "@mui/joy/Button";
 import Link from "@mui/joy/Link";
 import { Box, Stack } from "@mui/joy";
 import Login from "./Login";
-import SignUp from "./SignUp";
+import SignUp from "./Signup";
 import GoogleAuth from "./GoogleSignIn";
 
 export default function AuthForm() {
