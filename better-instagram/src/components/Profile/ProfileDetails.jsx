@@ -12,8 +12,9 @@ import { FavoriteRounded, FavoriteBorderRounded, SchoolOutlined, BackpackOutline
 export default function BottomActionsCard() {
   let userObj = useAuthStore((state) => state.user);
   console.log(userObj)
-  let major = "Computer Science";
-  let year = "24";
+  let major = userObj.major;
+  let year = userObj.year;
+  let bio = userObj.bio;
 
   return (
     <Stack 
@@ -48,7 +49,7 @@ export default function BottomActionsCard() {
         </Stack>
         <Typography level="h1">{userObj.fullName}</Typography>
         <Typography level="h4">@{userObj.username}</Typography>
-        <Typography sx={{mt: 2, mb: 2}}>This is where bio goes. I don't know what to type here</Typography>
+        <Typography sx={{mt: 2, mb: 2}}>{bio}</Typography>
         <Stack direction="row" alignItems="center" spacing={10}>
           <Stack sx={{mt: 1, mb: 0.5}} direction="row" alignItems="center" spacing={1}>
               <BackpackOutlined sx={{ fontSize: 30 }} />
