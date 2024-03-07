@@ -7,7 +7,6 @@ import { Stack, Box } from "@mui/joy";
 function HomePage() {
     return <>
     
-    <FilterButton />
       <Box sx={{ pb: 5 }}>
         <img
           src="public/Bruingram.png"
@@ -15,6 +14,7 @@ function HomePage() {
           alt=""
         />
       </Box>
+      <FilterButton />
       <Stack direction="column"  alignItems="flex-start" spacing={3}>
           <Stack direction="row" spacing={3} alignItems="flex-start" justifyContent="center">
             <HomePageWidget name="Daniel Fenex" desc="Likes cats." major="Computer Science" year="25" imageSrc="daniel"></HomePageWidget>
