@@ -14,7 +14,7 @@ import useAuthStore from "./store/authStore";
 
 
 function Wrapper({ children }) {
-  let username = useAuthStore((state) => state.user)
+  let username = useAuthStore((state) => state.username)
   return <>
     <Box sx={{
       alignItems: 'center',
