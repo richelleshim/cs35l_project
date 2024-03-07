@@ -1,5 +1,5 @@
 import Typography from "@mui/joy/Typography";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import ModalClose from "@mui/joy/ModalClose";
 import Modal from "@mui/joy/Modal";
 import Sheet from "@mui/joy/Sheet";
@@ -20,6 +20,8 @@ import Stack from "@mui/joy/Stack";
 import { ModalDialog } from "@mui/joy";
 import Input from "@mui/joy/Input";
 import Button from "@mui/joy/Button";
+import SendIcon from '@mui/icons-material/Send';
+import moment from 'moment'
 
 // post image loading -chai
 import {
@@ -28,7 +30,7 @@ import {
   getDownloadURL,
   deleteObject,
 } from "firebase/storage";
-import { doc, deleteDoc } from "firebase/firestore";
+import { doc, deleteDoc, getDocs, collection, addDoc, query, where, onSnapshot, Timestamp, serverTimestamp, orderBy } from "firebase/firestore";
 import { firestore } from "../../firebase/firebase";
 
 export default function ViewPost({
@@ -43,6 +45,59 @@ export default function ViewPost({
 }) {
   const [isExpanded, setIsExpanded] = useState(false);
   const [imgSrc, setImgSrc] = useState("");
+  const [commentsList, setCommentsList] = useState([])
+  const orderedCommentsQuery = query(collection(firestore, 'comments'), orderBy('timestamp', 'desc'));
+  const [commentInput, setCommentInput] = useState('')
+
+  useEffect(()=>{
+    const getCommentsList= async () => {
+        try{
+            const data = await getDocs(orderedCommentsQuery);
+            const filteredData = data.docs.map((doc) => ({
+                ...doc.data(),
+                id: doc.id
+            }))
+            setCommentsList(filteredData);
+        } catch(err){
+            console.error(err)
+        }
+    };
+    getCommentsList();
+
+    const unsubscribe = onSnapshot(orderedCommentsQuery, (snapshot) => {
+        const comments = [];
+        snapshot.forEach((doc) => {
+            comments.push({ id: doc.id, ...doc.data() });
+        });
+        setCommentsList(comments);
+    });
+
+    return () => unsubscribe();
+    /*
+    const commentsQuery = query(collection(firestore, 'comments'), where('postID', '==', postId))
+    const unsubscribe = onSnapshot(commentsQuery, (snapshot) =>{
+        const comments = []
+        snapshot.forEach((doc) =>{
+            comments.push({ id: doc.id, ...doc.data()})
+        })
+        setCommentInput(comments)
+    })*/
+
+    //return () => unsubscribe();
+
+}, [postId]);
+
+const handlePostComment = async()=>{
+    if (!commentInput.trim()) return;
+    console.log('post comment')
+    await addDoc(collection(firestore, "comments"), {
+        content: commentInput,
+        postID: postId,
+        userID: '',
+        timestamp: serverTimestamp()
+    });
+    setCommentInput('')
+}
 
   // load the image based off of the image key
   const updateImage = async () => {
@@ -65,6 +120,14 @@ export default function ViewPost({
   const deletePost = async () => {
     const storage = getStorage();
     await deleteDoc(doc(firestore, "posts", postId));
+
+    //get the comments on the post and delete them
+    const commentsQuery = query(
+        collection(firestore, 'comments'), 
+        where('postID', '==', postId)
+    );
+
+    //const commentsQuerySnapshot = await getDoc(commentsQuery)
 
     // Create a reference to the file to delete
     const desertRef = ref(storage, `images/${postId}.png`);
@@ -166,28 +229,57 @@ export default function ViewPost({
               {caption}
             </Typography>
           </div>
-
-          <Input
-            placeholder="Add a comment"
+        
+        <Box
             sx={{
-              marginTop: "10px",
-              borderRadius: "20px",
-            }}
-          />
+                display: 'flex',
+                justifyContent: "center",
+            }}>
+            <Input
+                placeholder="Add a comment"
+                value={commentInput}
+                onChange={(e) => setCommentInput(e.target.value)}
+                sx={{
+                    flex: 1,
+                    marginTop: "10px",
+                    borderRadius: "20px",
+                }}
+            />
+            <IconButton 
+                onClick={handlePostComment}
+                sx={{ marginTop: "10px",}}>
+                <SendIcon/>
+            </IconButton>
+        </Box>
 
+        {/*still need to have avatars*/}
           <Stack>
-            <Box
-              sx={{ display: "flex", alignItems: "center", marginTop: "20px" }}
-            >
-              <Avatar sx={{ marginRight: "15px" }} />I love greg
-            </Box>
-            <Box
-              sx={{ display: "flex", alignItems: "center", marginTop: "20px" }}
-            >
-              <Avatar sx={{ marginRight: "15px" }} />
-              me too
-            </Box>
+            {commentsList.map((comment) => (
+                postId === comment.postID && (
+                <Box
+                sx={{ display: "flex", alignItems: "center", marginTop: "20px" }}>
+                    <Avatar sx={{ marginRight: "15px" }} /> 
+                    <Stack direction='column'>
+                        <div>
+                            {comment && comment.userID}
+                        </div>
+
+                        <div>
+                            {comment.timestamp && moment(comment.timestamp.toDate()).fromNow()}
+                            
+                        </div>
+
+                        <div>
+                            {comment && comment.content}
+                        </div>
+
+                    </Stack>
+                    
+                </Box>  
+                )  
+            ))}
           </Stack>
+          
         </Box>
 
         <Box
@@ -220,3 +312,5 @@ export default function ViewPost({
     </Modal>
   );
 }
+
+
