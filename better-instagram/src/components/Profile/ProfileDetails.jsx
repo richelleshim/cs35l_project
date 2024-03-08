@@ -1,13 +1,8 @@
 import * as React from "react";
-import Avatar from "@mui/joy/Avatar";
-import Box from "@mui/joy/Box";
-import Button from "@mui/joy/Button";
-import CardContent from "@mui/joy/CardContent";
-import CardActions from "@mui/joy/CardActions";
-import FavoriteBorder from "@mui/icons-material/FavoriteBorder";
 import useAuthStore from "../../store/authStore";
-import { Stack, Typography, IconButton } from "@mui/joy";
-import { FavoriteRounded, FavoriteBorderRounded, SchoolOutlined, BackpackOutlined } from '@mui/icons-material';
+import EditProfilePage from "../../pages/EditProfilePage";
+import { Box, Button, Avatar, Stack, Typography, IconButton } from "@mui/joy";
+import { SchoolOutlined, BackpackOutlined, FavoriteBorder } from '@mui/icons-material';
 
 export default function BottomActionsCard() {
   let userObj = useAuthStore((state) => state.user);
@@ -43,6 +38,7 @@ export default function BottomActionsCard() {
           <Button variant="outlined" color="neutral">
             Edit Profile
           </Button>
+          <EditProfilePage></EditProfilePage>
           <IconButton variant="outlined" color="neutral">
             <FavoriteBorder />
           </IconButton>
