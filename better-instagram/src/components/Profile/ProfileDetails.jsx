@@ -35,9 +35,6 @@ export default function BottomActionsCard() {
         direction="column" 
       >
         <Stack sx={{mb: 2}} direction="row" spacing={2}>
-          <Button variant="outlined" color="neutral">
-            Edit Profile
-          </Button>
           <EditProfilePage></EditProfilePage>
           <IconButton variant="outlined" color="neutral">
             <FavoriteBorder />

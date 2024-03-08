@@ -11,7 +11,7 @@ import {
 import Stack from '@mui/material/Stack';
 import { useState, useRef } from 'react';
 
-const EditProfilePage =()=>{
+export function EditProfilePage ({ close }) {
     const [inputs, setInputs] = useState({
         name: '',
         username: '',
@@ -164,7 +164,7 @@ const EditProfilePage =()=>{
                         onClick={handleEditProfile}>
                         Save changes
                     </Button>
-                    <Button variant="outlined" color="neutral">
+                    <Button variant="outlined" color="neutral" onClick={close}>
                         Cancel
                     </Button>
                 </Stack>
@@ -173,5 +173,25 @@ const EditProfilePage =()=>{
     </Modal>;
     
 }
-export default EditProfilePage
+
+export default function EditProfilePageButton({ addedPost }) {
+  const [openModal, setOpenModal] = useState(false);
+
+  const click = () => {
+    setOpenModal(!openModal);
+  }
+
+  return (
+    <>
+      <Button 
+        sx={{ m: 5 }} 
+        onClick={() => { click() }}
+        variant="outlined" color="neutral"
+      >Edit profile</Button>
+      {openModal && <EditProfilePage
+        close={() => { click() }}
+      />}
+    </>
+  );
+}
 
