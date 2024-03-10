@@ -36,7 +36,7 @@ export default function FilterButton() {
     <div style={{ position: 'relative', paddingTop: '50px', paddingBottom: '0px'}}>
       <Button
         variant="outlined"
-        color="primary"
+        color="neutral"
         size="small"
         onClick={handleFilterButtonClick}
         sx={{ position: 'relative', zIndex: 1}} 
