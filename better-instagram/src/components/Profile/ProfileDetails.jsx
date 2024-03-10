@@ -6,7 +6,6 @@ import { SchoolOutlined, BackpackOutlined, FavoriteBorder } from '@mui/icons-mat
 
 export default function BottomActionsCard() {
   let userObj = useAuthStore((state) => state.user);
-  console.log(userObj)
   let major = userObj.major;
   let year = userObj.year;
   let bio = userObj.bio;
