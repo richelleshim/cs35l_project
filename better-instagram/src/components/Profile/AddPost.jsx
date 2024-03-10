@@ -36,7 +36,7 @@ export function PostWidget({ close, addedPost }) {
     const postRef = await addDoc(collection(firestore, "posts"), {
       caption: caption,
       image: "",  // this is set to id, but is set later on as we don't know id atm
-      userId: userObj.uid, // TODO
+      userId: userObj.uid, 
       timestamp: serverTimestamp() //time of posting
     });
     console.log('hello')

@@ -50,6 +50,7 @@ export default function ViewPost({
   const [commentsList, setCommentsList] = useState([]) 
   const [commentsWithImageList, setCommentsWithImageList] = useState([]) 
   const [commentInput, setCommentInput] = useState('')
+  const [toggleEditCaption, setToggleEditCaption] = useState(false)
 
   const orderedCommentsQuery = query(collection(firestore, 'comments'), orderBy('timestamp', 'desc'));
 
@@ -173,7 +174,9 @@ export default function ViewPost({
     }
   }
 
-
+  const editCaption = async () => {
+    setToggleEditCaption(!toggleEditCaption)  
+  }
 
   //styling the caption
   const captionStyle = {
@@ -192,6 +195,7 @@ export default function ViewPost({
   };
 
   return (
+    <>
     <Modal
       open={true}
       onClose={close}
@@ -265,11 +269,20 @@ export default function ViewPost({
           </Box>
 
           {/*Caption*/}
-          <div onClick={expandCaption}>
-            <Typography sx={isExpanded ? captionStyleFull : captionStyle}>
-              {caption}
-            </Typography>
-          </div>
+          <Box sx={{display:'flex', justifyContent: "space-between"}}>
+            <div onClick={expandCaption} style={{ flex: '1' }}>
+              <Typography sx={isExpanded ? captionStyleFull : captionStyle}>
+                {caption}
+              </Typography>
+            </div>
+
+            <div onClick={() => editCaption()} style={{marginTop: '1.2vh'}}>
+              <Typography level="body-sm">
+                Edit caption
+              </Typography>
+            </div>
+          </Box>
+          
         
         {/*Posting comments section*/}
         <Box
@@ -374,6 +387,7 @@ export default function ViewPost({
         </Box>
       </Box>
     </Modal>
+    </>
   );
 }
 
