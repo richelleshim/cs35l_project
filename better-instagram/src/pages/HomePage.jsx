@@ -12,7 +12,9 @@ function HomePage() {
       <Box sx={{ alignItems: "flex-start" }}>
         <NavBar />
       </Box>
-      <FilterButton />
+      <Stack>
+        <FilterButton />
+      </Stack>
       <Box
         component="main"
         sx={{
