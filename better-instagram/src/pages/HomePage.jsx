@@ -77,7 +77,7 @@ const handleGoToProfile =()=>{
               <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '10px' }}>
                 
                 {userWithImageList.map((user) => (
-                    <div onClick={handleGoToProfile}>
+                    
                       <HomePageWidget
                         key={user.id}
                         name={user.fullName}
@@ -85,8 +85,9 @@ const handleGoToProfile =()=>{
                         major={user.major}
                         year={user.year}
                         imageSrc={user.profilePicURL}
+                        handleGoToProfile={handleGoToProfile}
                       />  
-                    </div>
+                    
                 ))}
               </div>
       </Stack>

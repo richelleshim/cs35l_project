@@ -15,12 +15,14 @@ import Stack from "@mui/joy/Stack";
 import Input from "@mui/joy/Input";
 import SendIcon from '@mui/icons-material/Send';
 import moment from 'moment'
+import useAuthStore from "../../store/authStore";
 
 // post image loading -chai
 import {
   getStorage,
   ref,
   deleteObject,
+  getDownloadURL,
 } from "firebase/storage";
 import { 
   doc, 
@@ -46,8 +48,18 @@ export default function ViewPost({
 }) {
   const [isExpanded, setIsExpanded] = useState(false); //expanding the caption
   const [commentsList, setCommentsList] = useState([]) 
+  const [commentsWithImageList, setCommentsWithImageList] = useState([]) 
   const [commentInput, setCommentInput] = useState('')
+  const [toggleEditCaption, setToggleEditCaption] = useState(false)
+  //const uid = postId.
+
   const orderedCommentsQuery = query(collection(firestore, 'comments'), orderBy('timestamp', 'desc'));
+
+  let userObj = useAuthStore((state) => state.user());
+  if (userObj == null) {
+      return <h1>Not Logged In</h1>;
+  }
+  
   
   useEffect(()=>{  
     //get the list of comments 
@@ -78,21 +90,50 @@ export default function ViewPost({
     return () => unsubscribe();
   }, [postId]);
 
+
+  useEffect(() => {
+    //Load in user profile pictures
+    const loadImages = async () => {
+        const storage = getStorage();
+        const newCommentsList = []; 
+
+        for (const comment of commentsList) {
+            try {
+                let url
+                if(comment.profilePicture){
+                  url = await getDownloadURL(ref(storage, comment.profilePicture));      
+                }  
+                const newComment = {
+                    ...comment,
+                    profilePicURL: url 
+                };
+                newCommentsList.push(newComment);
+            } catch (error) {
+                console.error('Error fetching profile picture for comment:', comment.id);
+            }
+        }
+        setCommentsWithImageList(newCommentsList);
+    };
+
+    loadImages();
+}, [commentsList]);
+
   //posting a new comment
   const handlePostComment = async()=>{
       //make sure comment isn't empty
       if (!commentInput.trim()) return;
-
       await addDoc(collection(firestore, "comments"), {
           content: commentInput,
           postID: postId,
-          userID: '',
+          userID: userObj.uid,
+          username: userObj.username,
+          profilePicture: userObj.profilePicURL,
           timestamp: serverTimestamp()
       });
 
       //reset comment input field
       setCommentInput('')
-  }
+  } 
 
   //expanding the caption
   const expandCaption = () => {
@@ -135,6 +176,10 @@ export default function ViewPost({
     }
   }
 
+  const editCaption = async () => {
+    setToggleEditCaption(!toggleEditCaption)  
+  }
+
   //styling the caption
   const captionStyle = {
     marginTop: "2%",
@@ -152,6 +197,7 @@ export default function ViewPost({
   };
 
   return (
+    <>
     <Modal
       open={true}
       onClose={close}
@@ -225,11 +271,20 @@ export default function ViewPost({
           </Box>
 
           {/*Caption*/}
-          <div onClick={expandCaption}>
-            <Typography sx={isExpanded ? captionStyleFull : captionStyle}>
-              {caption}
-            </Typography>
-          </div>
+          <Box sx={{display:'flex', justifyContent: "space-between"}}>
+            <div onClick={expandCaption} style={{ flex: '1' }}>
+              <Typography sx={isExpanded ? captionStyleFull : captionStyle}>
+                {caption}
+              </Typography>
+            </div>
+
+            <div onClick={() => editCaption()} style={{marginTop: '1.2vh'}}>
+              <Typography level="body-sm">
+                Edit caption
+              </Typography>
+            </div>
+          </Box>
+          
         
         {/*Posting comments section*/}
         <Box
@@ -261,7 +316,7 @@ export default function ViewPost({
         {/*Comments section*/}
           <Stack>
             {/*Map through list of comments that match the post ID and display*/}
-            {commentsList.map((comment) => (
+            {commentsWithImageList.map((comment) => (
                 postId === comment.postID && (
                 <Box
                   sx={{ 
@@ -271,21 +326,23 @@ export default function ViewPost({
                     marginTop: '2.5vh'}}>
                     
                     {/*Commenter profile*/}
-                    <Avatar sx={{ marginRight: "15px" }} /> 
+                    <Avatar sx={{ marginRight: "15px" }} src={comment.profilePicURL}/> 
 
                       {/*Commenter ID, comment timestamp, comment content*/}
                       <Stack direction='column' >
-                          <div>
-                              {comment && comment.userID}
-                          </div>
+                          <Box sx={{display:'flex'}}>
+                            <Typography level="title-md">
+                                {comment && comment.username}
+                            </Typography>
 
-                          <div>
-                              {comment.timestamp && moment(comment.timestamp.toDate()).fromNow()}   
-                          </div>
-
-                          <div>
+                            <Typography level="body-sm" sx={{marginLeft:'1vh'}}>
+                                {comment.timestamp && moment(comment.timestamp.toDate()).fromNow()}   
+                            </Typography>
+                          </Box>
+                          
+                          <Typography>
                                 {comment && comment.content}
-                          </div>
+                          </Typography>
                       </Stack>
                     
                     {/*Delete comment button*/}
@@ -332,6 +389,7 @@ export default function ViewPost({
         </Box>
       </Box>
     </Modal>
+    </>
   );
 }
 
