@@ -51,6 +51,7 @@ export default function ViewPost({
   const [commentsWithImageList, setCommentsWithImageList] = useState([]) 
   const [commentInput, setCommentInput] = useState('')
   const [toggleEditCaption, setToggleEditCaption] = useState(false)
+  //const uid = postId.
 
   const orderedCommentsQuery = query(collection(firestore, 'comments'), orderBy('timestamp', 'desc'));
 
@@ -58,6 +59,7 @@ export default function ViewPost({
   if (userObj == null) {
       return <h1>Not Logged In</h1>;
   }
+  
   
   useEffect(()=>{  
     //get the list of comments 
