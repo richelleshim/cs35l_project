@@ -3,6 +3,7 @@ import { auth, firestore } from "../firebase/firebase";
 import { doc, getDoc } from "firebase/firestore";
 import useAuthStore from "../store/authStore";
 
+/*
 const useLogin = () => {
   const [signInWithEmailAndPassword, , loading, error] =
     useSignInWithEmailAndPassword(auth);
@@ -33,3 +34,5 @@ const useLogin = () => {
 };
 
 export default useLogin;
+
+*/

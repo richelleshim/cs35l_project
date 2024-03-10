@@ -12,11 +12,16 @@ import { doc, updateDoc, getDoc } from 'firebase/firestore';
 import { firestore } from '../firebase/firebase';
 import Stack from '@mui/material/Stack';
 import { useState, useRef } from 'react';
+import { useNavigate } from "react-router-dom";
 import useAuthStore from "../store/authStore";
 
 export function EditProfilePage ({ close }) {
 
-    let userObj = useAuthStore((state) => state.user);
+  const navigate = useNavigate();
+    let userObj = useAuthStore((state) => state.user());
+    if (userObj == null) {
+        return <h1>Not Logged In</h1>;
+    }
     const [inputs, setInputs] = useState({
         fullName: userObj.fullName,
         username: userObj.username,
