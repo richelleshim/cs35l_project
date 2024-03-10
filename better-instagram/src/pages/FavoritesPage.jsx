@@ -95,16 +95,7 @@ const Item = styled("div")(({ theme }) => ({
 
 const FavoritesPage = () => {
   // Define an array of user data (for demonstration purposes) **not used right now
-  const users = [
-    {
-      name: "Happy Name", //have to get from firestore fetch profile data by uid
-      major: "Theater Studies",
-      year: "Class of 26",
-      imageUrl:
-        "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&w=286",
-    },
-    // Add more user data as needed
-  ];
+  
   const[favoritesList, setFavoritesList] = useState([]);
   const favoritesCollectionRef = collection(firestore, 'favoritedprofiles')
   //const [currentIndex, setCurrentIndex] = useState(null);
@@ -145,10 +136,8 @@ const FavoritesPage = () => {
           <Stack spacing={3}>
           {favoritesList.map((favorite, index) => (
             <HomePageWidget
-              //key={index}
-              name={favorite.favoriteduid.fullName}
-              major={favorite.favoriteduid.major}
-              year={favorite.favoriteduid.year}
+              key={index}
+              uid={favorite.favoriteuid}
             />
           ))}
         </Stack> 

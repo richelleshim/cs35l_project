@@ -1,6 +1,6 @@
 import { useRef, useState, useEffect } from 'react';
 import { firestore } from '../../firebase/firebase';
-import { setDoc, addDoc, collection } from 'firebase/firestore';
+import { setDoc, addDoc, deleteDoc, collection, doc, query, getDocs, where } from 'firebase/firestore';
 import { getStorage, ref, uploadBytesResumable } from "firebase/storage";
 import Avatar from "@mui/joy/Avatar";
 
@@ -10,26 +10,56 @@ import { FavoriteRounded, FavoriteBorderRounded, SchoolOutlined, BackpackOutline
 
 const storage = getStorage();
 
-function HomePageWidget ({ name, desc, major, year, imageSrc , isFavorited, handleGoToProfile }) {
-    const [favorited, setFavorited] = useState(isFavorited);
+function HomePageWidget ({ name, desc, major, year, uid, imageSrc , isFavorited, handleGoToProfile }) {
+    const [favorited, setFavorited] = useState(false);
     const imageSrcFull = `assets/profilepics/${imageSrc}.png`
+    const [userData, setUserData] = useState(null);
 
     useEffect(() => {
-        // Get favorited status from localStorage
-        const isFavorited = localStorage.getItem(name) === 'true';
+        // Check favorited status from localStorage when component mounts
+        const isFavorited = localStorage.getItem(uid) === 'true';
         setFavorited(isFavorited);
-    }, [name]);
+    }, [uid]);
+
+    const toggleFavorite = () => {
+        const newFavorited = !favorited;
+        setFavorited(newFavorited);
+        localStorage.setItem(uid, newFavorited ? 'true' : 'false');
+        // Call updateFirestore with newFavorited
+        updateFirestore(newFavorited);
+    };
     
-    const favoriteddata = async () => {
+
+    const updateFirestore = async (newFavorited) => {
         try {
-            await addDoc(collection(firestore, "favoritedprofiles"), {
-                favoriteduid: name, // Assuming `name` holds the UID of the profile
-                personaluid: "TODO" // Assuming this is the user's UID
-            });
-            localStorage.setItem(name, 'true'); // Set favorited status in localStorage
-            setFavorited(true); // Update local state to reflect favorited status
+            const favoritedRef = collection(firestore, "favoritedprofiles");
+            const favoritedQuery = query(
+                favoritedRef,
+                where("favoriteduid", "==", uid)
+            );
+            const favoritedSnapshot = await getDocs(favoritedQuery);
+            
+            // Check if the profile is already favorited
+            const isAlreadyFavorited = !favoritedSnapshot.empty;
+    
+            if (isAlreadyFavorited) {
+                // Profile is already favorited, so remove it from Firestore
+                favoritedSnapshot.forEach(async (doc) => {
+                    await deleteDoc(doc.ref);
+                });
+                localStorage.setItem(uid, 'false'); // Update local storage
+                setFavorited(false); // Update local state to reflect unfavorited status
+            } else {
+                // Profile is not favorited, so add it to Firestore
+                await addDoc(favoritedRef, {
+                    favoriteduid: uid,
+                    personaluid: "TODO"
+                });
+                localStorage.setItem(uid, 'true'); // Update local storage
+                setFavorited(true); // Update local state to reflect favorited status
+            }
         } catch (error) {
-            console.error("Error adding favorited profile: ", error);
+            console.error("Error updating favorited profile in Firestore: ", error);
         }
     };
 
@@ -78,13 +108,13 @@ function HomePageWidget ({ name, desc, major, year, imageSrc , isFavorited, hand
             </Grid>
             </div>
             <Grid item>
-            <IconButton variant="plain" onClick={favoriteddata}>
-                    {favorited ? (
-                        <FavoriteRounded sx={{ fontSize: 30, color: "red" }} />
-                    ) : (
-                        <FavoriteBorderRounded sx={{ fontSize: 30 }} />
-                    )}
-                </IconButton>
+            <IconButton variant="plain" onClick={toggleFavorite}>
+                        {favorited ? (
+                            <FavoriteRounded sx={{ fontSize: 30, color: "red" }} />
+                        ) : (
+                            <FavoriteBorderRounded sx={{ fontSize: 30 }} />
+                        )}
+                    </IconButton>
             </Grid>
         </Grid>
     </Card>
