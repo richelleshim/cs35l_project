@@ -1,7 +1,7 @@
 import { Box, Button, Modal, Textarea, Typography } from '@mui/joy';
 import { useRef, useState } from 'react';
 import { firestore } from '../../firebase/firebase';
-import { setDoc, addDoc, collection } from 'firebase/firestore';
+import { setDoc, addDoc, collection, serverTimestamp, } from 'firebase/firestore';
 import { getStorage, ref, uploadBytesResumable } from "firebase/storage";
 
 const storage = getStorage();
@@ -30,6 +30,7 @@ export function PostWidget({ close, addedPost }) {
       caption: caption,
       image: "",  // this is set to id, but is set later on as we don't know id atm
       userId: "", // TODO
+      timestamp: serverTimestamp() //time of posting
     });
     // set image id of the post to the post id
     let imageId = postRef.id
@@ -131,7 +132,7 @@ export function PostWidget({ close, addedPost }) {
             borderRadius: 5
           }}
         >
-          {/* idk what this is */}
+          {/*File selection window*/}
           <Box sx={{ display: 'flex', gap: 2, flexWrap: 'wrap' }}>
             <input
               type="file"

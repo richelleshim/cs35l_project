@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import Avatar from "@mui/joy/Avatar";
 
 // import all custom styling from MUI
 import { Card, Stack, Typography, AspectRatio, Grid, IconButton } from "@mui/joy";
@@ -31,12 +32,10 @@ function HomePageWidget ({ name, desc, major, year, imageSrc }) {
                         ratio="1"
                         sx={{ flex: 1, maxWidth: 180, borderRadius: '100%' }}
                     >
-                        <img
-                        src={imageSrcFull}
-                        loading="lazy"
-                        alt=""
-                        />
+                        <Avatar src={imageSrc} sx={{ width: 180, height: 180 }} />
+                        
                     </AspectRatio>
+                    
                     <Stack direction="column" alignItems="flex-start" justifyContent="center" spacing={1}>
                         <Typography level="h2" textAlign="start">
                             {name}

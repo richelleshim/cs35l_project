@@ -1,8 +1,6 @@
 import Typography from "@mui/joy/Typography";
 import { useState, useEffect } from "react";
-import ModalClose from "@mui/joy/ModalClose";
 import Modal from "@mui/joy/Modal";
-import Sheet from "@mui/joy/Sheet";
 import AspectRatio from "@mui/joy/AspectRatio";
 import greg from "../../../assets/images/greg.svg";
 import Box from "@mui/joy/Box";
@@ -10,16 +8,11 @@ import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
 import DeleteOutlinedIcon from "@mui/icons-material/DeleteOutlined";
 import IconButton from "@mui/joy/IconButton";
 import FavoriteIcon from "@mui/icons-material/Favorite";
-import DeleteIcon from "@mui/icons-material/Delete";
 import ArrowBackIosIcon from "@mui/icons-material/ArrowBackIos";
 import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
-import List from "@mui/joy/List";
-import ListItem from "@mui/joy/ListItem";
 import Avatar from "@mui/joy/Avatar";
 import Stack from "@mui/joy/Stack";
-import { ModalDialog } from "@mui/joy";
 import Input from "@mui/joy/Input";
-import Button from "@mui/joy/Button";
 import SendIcon from '@mui/icons-material/Send';
 import moment from 'moment'
 
@@ -27,43 +20,38 @@ import moment from 'moment'
 import {
   getStorage,
   ref,
-  getDownloadURL,
   deleteObject,
 } from "firebase/storage";
-import { doc, deleteDoc, getDocs, collection, addDoc, query, where, onSnapshot, Timestamp, serverTimestamp, orderBy } from "firebase/firestore";
+import { 
+  doc, 
+  deleteDoc, 
+  getDocs, 
+  collection, 
+  addDoc, 
+  query, 
+  onSnapshot,
+  serverTimestamp,
+  orderBy } from "firebase/firestore";
 import { firestore } from "../../firebase/firebase";
 
 export default function ViewPost({
   close,
   postId,
-  image,
+  imageUrl,
   caption,
   goBack,
   goForward,
   likeClick,
   liked,
 }) {
-  const [isExpanded, setIsExpanded] = useState(false);
-  const [imgSrc, setImgSrc] = useState("");
-  const [commentsList, setCommentsList] = useState([])
-  const orderedCommentsQuery = query(collection(firestore, 'comments'), orderBy('timestamp', 'desc'));
+  const [isExpanded, setIsExpanded] = useState(false); //expanding the caption
+  const [commentsList, setCommentsList] = useState([]) 
   const [commentInput, setCommentInput] = useState('')
-
-  useEffect(()=>{
-
-    const updateImage = async () => {
-        const storage = getStorage();
-        getDownloadURL(ref(storage, image))
-          .then((url) => {
-            setImgSrc(url);
-          })
-          .catch((error) => {
-            // Handle any errors
-          });
-      };
-    updateImage();
-    
-    const getCommentsList= async () => {
+  const orderedCommentsQuery = query(collection(firestore, 'comments'), orderBy('timestamp', 'desc'));
+  
+  useEffect(()=>{  
+    //get the list of comments 
+    const getCommentsList = async () => { 
         try{
             const data = await getDocs(orderedCommentsQuery);
             const filteredData = data.docs.map((doc) => ({
@@ -77,71 +65,50 @@ export default function ViewPost({
     };
     getCommentsList();
 
-    const unsubscribe = onSnapshot(orderedCommentsQuery, (snapshot) => {
-        const comments = [];
-        snapshot.forEach((doc) => {
-            comments.push({ id: doc.id, ...doc.data() });
-        });
-        setCommentsList(comments);
+    //update comments without refreshing the page
+  const unsubscribe = onSnapshot(orderedCommentsQuery, (snapshot) => { 
+    const comments = [];
+    snapshot.forEach((doc) => {
+      comments.push({ id: doc.id, ...doc.data() });
+    });
+
+    setCommentsList(comments);
     });
 
     return () => unsubscribe();
-    /*
-    const commentsQuery = query(collection(firestore, 'comments'), where('postID', '==', postId))
-    const unsubscribe = onSnapshot(commentsQuery, (snapshot) =>{
-        const comments = []
-        snapshot.forEach((doc) =>{
-            comments.push({ id: doc.id, ...doc.data()})
-        })
-        setCommentInput(comments)
-    })*/
+  }, [postId]);
 
-    //return () => unsubscribe();
+  //posting a new comment
+  const handlePostComment = async()=>{
+      //make sure comment isn't empty
+      if (!commentInput.trim()) return;
 
-}, [postId]);
-
-const handlePostComment = async()=>{
-    if (!commentInput.trim()) return;
-    console.log('post comment')
-    await addDoc(collection(firestore, "comments"), {
-        content: commentInput,
-        postID: postId,
-        userID: '',
-        timestamp: serverTimestamp()
-    });
-    setCommentInput('')
-}
-
-  // load the image based off of the image key
-  /*
-  const updateImage = async () => {
-    const storage = getStorage();
-    getDownloadURL(ref(storage, image))
-      .then((url) => {
-        setImgSrc(url);
-      })
-      .catch((error) => {
-        // Handle any errors
+      await addDoc(collection(firestore, "comments"), {
+          content: commentInput,
+          postID: postId,
+          userID: '',
+          timestamp: serverTimestamp()
       });
-  };
-  updateImage();*/
 
+      //reset comment input field
+      setCommentInput('')
+  }
 
-  const onClick = () => {
+  //expanding the caption
+  const expandCaption = () => {
     setIsExpanded(!isExpanded);
   };
 
+  //deleting a post
   const deletePost = async () => {
     const storage = getStorage();
     await deleteDoc(doc(firestore, "posts", postId));
 
-    //get the comments on the post and delete them
-    const commentsQuery = query(
-        collection(firestore, 'comments'), 
-        where('postID', '==', postId)
-    );
-
-    //const commentsQuerySnapshot = await getDoc(commentsQuery)
+    //delete all comments of the post
+    const deleteCommentList = commentsList.filter((comment) => comment.postID === postId);
+    for(const comment of deleteCommentList){
+      await deleteComment(comment.id)
+    }
 
     // Create a reference to the file to delete
     const desertRef = ref(storage, `images/${postId}.png`);
@@ -159,15 +126,26 @@ const handlePostComment = async()=>{
     window.location.reload();
   };
 
+  //deleting a comment
+  const deleteComment = async (commentID) =>{
+    try{
+      await deleteDoc(doc(firestore, "comments", commentID));
+    }catch(error){
+      console.error('Failed to delete comment: ', commentID)
+    }
+  }
+
+  //styling the caption
   const captionStyle = {
     marginTop: "2%",
     marginLeft: "2%",
     overflow: "hidden",
     display: "-webkit-box",
-    WebkitLineClamp: "2",
+    WebkitLineClamp: "1",
     WebkitBoxOrient: "vertical",
   };
 
+  //styling the caption
   const captionStyleFull = {
     marginTop: "2%",
     marginLeft: "2%",
@@ -189,17 +167,19 @@ const handlePostComment = async()=>{
             bgcolor: "#FFFFFF",
             borderRadius: 10,
             p: 1.5,
-            height: "90vh",
+            height: "80vh",
             width: "60vh",
             overflowY: "auto",
           }}
         >
+          {/*Image of the post*/}
           <Box sx={{ borderRadius: 8, overflow: "hidden" }}>
             <AspectRatio ratio="1">
-              <img id={"viewimg" + image} src={imgSrc} />
+              <img id={"viewimg" + imageUrl} src={imageUrl} alt='image'/>
             </AspectRatio>
           </Box>
 
+          {/*Caption and comments section*/}
           <Box
             sx={{
               display: "flex",
@@ -209,12 +189,16 @@ const handlePostComment = async()=>{
             }}
           >
             <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
-              <Avatar src={greg} sx={{ size: "lg" }} />
+              {/*User profile*/}
+              <Avatar src={greg} sx={{ size: "lg" }} /> 
 
+              {/*Username*/}
               <Typography fontWeight="bold">@jolly_greg</Typography>
             </Box>
 
+            {/*Delete post and like post section*/}
             <Box sx={{ display: "flex", alignItems: "center", gap: 0 }}>
+              {/*Delete post icon*/}
               <IconButton
                 size="lg"
                 color="inherit"
@@ -223,6 +207,8 @@ const handlePostComment = async()=>{
               >
                 <DeleteOutlinedIcon />
               </IconButton>
+
+              {/*Like post icon*/}
               <IconButton
                 size="lg"
                 color="inherit"
@@ -238,17 +224,21 @@ const handlePostComment = async()=>{
             </Box>
           </Box>
 
-          <div onClick={onClick}>
+          {/*Caption*/}
+          <div onClick={expandCaption}>
             <Typography sx={isExpanded ? captionStyleFull : captionStyle}>
               {caption}
             </Typography>
           </div>
         
+        {/*Posting comments section*/}
         <Box
             sx={{
                 display: 'flex',
                 justifyContent: "center",
             }}>
+
+            {/*Comment input section*/}
             <Input
                 placeholder="Add a comment"
                 value={commentInput}
@@ -259,6 +249,8 @@ const handlePostComment = async()=>{
                     borderRadius: "20px",
                 }}
             />
+
+            {/*Post comment icon*/}
             <IconButton 
                 onClick={handlePostComment}
                 sx={{ marginTop: "10px",}}>
@@ -266,36 +258,52 @@ const handlePostComment = async()=>{
             </IconButton>
         </Box>
 
-        {/*still need to have avatars*/}
+        {/*Comments section*/}
           <Stack>
+            {/*Map through list of comments that match the post ID and display*/}
             {commentsList.map((comment) => (
                 postId === comment.postID && (
                 <Box
-                sx={{ display: "flex", alignItems: "center", marginTop: "20px" }}>
-                    <Avatar sx={{ marginRight: "15px" }} /> 
-                    <Stack direction='column'>
-                        <div>
-                            {comment && comment.userID}
-                        </div>
-
-                        <div>
-                            {comment.timestamp && moment(comment.timestamp.toDate()).fromNow()}
-                            
-                        </div>
-
-                        <div>
-                            {comment && comment.content}
-                        </div>
-
-                    </Stack>
+                  sx={{ 
+                    display: "flex", 
+                    alignItems: "center", 
+                    justifyContent: "space-between",
+                    marginTop: '2.5vh'}}>
                     
+                    {/*Commenter profile*/}
+                    <Avatar sx={{ marginRight: "15px" }} /> 
+
+                      {/*Commenter ID, comment timestamp, comment content*/}
+                      <Stack direction='column' >
+                          <div>
+                              {comment && comment.userID}
+                          </div>
+
+                          <div>
+                              {comment.timestamp && moment(comment.timestamp.toDate()).fromNow()}   
+                          </div>
+
+                          <div>
+                                {comment && comment.content}
+                          </div>
+                      </Stack>
+                    
+                    {/*Delete comment button*/}
+                    <IconButton
+                      size="sm"
+                      color="inherit"
+                      onClick={()=>deleteComment(comment.id)}
+                      sx={{ outline: "none !important", marginLeft: 'auto'}}
+                    >
+                      <DeleteOutlinedIcon />
+                    </IconButton>          
                 </Box>  
                 )  
             ))}
-          </Stack>
-          
+          </Stack>     
         </Box>
 
+        {/*Left and right arrows to move between posts*/}
         <Box
           sx={{
             position: "absolute",
