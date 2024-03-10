@@ -14,7 +14,7 @@ import {
     getDownloadURL,
   } from "firebase/storage";
 
-export default function Cards(){
+export default function Cards({ uid }){
     const[likesList, setLikesList] = useState([]);
     const[postsList, setPostsList] = useState([]);
     const[imageUrlList, setImageUrlList] = useState([])
