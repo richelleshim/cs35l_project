@@ -3,6 +3,8 @@ import { useRef, useState } from 'react';
 import { firestore } from '../../firebase/firebase';
 import { setDoc, addDoc, collection, serverTimestamp, } from 'firebase/firestore';
 import { getStorage, ref, uploadBytesResumable } from "firebase/storage";
+import useAuthStore from "../../store/authStore";
+
 
 const storage = getStorage();
 
@@ -11,6 +13,11 @@ export function PostWidget({ close, addedPost }) {
   const [selectedFile, setSelectedFile] = useState(null);
   const [caption, setCaption] = useState("");
   const inputRef = useRef(null);
+
+  let userObj = useAuthStore((state) => state.user());
+  if (userObj == null) {
+      return <h1>Not Logged In</h1>;
+  }
 
   // handle change in image
   const handleFileInputChange = (event) => {
@@ -29,9 +36,10 @@ export function PostWidget({ close, addedPost }) {
     const postRef = await addDoc(collection(firestore, "posts"), {
       caption: caption,
       image: "",  // this is set to id, but is set later on as we don't know id atm
-      userId: "", // TODO
+      userId: userObj.uid, // TODO
       timestamp: serverTimestamp() //time of posting
     });
+    console.log('hello')
     // set image id of the post to the post id
     let imageId = postRef.id
     setDoc(postRef, { image: `images/${imageId}.png` }, { merge: true });

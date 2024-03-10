@@ -10,7 +10,7 @@ import { FavoriteRounded, FavoriteBorderRounded, SchoolOutlined, BackpackOutline
 
 const storage = getStorage();
 
-function HomePageWidget ({ name, desc, major, year, imageSrc , isFavorited }) {
+function HomePageWidget ({ name, desc, major, year, imageSrc , isFavorited, handleGoToProfile }) {
     const [favorited, setFavorited] = useState(isFavorited);
     const imageSrcFull = `assets/profilepics/${imageSrc}.png`
 
@@ -43,6 +43,7 @@ function HomePageWidget ({ name, desc, major, year, imageSrc , isFavorited }) {
         }}
     >
         <Grid container spacing={2}>
+            <div onClick={handleGoToProfile}>
             <Grid item>
                 <Stack direction="row" alignItems="center" spacing={5} sx={{ width: 500, height: 200 }}>
                     <AspectRatio
@@ -75,6 +76,7 @@ function HomePageWidget ({ name, desc, major, year, imageSrc , isFavorited }) {
                     </Stack>
                 </Stack>
             </Grid>
+            </div>
             <Grid item>
             <IconButton variant="plain" onClick={favoriteddata}>
                     {favorited ? (
