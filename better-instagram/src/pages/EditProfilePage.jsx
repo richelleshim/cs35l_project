@@ -8,18 +8,24 @@ import {
     Textarea,
     Divider
 } from '@mui/joy';
+import { doc, updateDoc, getDoc } from 'firebase/firestore';
+import { firestore } from '../firebase/firebase';
 import Stack from '@mui/material/Stack';
 import { useState, useRef } from 'react';
+import useAuthStore from "../store/authStore";
 
 export function EditProfilePage ({ close }) {
-    const [inputs, setInputs] = useState({
-        name: '',
-        username: '',
-        bio: '',
-        major: '',
-        year: ''
 
-    })
+    let userObj = useAuthStore((state) => state.user);
+    const [inputs, setInputs] = useState({
+        fullName: userObj.fullName,
+        username: userObj.username,
+        bio: userObj.bio,
+        major: userObj.major,
+        year: userObj.year
+
+    });
+
     const [imgSrc, setImgSrc] = useState('')
     const fileRef = useRef(null);
 
@@ -37,38 +43,25 @@ export function EditProfilePage ({ close }) {
         setImgSrc('')
         fileRef.current.value = ''
     }
-
-    const[isUpdating, setIsUpdating] = useState(false)
     
     const handleEditProfile = async()=>{
-        console.log('submit')
-        /*
-        if(isUpdating) return
-        setIsUpdating(true)
+        const userDocRef = doc(firestore, 'users', userObj.uid)
 
-        const storageRef = ref(storage, 'profilePics/${userIDpath}')
-        const userDocRef = doc(firestore, 'profiles', userID)
+        const updatedUser = {
+            fullName: inputs.fullName, 
+            username: inputs.username,
+            bio: inputs.bio,
+            major: inputs.major,
+            year: inputs.year
+        }
 
-        let URL = ''
-        try{
-            if(imgSrc){
-                await uploadString(storageRef, imgSrc, 'data_url')
-                URL = await getDownloadURL(ref(storage, 'profilePics/${userIDpath}'))
-            }
+        await updateDoc(userDocRef, updatedUser);
 
-            const updatedUser = {
-                ...authUser,
-                name: inputs.name || ogName, 
-                username: inputs.username || ogUsername,
-                bio: inputs.bio || ogBio,
-                profilePicURL: URL || ogprofilepic,
-            }
-
-            await updateDoc(userDocRef, updatedUser)
-
-        } catch(error){
-
-        }*/
+        const docSnap = await getDoc(userDocRef);
+        localStorage.setItem("user-info", JSON.stringify(docSnap.data()));
+        console.log("updated");
+        window.location.reload();
+        close();
     }
 
     return <Modal
@@ -122,8 +115,8 @@ export function EditProfilePage ({ close }) {
                         <FormLabel>Name</FormLabel>
                         <Input 
                             placeholder="Name" 
-                            value={inputs.name}
-                            onChange={(e) => setInputs({...inputs, name: e.target.value})}
+                            value={inputs.fullName}
+                            onChange={(e) => setInputs({...inputs, fullName: e.target.value})}
                         />
                     </FormControl>
                 </Stack>
@@ -174,7 +167,7 @@ export function EditProfilePage ({ close }) {
     
 }
 
-export default function EditProfilePageButton({ addedPost }) {
+export default function EditProfilePageButton({ inputs }) {
   const [openModal, setOpenModal] = useState(false);
 
   const click = () => {
