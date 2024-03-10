@@ -18,7 +18,7 @@ function HomePage() {
   const [usersList, setUsersList] = useState([])
   const [userWithImageList, setUserWithImageList] = useState([]) //List of users with profile pictures loaded
   const usersCollectionRef = collection(firestore, 'users')
-  const navigate = useNavigate();
+  //const navigate = useNavigate();
   
 
   useEffect(()=>{ 
@@ -68,7 +68,7 @@ function HomePage() {
     
 const handleGoToProfile =()=>{
   console.log('click')
-  navigate("/profile")
+  //navigate("/profile")
 }
 
   return (
@@ -84,6 +84,7 @@ const handleGoToProfile =()=>{
                         name={user.fullName}
                         desc={user.bio}
                         major={user.major}
+                        uid = {user.uid}
                         year={user.year}
                         imageSrc={user.profilePicURL}
                       />  
