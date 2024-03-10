@@ -1,109 +1,74 @@
-// import React from "react";
-// import { useNavigate } from "react-router-dom";
-// import Box from "@mui/joy/Box";
-// import List from "@mui/joy/List";
-// import ListDivider from "@mui/joy/ListDivider";
-// import ListItem from "@mui/joy/ListItem";
-// import ListItemButton from "@mui/joy/ListItemButton";
-// import Home from "@mui/icons-material/Home";
-// import Person from "@mui/icons-material/Person";
-// import { FavoriteRounded } from "@mui/icons-material";
-// import { Stack } from "@mui/joy";
-
-// const NavBar = () => {
-//   const navigate = useNavigate();
-//   return (
-//     <Stack direction="row">
-//       <Box component="nav" aria-label="My site" sx={{ flexGrow: 1 }}>
-//         <List role="menubar" orientation="horizontal">
-//           <Stack direction="row">
-//             <ListItem role="none">
-//               <ListItemButton
-//                 onClick={() => navigate("/home")}
-//                 role="menuitem"
-//                 component="a"
-//                 aria-label="Home"
-//               >
-//                 <Home />
-//               </ListItemButton>
-//             </ListItem>
-//             <ListDivider />
-//             <ListItem role="none">
-//               <ListItemButton
-//                 onClick={() => navigate("/favorites")}
-//                 role="menuitem"
-//                 component="a"
-//                 aria-label="Favorite"
-//               >
-//                 <FavoriteRounded />
-//               </ListItemButton>
-//             </ListItem>
-//             <ListDivider />
-//             <ListItem role="none">
-//               <ListItemButton
-//                 onClick={() => navigate("/profile")}
-//                 role="menuitem"
-//                 component="a"
-//                 aria-label="Profile"
-//               >
-//                 <Person />
-//               </ListItemButton>
-//             </ListItem>
-//           </Stack>
-//         </List>
-//       </Box>
-//     </Stack>
-//   );
-// };
-
-// export default NavBar;
-
-import React from "react";
-import { useNavigate } from "react-router-dom";
-import {
-  Stack
-} from "@mui/joy";
+import React, { useState, Fragment } from "react";
 import Box from "@mui/joy/Box";
+import IconButton from "@mui/joy/IconButton";
+import Drawer from "@mui/joy/Drawer";
+import Input from "@mui/joy/Input";
 import List from "@mui/joy/List";
-import ListItem from "@mui/joy/ListItem";
 import ListItemButton from "@mui/joy/ListItemButton";
-import Home from "@mui/icons-material/Home";
-import Person from "@mui/icons-material/Person";
-import { FavoriteRounded } from "@mui/icons-material";
+import Typography from "@mui/joy/Typography";
+import ModalClose from "@mui/joy/ModalClose";
+import Menu from "@mui/icons-material/Menu";
+import Search from "@mui/icons-material/Search";
+import { ListDivider, ListItem, Stack } from "@mui/joy";
+import { FavoriteRounded, Home, Person } from "@mui/icons-material";
+import { useNavigate } from "react-router-dom";
 
-const NavBar = () => {
+export default function DrawerMobileNavigation() {
+  const [open, setOpen] = useState(false);
   const navigate = useNavigate();
 
   return (
-    <Stack direction="row" sx={{ width: "100%", height: "100vh" }}>
+    <Fragment>
       <Box
-        sx={{
-          display: "flex",
-          flexDirection: "column",
-          alignItems: "flex-start",
-          position: "fixed", // This makes the navbar fixed
-          left: 0, // Stick to the left side
-          top: 0, // Stick to the top
-          height: "100%", // Full height
-          width: "max-content", // Width of the content
-          padding: "16px",
-          gap: "8px",
-          bgcolor: "background.surface",
-          zIndex: 1200, // Ensures it's above other content
-        }}
+        onClick={() => setOpen(true)}
+        sx={{ "&:hover": { cursor: "pointer" } }}
       >
-        {/* Bruingram Logo */}
+        <Stack direction="row" spacing={2}>
+          <img src="./bruinicon.png" alt="Bruingram" width={40} height={40} />
+          <Box>
+            <img
+              src="public/Bruingram.png"
+              loading="lazy"
+              alt=""
+              // height={xs:}
+            />
+          </Box>
+        </Stack>
+      </Box>
+      <Drawer open={open} onClose={() => setOpen(false)}>
         <Box
-          onClick={() => navigate("/home")}
-          sx={{ "&:hover": { cursor: "pointer" } }}
+          sx={{
+            display: "flex",
+            alignItems: "center",
+            gap: 0.5,
+            ml: "auto",
+            mt: 1,
+            mr: 2,
+          }}
         >
-          <Stack direction="row" spacing={2}>
-            <img src="./bruinicon.png" alt="Bruingram" width={40} height={40} />
-            <img src="public/Bruingram.png" loading="lazy" alt="" height={50} />
-          </Stack>
+          <Typography
+            component="label"
+            htmlFor="close-icon"
+            fontSize="sm"
+            fontWeight="lg"
+            sx={{ cursor: "pointer" }}
+          >
+            Close
+          </Typography>
+          <ModalClose id="close-icon" sx={{ position: "initial" }} />
         </Box>
-        <List sx={{ width: "100%" }} role="menubar" orientation="vertical">
-          <Stack spacing={3}>
+
+        <List
+          size="lg"
+          component="nav"
+          sx={{
+            flex: "none",
+            fontSize: "xl",
+            "& > div": { justifyContent: "center" },
+          }}
+          role="menubar"
+        >
+          <Stack direction="column">
             <ListItem role="none">
               <ListItemButton
                 onClick={() => navigate("/home")}
@@ -111,13 +76,10 @@ const NavBar = () => {
                 component="a"
                 aria-label="Home"
               >
-                <Home />
-                <Box component="span" sx={{ marginLeft: "8px" }}>
-                  Home
-                </Box>
+                <Home /> Home
               </ListItemButton>
             </ListItem>
-            {/* <ListDivider /> */}
+            <ListDivider />
             <ListItem role="none">
               <ListItemButton
                 onClick={() => navigate("/favorites")}
@@ -125,13 +87,10 @@ const NavBar = () => {
                 component="a"
                 aria-label="Favorite"
               >
-                <FavoriteRounded />
-                <Box component="span" sx={{ marginLeft: "8px" }}>
-                  Favorites
-                </Box>
+                <FavoriteRounded /> Favorites
               </ListItemButton>
             </ListItem>
-            {/* <ListDivider /> */}
+            <ListDivider />
             <ListItem role="none">
               <ListItemButton
                 onClick={() => navigate("/profile")}
@@ -139,44 +98,93 @@ const NavBar = () => {
                 component="a"
                 aria-label="Profile"
               >
-                <Person />{" "}
-                <Box component="span" sx={{ marginLeft: "8px" }}>
-                  Profile
-                </Box>
+                <Person /> Profile
               </ListItemButton>
             </ListItem>
           </Stack>
         </List>
-        ;{/* Navigation List */}
-        {/* <List sx={{ width: "100%" }}>
-          <ListItemButton onClick={() => navigate("/home")}>
-            <Home />
-            <Box component="span" sx={{ marginLeft: "8px" }}>
-              Home
-            </Box>
-          </ListItemButton>
-          <ListItemButton onClick={() => navigate("/favorites")}>
-            <FavoriteRounded />
-            <Box component="span" sx={{ marginLeft: "8px" }}>
-              Favorites
-            </Box>
-          </ListItemButton>
-          <ListItemButton onClick={() => navigate("/profile")}>
-            <AccountCircle />
-            <Box component="span" sx={{ marginLeft: "8px" }}>
-              Profile
-            </Box>
-          </ListItemButton>
-        </List>
-        ; */}
-      </Box>
-
-      {/* Rest of the page content */}
-      <Box sx={{ flexGrow: 1, bgcolor: "background.default" }}>
-        {/* Your page content goes here */}
-      </Box>
-    </Stack>
+      </Drawer>
+    </Fragment>
   );
-};
+}
 
-export default NavBar;
+{
+  /* <IconButton
+variant="outlined"
+color="neutral"
+onClick={() => setOpen(true)}
+>
+<Menu />
+</IconButton> */
+}
+// import React from "react";
+// import { useNavigate } from "react-router-dom";
+// import Box from "@mui/joy/Box";
+// import List from "@mui/joy/List";
+// import ListDivider from "@mui/joy/ListDivider";
+// import ListItem from "@mui/joy/ListItem";
+// import ListItemButton from "@mui/joy/ListItemButton";
+// import { FavoriteRounded, Person, Home } from "@mui/icons-material";
+// import { Stack } from "@mui/joy";
+
+// const NavBar = () => {
+//   const navigate = useNavigate();
+//   return (
+//     <Box component="nav" aria-label="My site" sx={{ flexGrow: 1 }}>
+//       <Box
+//         onClick={() => navigate("/home")}
+//         sx={{ "&:hover": { cursor: "pointer" } }}
+//       >
+//         <Stack direction="row" spacing={2}>
+//           <img src="./bruinicon.png" alt="Bruingram" width={40} height={40} />
+//           <Box>
+//             <img
+//               src="public/Bruingram.png"
+//               loading="lazy"
+//               alt=""
+//               // height={xs:}
+//             />
+//           </Box>
+//         </Stack>
+//       </Box>
+// <List role="menubar">
+//   <Stack direction="column">
+//     <ListItem role="none">
+//       <ListItemButton
+//         onClick={() => navigate("/home")}
+//         role="menuitem"
+//         component="a"
+//         aria-label="Home"
+//       >
+//         <Home /> Home
+//       </ListItemButton>
+//     </ListItem>
+//     <ListDivider />
+//     <ListItem role="none">
+//       <ListItemButton
+//         onClick={() => navigate("/favorites")}
+//         role="menuitem"
+//         component="a"
+//         aria-label="Favorite"
+//       >
+//         <FavoriteRounded /> Favorites
+//       </ListItemButton>
+//     </ListItem>
+//     <ListDivider />
+//     <ListItem role="none">
+//       <ListItemButton
+//         onClick={() => navigate("/profile")}
+//         role="menuitem"
+//         component="a"
+//         aria-label="Profile"
+//       >
+//         <Person /> Profile
+//       </ListItemButton>
+//     </ListItem>
+//   </Stack>
+// </List>
+//     </Box>
+//   );
+// };
+
+// export default NavBar;

@@ -13,7 +13,7 @@ function ProfilePage() {
     <>
       <Stack direction="row">
         <NavBar />
-        <Box>
+        <Box component="main" sx={{ flexGrow: 1, p: 3 }}>
           <ProfileDetails />
           <AddPostButton
             addedPost={() => {

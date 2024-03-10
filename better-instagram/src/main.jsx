@@ -9,12 +9,10 @@ import ProfilePage from './pages/ProfilePage.jsx'
 import FavoritesPage from './pages/FavoritesPage.jsx'
 import { Children } from 'react';
 import { Box, Typography } from '@mui/joy';
-import useAuthStore from "./store/authStore";
 
 
 
 function Wrapper({ children }) {
-  let username = useAuthStore((state) => state.username)
   return <>
     <Box sx={{
       alignItems: 'center',
@@ -30,7 +28,6 @@ function Wrapper({ children }) {
         margin: "auto"
       }}>
         <RouterProvider router={router}/>
-        <Typography level="h1">Username: {username}</Typography>
       </Box>
     </Box>
   </>;

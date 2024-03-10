@@ -169,6 +169,9 @@ export function PostWidget({ close, addedPost }) {
         {selectedFileURL &&
           <Button sx={{ mt: 3, pt: 1.5, pb: 1.5, width: "100%" }} onClick={() => post()}>Post!</Button>
         }
+        <Button sx={{ mt: 3 }} variant="outlined" color="neutral" onClick={close}>
+          Cancel
+        </Button>
         {/* Aesthetic margin */}
         <Box sx={{ mb: 5 }} />
       </Box>
