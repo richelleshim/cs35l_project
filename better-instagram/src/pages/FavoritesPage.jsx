@@ -1,7 +1,7 @@
-import { useState } from "react";
-import Button from "@mui/joy/Button";
+import { useState, useEffect } from "react";
 import Stack from "@mui/joy/Stack";
 import Box from "@mui/joy/Box";
+import HomePageWidget from "../components/Home/HomePageWidget";
 import { styled } from "@mui/joy/styles";
 import {
   AspectRatio,
@@ -13,23 +13,26 @@ import {
 } from "@mui/joy";
 import { Favorite, FavoriteBorder } from "@mui/icons-material";
 import NavBar from "../components/NavBar/NavBar";
+import {firestore} from '../firebase/firebase';
+import { getDocs, collection} from 'firebase/firestore'
+import {
+  getStorage,
+  ref,
+  getDownloadURL,
+  deleteObject,
+} from "firebase/storage";
 
-const Title = styled("h2")({
-  fontFamily: "Lobster, cursive",
-  fontWeight: "bold",
-  textAlign: "center",
-  marginTop: "10px", // Adjust as needed
-  color: "black",
-});
 
+//not using for now, because will pull from homepagewidget styling
 const UserCard = ({ user }) => {
   const { name, major, year, imageUrl } = user;
   const [isFavorite, setIsFavorite] = useState(true); // State to track favorite status
+  //const[favoritedProfilesList, setfavoritedProfilesList] = useState([]); //list of which profiles you favorited; fetch from firestore field
 
-  // Function to toggle favorite status
-  const handleFavoriteToggle = () => {
+  // Function to toggle favorite status (for now get rid of: only show the favorited profiles from firestore; enable deleting later)
+  /*const handleFavoriteToggle = () => {
     setIsFavorite((prev) => !prev);
-  };
+  };*/
 
   return (
     <Card
@@ -50,7 +53,7 @@ const UserCard = ({ user }) => {
       <IconButton
         sx={{ position: "absolute", top: "8px", right: "8px" }} // Adjust position
         size="small"
-        onClick={handleFavoriteToggle} // Toggle favorite status on click
+        //onClick={handleFavoriteToggle} // Toggle favorite status on click (update later)
       >
         {isFavorite ? <Favorite /> : <FavoriteBorder />}
       </IconButton>
@@ -63,6 +66,7 @@ const UserCard = ({ user }) => {
           style={{ width: "100%", height: "100%", objectFit: "cover" }}
         />
       </AspectRatio>
+
       <CardContent sx={{ flex: 1 }}>
         <Typography fontSize="xl" fontWeight="lg">
           {name}
@@ -90,10 +94,10 @@ const Item = styled("div")(({ theme }) => ({
 }));
 
 const FavoritesPage = () => {
-  // Define an array of user data (for demonstration purposes)
+  // Define an array of user data (for demonstration purposes) **not used right now
   const users = [
     {
-      name: "Happy Name",
+      name: "Happy Name", //have to get from firestore fetch profile data by uid
       major: "Theater Studies",
       year: "Class of 26",
       imageUrl:
@@ -101,6 +105,27 @@ const FavoritesPage = () => {
     },
     // Add more user data as needed
   ];
+  const[favoritesList, setFavoritesList] = useState([]);
+  const favoritesCollectionRef = collection(firestore, 'favoritedprofiles')
+  //const [currentIndex, setCurrentIndex] = useState(null);
+
+
+  useEffect(()=> {
+    const getFavoritedList = async () => {
+        try{
+            const data = await getDocs(favoritesCollectionRef);
+            const filteredData = data.docs.map((doc) => ({
+                ...doc.data(),
+                id: doc.id
+            }))
+            setFavoritesList(filteredData);
+        } catch(err){
+            console.error(err)
+        }
+    };
+
+    getFavoritedList();
+}, []);
 
   return (
     <>
@@ -117,29 +142,16 @@ const FavoritesPage = () => {
               color: "black",
             }}
           />
-          {/* <Title>Bruinstagram</Title> */}
-          {/* <img src="./Bruingram.png" /> */}
           <Stack spacing={3}>
-            {users.map((user, index) => (
-              <UserCard key={index} user={user} />
-            ))}
-
-            {users.map((user, index) => (
-              <UserCard key={index} user={user} />
-            ))}
-
-            {users.map((user, index) => (
-              <UserCard key={index} user={user} />
-            ))}
-
-            {users.map((user, index) => (
-              <UserCard key={index} user={user} />
-            ))}
-
-            {users.map((user, index) => (
-              <UserCard key={index} user={user} />
-            ))}
-          </Stack>
+          {favoritesList.map((favorite, index) => (
+            <HomePageWidget
+              //key={index}
+              name={favorite.favoriteduid.fullName}
+              major={favorite.favoriteduid.major}
+              year={favorite.favoriteduid.year}
+            />
+          ))}
+        </Stack> 
         </div>
       </Stack>
     </>
