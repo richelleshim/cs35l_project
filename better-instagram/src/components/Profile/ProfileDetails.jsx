@@ -81,7 +81,7 @@ export default function BottomActionsCard() {
       >
         <Stack sx={{mb: 2}} direction="row" spacing={2}>
           {
-            userObj.uid == null ?
+            userObj.uid == selfUserObj.uid ?
             <EditProfilePage></EditProfilePage> /* I own this profile */
             : null
           }
