@@ -1,18 +1,62 @@
 import * as React from "react";
 import useAuthStore from "../../store/authStore";
 import EditProfilePage from "../../pages/EditProfilePage";
-import { Box, Button, Avatar, Stack, Typography, IconButton } from "@mui/joy";
+import { Box, Avatar, Stack, Typography, IconButton } from "@mui/joy";
+import { useState, useEffect } from 'react';
+import {
+  getStorage,
+  ref,
+  getDownloadURL,
+} from "firebase/storage";
+import { query, collection, where, getDocs } from 'firebase/firestore'
+import { firestore } from "../../firebase/firebase";
 import { SchoolOutlined, BackpackOutlined, FavoriteBorder } from '@mui/icons-material';
-import { useNavigate } from "react-router-dom";
+import { useSearchParams } from "react-router-dom";
 
 export default function BottomActionsCard() {
-  const navigate = useNavigate();
-  let userObj = useAuthStore((state) => state.user());
-  if (userObj == null) {
-    return <h1>Not Logged In</h1>;
-  }
+  let [imgSrc, setImgSrc] = useState("");
+  let [userObj, setUserObj] = useState({});
+  const [searchParams, setSearchParams] = useSearchParams();
+  let selfUserObj = useAuthStore((state) => state.user());
 
-  return (
+  useEffect(() => {
+    let internalUserObj = userObj;
+    //Load in user profile pictures
+    const loadUser = async () => {
+      let uid = searchParams.get("uid")
+      if (uid == null) {
+        // load the user's own profile
+        internalUserObj = selfUserObj;
+      } else {
+        // load the uid's profile
+        const q = query(collection(firestore, "users"), where("uid", "==", uid));
+        const querySnapshot = await getDocs(q);
+
+        if(querySnapshot.empty) {
+          console.log("user not found");
+          internalUserObj = null;
+        }
+        querySnapshot.forEach((doc) => {
+          internalUserObj = doc.data();
+        });
+      }
+
+      // load profile picture
+      const storage = getStorage();
+      let url
+      if (internalUserObj.profilePicURL) {
+        url = await getDownloadURL(ref(storage, internalUserObj.profilePicURL));
+      }
+      setUserObj(internalUserObj);
+      setImgSrc(url);
+    };
+
+    loadUser();
+}, []);
+
+  return <>{
+    (userObj == {} || userObj == null) ?
+    <h1>Not logged in, or invalid uid</h1> :
     <Stack 
       sx={{mt: 5, mb: 5}}
       direction="row" 
@@ -25,7 +69,7 @@ export default function BottomActionsCard() {
           width: 250
         }}
       >
-        <Avatar src="/static/images/avatar/1.jpg" size="" 
+        <Avatar src={imgSrc} size="" 
           sx={{
             width: 250,
             height: 250,
@@ -36,7 +80,11 @@ export default function BottomActionsCard() {
         direction="column" 
       >
         <Stack sx={{mb: 2}} direction="row" spacing={2}>
-          <EditProfilePage></EditProfilePage>
+          {
+            userObj.uid == selfUserObj.uid ?
+            <EditProfilePage></EditProfilePage> /* I own this profile */
+            : null
+          }
           <IconButton variant="outlined" color="neutral">
             <FavoriteBorder />
           </IconButton>
@@ -60,5 +108,5 @@ export default function BottomActionsCard() {
         </Stack>
       </Stack>
     </Stack>
-  );
+  }</>;
 }
