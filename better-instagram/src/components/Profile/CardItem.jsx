@@ -5,9 +5,9 @@ import { useState, useEffect } from 'react'
 
 import { getStorage, ref, getDownloadURL } from "firebase/storage";
 
-export default function CardItem({image, onCardClick}){
+export default function CardItem({imageUrl, onCardClick}){
     const [imgSrc, setImgSrc] = useState('');
-
+/*
     useEffect(()=>{
         // load the image based off of the image key
         const updateImage = async () => {
@@ -22,17 +22,18 @@ export default function CardItem({image, onCardClick}){
         };
 
         updateImage();
-    }, []);
+    }, []);*/
 
     return(
         <>
         <Card sx={{ width:250, height:250, flexGrow: 1}}>
             <CardCover>
                 <img
-                    id={"img"+image}
-                    src={imgSrc}
+                    id={"img"+imageUrl}
+                    src={imageUrl}
                     alt='image'
                 /> 
+
                 <Link overlay onClick={onCardClick}/>  
             </CardCover>
         </Card>

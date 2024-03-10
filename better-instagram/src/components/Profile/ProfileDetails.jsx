@@ -8,8 +8,10 @@ import CardActions from "@mui/joy/CardActions";
 import IconButton from "@mui/joy/IconButton";
 import Typography from "@mui/joy/Typography";
 import FavoriteBorder from "@mui/icons-material/FavoriteBorder";
+import { useNavigate } from "react-router-dom";
 
 export default function BottomActionsCard() {
+  const navigate = useNavigate();
   return (
     <Grid>
       <Box
@@ -46,7 +48,7 @@ export default function BottomActionsCard() {
         <IconButton variant="outlined" color="neutral">
           <FavoriteBorder />
         </IconButton>
-        <Button variant="outlined" color="neutral">
+        <Button onClick={() => navigate("/editprofile")} variant="outlined" color="neutral">
           Edit Profile
         </Button>
       </CardActions>
