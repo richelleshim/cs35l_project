@@ -3,12 +3,14 @@ import useAuthStore from "../../store/authStore";
 import EditProfilePage from "../../pages/EditProfilePage";
 import { Box, Button, Avatar, Stack, Typography, IconButton } from "@mui/joy";
 import { SchoolOutlined, BackpackOutlined, FavoriteBorder } from '@mui/icons-material';
+import { useNavigate } from "react-router-dom";
 
 export default function BottomActionsCard() {
-  let userObj = useAuthStore((state) => state.user);
-  let major = userObj.major;
-  let year = userObj.year;
-  let bio = userObj.bio;
+  const navigate = useNavigate();
+  let userObj = useAuthStore((state) => state.user());
+  if (userObj == null) {
+    return <h1>Not Logged In</h1>;
+  }
 
   return (
     <Stack 
@@ -41,18 +43,18 @@ export default function BottomActionsCard() {
         </Stack>
         <Typography level="h1">{userObj.fullName}</Typography>
         <Typography level="h4">@{userObj.username}</Typography>
-        <Typography sx={{mt: 2, mb: 2}}>{bio}</Typography>
+        <Typography sx={{mt: 2, mb: 2}}>{userObj.bio}</Typography>
         <Stack direction="row" alignItems="center" spacing={10}>
           <Stack sx={{mt: 1, mb: 0.5}} direction="row" alignItems="center" spacing={1}>
               <BackpackOutlined sx={{ fontSize: 30 }} />
               <Typography>
-                  {major}
+                  {userObj.major}
               </Typography>
           </Stack>
           <Stack sx={{mt: 0.5, mb: 2}} direction="row" alignItems="center" spacing={1}>
               <SchoolOutlined sx={{ fontSize: 30 }} />
               <Typography>
-                  Class of '{year}
+                  Class of '{userObj.year}
               </Typography>
           </Stack>
         </Stack>

@@ -91,7 +91,7 @@ export function PostWidget({ close, addedPost }) {
     setCaption(event.target.value);
   };
 
-  return <Modal
+return <Modal
     open={true}
     onClose={close}
     sx={{

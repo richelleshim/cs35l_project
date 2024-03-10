@@ -6,11 +6,14 @@ import {
   FormLabel,
   IconButton,
   Input,
-  Stack
+  Stack,
+  Typography
 } from "@mui/joy";
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { doc, getDoc } from "firebase/firestore";
 import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
+import { firestore } from '../../firebase/firebase';
 
 const Login = () => {
   const [inputs, setInputs] = useState({
@@ -25,9 +28,14 @@ const Login = () => {
   const login = async ({ email, password }) => {
     const auth = getAuth();
     try {
-      await signInWithEmailAndPassword(auth, email, password);
+      localStorage.removeItem("user-info");
+      var userObj = await signInWithEmailAndPassword(auth, email, password);
       // take to home page if successful
-      navigate("/home");
+      const userDocRef = doc(firestore, 'users', userObj.user.uid)
+      const docSnap = await getDoc(userDocRef);
+      localStorage.setItem("user-info", JSON.stringify(docSnap.data()));
+      console.log(docSnap.data())
+      navigate("/profile");
     } catch (error) {
       // display error message if unsuccessful
       setLoginError("Login Failed");
