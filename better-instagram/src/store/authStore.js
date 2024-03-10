@@ -2,7 +2,6 @@ import { create } from "zustand";
 
 function getUser() {
   let a = localStorage.getItem("user-info");
-  console.log(a);
   return JSON.parse(a);
 }
 
