@@ -20,12 +20,13 @@ export default function BottomActionsCard() {
   let selfUserObj = useAuthStore((state) => state.user());
 
   useEffect(() => {
+    let internalUserObj = userObj;
     //Load in user profile pictures
     const loadUser = async () => {
       let uid = searchParams.get("uid")
       if (uid == null) {
         // load the user's own profile
-        setUserObj(selfUserObj);
+        internalUserObj = selfUserObj;
       } else {
         // load the uid's profile
         const q = query(collection(firestore, "users"), where("uid", "==", uid));
@@ -33,25 +34,21 @@ export default function BottomActionsCard() {
 
         if(querySnapshot.empty) {
           console.log("user not found");
-          setUserObj(null);
+          internalUserObj = null;
         }
         querySnapshot.forEach((doc) => {
-          setUserObj(doc.data());
+          internalUserObj = doc.data();
         });
       }
 
       // load profile picture
       const storage = getStorage();
-      try{
-        let url
-        if (userObj.profilePicURL) {
-          url = await getDownloadURL(ref(storage, userObj.profilePicURL));
-          console.log(url)
-        }
-        setImgSrc(url);
-      } catch(err){
-        console.error(err)
+      let url
+      if (internalUserObj.profilePicURL) {
+        url = await getDownloadURL(ref(storage, internalUserObj.profilePicURL));
       }
+      setUserObj(internalUserObj);
+      setImgSrc(url);
     };
 
     loadUser();
