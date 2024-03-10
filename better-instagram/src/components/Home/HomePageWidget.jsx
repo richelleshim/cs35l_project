@@ -10,10 +10,10 @@ import { FavoriteRounded, FavoriteBorderRounded, SchoolOutlined, BackpackOutline
 
 const storage = getStorage();
 
-function HomePageWidget ({ name, desc, major, year, uid, imageSrc }) {
-    const [favorited, setFavorited] = useState(false); //og isFavorited
-    const [userData, setUserData] = useState(null);
+function HomePageWidget ({ name, desc, major, year, uid, imageSrc , isFavorited, handleGoToProfile }) {
+    const [favorited, setFavorited] = useState(false);
     const imageSrcFull = `assets/profilepics/${imageSrc}.png`
+    const [userData, setUserData] = useState(null);
 
     useEffect(() => {
         // Check favorited status from localStorage when component mounts
@@ -73,6 +73,7 @@ function HomePageWidget ({ name, desc, major, year, uid, imageSrc }) {
         }}
     >
         <Grid container spacing={2}>
+            <div onClick={handleGoToProfile}>
             <Grid item>
                 <Stack direction="row" alignItems="center" spacing={5} sx={{ width: 500, height: 200 }}>
                     <AspectRatio
@@ -105,6 +106,7 @@ function HomePageWidget ({ name, desc, major, year, uid, imageSrc }) {
                     </Stack>
                 </Stack>
             </Grid>
+            </div>
             <Grid item>
             <IconButton variant="plain" onClick={toggleFavorite}>
                         {favorited ? (

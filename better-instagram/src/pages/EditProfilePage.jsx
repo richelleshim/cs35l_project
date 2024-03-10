@@ -8,12 +8,18 @@ import {
     Textarea,
     Divider
 } from '@mui/joy';
-import { doc, updateDoc, getDoc } from 'firebase/firestore';
+import { doc, updateDoc, getDoc, setDoc } from 'firebase/firestore';
 import { firestore } from '../firebase/firebase';
 import Stack from '@mui/material/Stack';
-import { useState, useRef } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import { useNavigate } from "react-router-dom";
 import useAuthStore from "../store/authStore";
+import {
+  getStorage,
+  ref,
+  getDownloadURL,
+  uploadBytesResumable
+} from "firebase/storage";
 
 export function EditProfilePage ({ close }) {
 
@@ -34,22 +40,55 @@ export function EditProfilePage ({ close }) {
     const [imgSrc, setImgSrc] = useState('')
     const fileRef = useRef(null);
 
-    const updateImage = (e) => {
+    const updateImage = async (e) => {
         const file = e.target.files[0]
-        const reader = new FileReader()
 
-        reader.onloadend =()=>{
-            setImgSrc(reader.result)
+        if (file) {
+            // set image id of the post to the post id
+            let imageId = userObj.uid
+            const userRef = doc(firestore, 'users', userObj.uid)
+            let profilePicURL = `profilePictures/${imageId}.png`;
+            updateDoc(userRef, {profilePicURL: profilePicURL });
+
+            // Create the file metadata
+            /** @type {any} */
+            const metadata = {
+                contentType: 'image/png'
+            };
+
+            const storage = getStorage();
+            const storageRef = ref(storage, `profilePictures/${imageId}.png`);
+            const uploadTask = uploadBytesResumable(storageRef, file, metadata);
+            setImgSrc(profilePicURL);
+            const docSnap = await getDoc(userRef);
+            localStorage.setItem("user-info", JSON.stringify(docSnap.data()));
+            window.location.reload();
+            console.log("done");
         }
-        reader.readAsDataURL(file)
     };
 
     const deleteImage =()=>{
         setImgSrc('')
         fileRef.current.value = ''
     }
+
+    useEffect(() => {
+        let internalUserObj = userObj;
+        //Load in user profile pictures
+        const loadUser = async () => {
+            // load profile picture
+            const storage = getStorage();
+            let url
+            if (internalUserObj.profilePicURL) {
+                url = await getDownloadURL(ref(storage, internalUserObj.profilePicURL));
+            }
+            setImgSrc(url);
+        };
+
+        loadUser();
+    }, []);
     
-    const handleEditProfile = async()=>{
+    const handleSaveChanges = async()=>{
         const userDocRef = doc(firestore, 'users', userObj.uid)
 
         const updatedUser = {
@@ -57,14 +96,13 @@ export function EditProfilePage ({ close }) {
             username: inputs.username,
             bio: inputs.bio,
             major: inputs.major,
-            year: inputs.year
+            year: inputs.year,
         }
 
         await updateDoc(userDocRef, updatedUser);
 
         const docSnap = await getDoc(userDocRef);
         localStorage.setItem("user-info", JSON.stringify(docSnap.data()));
-        console.log("updated");
         window.location.reload();
         close();
     }
@@ -99,9 +137,6 @@ export function EditProfilePage ({ close }) {
                         </Box>
                         <Stack direction={'column'} justifyContent="center" spacing={1}>
                             <Button onClick={() => fileRef.current.click()} variant="outlined" color="neutral">Change Photo</Button>
-                            <Button sx={{ color: '#464646', bgcolor: 'transparent',  '&:hover': { bgcolor: '#bfbfbf' }}}
-                                onClick={deleteImage}
-                            >Remove Photo</Button>
                             <input type="file" ref={fileRef} style={{ display: 'none' }} onChange={updateImage}/>
                         </Stack>
                     </Stack>
@@ -159,7 +194,7 @@ export function EditProfilePage ({ close }) {
 
                 <Stack direction='row' spacing={2} sx={{pt: 2}}>
                     <Button
-                        onClick={handleEditProfile}>
+                        onClick={handleSaveChanges}>
                         Save changes
                     </Button>
                     <Button variant="outlined" color="neutral" onClick={close}>
