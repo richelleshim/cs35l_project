@@ -3,12 +3,15 @@ import {
     Box, FormControl,
     FormLabel,
     Input,
-    Avatar
+    Avatar,
+    Modal,
+    Textarea,
+    Divider
 } from '@mui/joy';
 import Stack from '@mui/material/Stack';
 import { useState, useRef } from 'react';
 
-const EditProfilePage =()=>{
+export function EditProfilePage ({ close }) {
     const [inputs, setInputs] = useState({
         name: '',
         username: '',
@@ -68,25 +71,36 @@ const EditProfilePage =()=>{
         }*/
     }
 
-    return(
-        <>
-            <Box
+    return <Modal
+        open={true}
+        onClose={close}
+        sx={{
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center',
+        }}
+    >
+        <Box
             sx={{
                 bgcolor: '#FFFFFF',
                 borderRadius: 10,
-                p: 1.5,
                 display: 'flex',
                 flexDirection: 'column',
                 alignItems: 'center',
+                p: 8
             }}
+        >
+            <Stack 
+                direction="column" 
+                spacing={2}
             >
                 <FormControl id="userPhoto">
-                    <Stack direction={['column', 'row']} spacing={6}>
+                    <Stack direction='row' justifyContent="center" spacing={6} sx={{mb: 2}}>
                         <Box display="flex" justifyContent='center'>
-                            <Avatar src={imgSrc} sx={{ width: 100, height: 100}}/>
+                            <Avatar src={imgSrc} sx={{ width: 150, height: 150}}/>
                         </Box>
-                        <Stack direction={'column'}>
-                            <Button onClick={() => fileRef.current.click()}>Change Photo</Button>
+                        <Stack direction={'column'} justifyContent="center" spacing={1}>
+                            <Button onClick={() => fileRef.current.click()} variant="outlined" color="neutral">Change Photo</Button>
                             <Button sx={{ color: '#464646', bgcolor: 'transparent',  '&:hover': { bgcolor: '#bfbfbf' }}}
                                 onClick={deleteImage}
                             >Remove Photo</Button>
@@ -95,30 +109,34 @@ const EditProfilePage =()=>{
                     </Stack>
                 </FormControl>
 
-                <FormControl id="userName" required>
-                    <FormLabel>Username</FormLabel>
-                    <Input 
-                        placeholder="Username" 
-                        value={inputs.username}
-                        /*value={inputs.username || authUser.username}*/
-                        onChange={(e) => setInputs({...inputs, username: e.target.value})}
-                    />
-                </FormControl>
+                <Stack direction={'row'} justifyContent="center" spacing={1}>
+                    <FormControl id="Username" required>
+                        <FormLabel>Username</FormLabel>
+                        <Input 
+                            placeholder="Username" 
+                            value={`@${inputs.username}`}
+                            onChange={(e) => setInputs({...inputs, username: e.target.value.substring(1,e.target.value.length)})}
+                        />
+                    </FormControl>
+                    <FormControl id="Name" required>
+                        <FormLabel>Name</FormLabel>
+                        <Input 
+                            placeholder="Name" 
+                            value={inputs.name}
+                            onChange={(e) => setInputs({...inputs, name: e.target.value})}
+                        />
+                    </FormControl>
+                </Stack>
 
-                <FormControl id="Name" required>
-                    <FormLabel>Name</FormLabel>
-                    <Input 
-                        placeholder="Name" 
-                        value={inputs.name}
-                        onChange={(e) => setInputs({...inputs, name: e.target.value})}
-                    />
-                </FormControl>
+                <Divider />
 
                 <FormControl id="bio">
                 <FormLabel>Bio</FormLabel>
-                    <Input
-                        placeholder="Bio"
+                    <Textarea
+                        placeholder='Write a long bio here...'
                         value={inputs.bio}
+                        minRows={3}
+                        maxRows={3}
                         onChange={(e) => setInputs({...inputs, bio: e.target.value})}
                     />
                 </FormControl>
@@ -141,18 +159,39 @@ const EditProfilePage =()=>{
                     />
                 </FormControl>
 
-                <Stack direction={['column', 'row']} spacing={2}>
-                    <Button>
-                        Cancel
-                    </Button>
+                <Stack direction='row' spacing={2} sx={{pt: 2}}>
                     <Button
                         onClick={handleEditProfile}>
                         Save changes
                     </Button>
+                    <Button variant="outlined" color="neutral" onClick={close}>
+                        Cancel
+                    </Button>
                 </Stack>
-            </Box>
-        </>
-    )
+            </Stack>
+        </Box>
+    </Modal>;
+    
 }
-export default EditProfilePage
+
+export default function EditProfilePageButton({ addedPost }) {
+  const [openModal, setOpenModal] = useState(false);
+
+  const click = () => {
+    setOpenModal(!openModal);
+  }
+
+  return (
+    <>
+      <Button 
+        sx={{ m: 5 }} 
+        onClick={() => { click() }}
+        variant="outlined" color="neutral"
+      >Edit profile</Button>
+      {openModal && <EditProfilePage
+        close={() => { click() }}
+      />}
+    </>
+  );
+}
 
