@@ -1,5 +1,6 @@
 // import homepagewidget
 import HomePageWidget from "../components/Home/HomePageWidget";
+import FilterButton from "../components/Home/FilterButton";
 
 // import from MUI
 import { Stack, Box } from "@mui/joy";
@@ -11,6 +12,7 @@ function HomePage() {
       <Box sx={{ alignItems: "flex-start" }}>
         <NavBar />
       </Box>
+      <FilterButton />
       <Box
         component="main"
         sx={{
