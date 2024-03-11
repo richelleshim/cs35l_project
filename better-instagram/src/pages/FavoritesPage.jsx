@@ -13,15 +13,14 @@ import {
 } from "@mui/joy";
 import { Favorite, FavoriteBorder } from "@mui/icons-material";
 import NavBar from "../components/NavBar/NavBar";
-import {firestore} from '../firebase/firebase';
-import { getDocs, collection} from 'firebase/firestore'
+import { firestore } from "../firebase/firebase";
+import { getDocs, collection } from "firebase/firestore";
 import {
   getStorage,
   ref,
   getDownloadURL,
   deleteObject,
 } from "firebase/storage";
-
 
 //not using for now, because will pull from homepagewidget styling
 const UserCard = ({ user }) => {
@@ -95,34 +94,31 @@ const Item = styled("div")(({ theme }) => ({
 
 const FavoritesPage = () => {
   // Define an array of user data (for demonstration purposes) **not used right now
-  
-  const[favoritesList, setFavoritesList] = useState([]);
-  const favoritesCollectionRef = collection(firestore, 'favoritedprofiles')
+
+  const [favoritesList, setFavoritesList] = useState([]);
+  const favoritesCollectionRef = collection(firestore, "favoritedprofiles");
   //const [currentIndex, setCurrentIndex] = useState(null);
 
-
-  useEffect(()=> {
+  useEffect(() => {
     const getFavoritedList = async () => {
-        try{
-            const data = await getDocs(favoritesCollectionRef);
-            const filteredData = data.docs.map((doc) => ({
-                ...doc.data(),
-                id: doc.id
-            }))
-            setFavoritesList(filteredData);
-        } catch(err){
-            console.error(err)
-        }
+      try {
+        const data = await getDocs(favoritesCollectionRef);
+        const filteredData = data.docs.map((doc) => ({
+          ...doc.data(),
+          id: doc.id,
+        }));
+        setFavoritesList(filteredData);
+      } catch (err) {
+        console.error(err);
+      }
     };
 
     getFavoritedList();
-}, []);
+  }, []);
 
   return (
     <>
       <Stack direction="row">
-        <NavBar />
-
         <div className="FavoritesPage">
           <Favorite
             sx={{
@@ -134,14 +130,12 @@ const FavoritesPage = () => {
             }}
           />
           <Stack spacing={3}>
-          {favoritesList.map((favorite, index) => (
-            <HomePageWidget
-              key={index}
-              uid={favorite.favoriteuid}
-            />
-          ))}
-        </Stack> 
+            {favoritesList.map((favorite, index) => (
+              <HomePageWidget key={index} uid={favorite.favoriteuid} />
+            ))}
+          </Stack>
         </div>
+        <NavBar />
       </Stack>
     </>
   );
