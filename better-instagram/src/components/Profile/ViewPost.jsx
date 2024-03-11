@@ -87,31 +87,37 @@ export default function ViewPost({
       comments.push({ id: doc.id, ...doc.data() });
     });
     setCommentsList(comments);
-/*
+
     const getUsernameAndProfilePic = async () => {
       try {
         let url
+        console.log(uid)
         const ownerQuery = query(collection(firestore, 'users'), where("uid", "==", uid));
         const owner = await getDocs(ownerQuery);
 
         setOwnerUsername(owner.docs[0].data().username);
+        //console.log()
 
-        console.log('reach')
-        if(owner.docs[0].data().profilePicURL){
+        //if(owner.docs[0].data().profilePicURL){
+          //url = await getDownloadURL(ref(storage, owner.docs[0].data().profilePicURL));    
+       // }
+       // setOwnerProfilePic(url)
           
-          url = await getDownloadURL(ref(storage, owner.docs[0].data().profilePicURL));
+
+/*
+        
    
-        }
-        console.log(url)
-        setOwnerProfilePic(url)
-        console.log('there')
+        }*/
+        //console.log(url)
+        //setOwnerProfilePic(url)
+        //console.log('there')
 
       } catch (error) {
-        console.error("Cannot get username of: ", uid);
+        console.error("Cannot get user data of: ", uid);
       }
     };
     
-    getUsernameAndProfilePic();*/
+    getUsernameAndProfilePic();
     });
 
     return () => unsubscribe();
@@ -358,7 +364,6 @@ export default function ViewPost({
                     
                     {/*Commenter profile*/}
                     <Avatar sx={{ marginRight: "15px" }} src={comment.profilePicURL}/> 
-                    {console.log(comment.profilePicURL)}
 
                       {/*Commenter ID, comment timestamp, comment content*/}
                       <Stack direction='column' >

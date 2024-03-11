@@ -136,6 +136,7 @@ export default function Cards({uid}){
                         goForward={goForward}
                         likeClick={()=>toggleLike(currentIndex)}
                         liked={likes[currentIndex]}
+                        uid={uid}
                     />} 
                 </>;
             })}
