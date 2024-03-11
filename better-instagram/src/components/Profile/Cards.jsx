@@ -20,7 +20,7 @@ export default function Cards({uid}){
     const[postsList, setPostsList] = useState([]);
     const[imageUrlList, setImageUrlList] = useState([])
     const likesCollectionRef = collection(firestore, 'likes')
-    const orderedPostsQuery = query(collection(firestore, 'posts'), orderBy('timestamp', 'desc')); //query posts based on descending time stamp order
+    //const orderedPostsQuery = query(collection(firestore, 'posts'), orderBy('timestamp', 'desc')); //query posts based on descending time stamp order
 
     const [viewPost, setViewPost] = useState(false); 
     const [currentIndex, setCurrentIndex] = useState(null);
