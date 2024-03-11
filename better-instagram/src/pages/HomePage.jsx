@@ -1,6 +1,7 @@
 // import homepagewidget
 import HomePageWidget from "../components/Home/HomePageWidget";
 import FilterButton from "../components/Home/FilterButton";
+import { useNavigate } from 'react-router-dom';
 
 // import from MUI
 import { Stack, Box } from "@mui/joy";
@@ -19,6 +20,7 @@ function HomePage() {
   const [usersList, setUsersList] = useState([])
   const [userWithImageList, setUserWithImageList] = useState([]) //List of users with profile pictures loaded
   const usersCollectionRef = collection(firestore, 'users')
+  const navigate = useNavigate();
   const navigate = useNavigate();
   
 
@@ -88,15 +90,14 @@ const handleGoToProfile =(uid)=>{
   console.log('click')
   navigate(`/profile?uid=${uid}`)
 }
-
-  return <Stack direction="row">
-    <Stack>
+  return (
+    <>
+      <NavBar />
       <FilterButton />
-    </Stack>
-    <NavBar />
-    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '10px' }}>
+      <Stack direction="row">
+       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '10px' }}>
 
-      {userWithImageList.map((user) => (
+        {userWithImageList.map((user) => (
 
         <HomePageWidget
           key={user.id}
@@ -112,6 +113,8 @@ const handleGoToProfile =(uid)=>{
       ))}
     </div>
   </Stack>;
+  </>
+  );
 }
 
 export default HomePage;
