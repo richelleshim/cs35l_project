@@ -1,34 +1,63 @@
-import { useRef, useState, useEffect } from 'react';
+import CardItem from '../Profile/CardItem'
+import { useState, useEffect, Suspense } from 'react';
 import { firestore } from '../../firebase/firebase';
-import { setDoc, addDoc, deleteDoc, collection, doc, query, getDocs, where } from 'firebase/firestore';
-import { getStorage, ref, uploadBytesResumable } from "firebase/storage";
-import Avatar from "@mui/joy/Avatar";
+import { addDoc, deleteDoc, collection, doc, query, getDocs, where } from 'firebase/firestore';
+import { getStorage, ref, getDownloadURL } from "firebase/storage";
+import { Avatar } from "@mui/joy";
+import { Shimmer } from 'react-shimmer'
+
 
 // import all custom styling from MUI
-import { Card, Stack, Typography, AspectRatio, Grid, IconButton } from "@mui/joy";
+import { Card, Stack, Typography, AspectRatio, Grid, IconButton, Box } from "@mui/joy";
 import { FavoriteRounded, FavoriteBorderRounded, SchoolOutlined, BackpackOutlined } from '@mui/icons-material';
 
-const storage = getStorage();
-
-function HomePageWidget ({ name, desc, major, year, uid, imageSrc , isFavorited, handleGoToProfile }) {
-    const [favorited, setFavorited] = useState(false);
-    const imageSrcFull = `assets/profilepics/${imageSrc}.png`
-    const [userData, setUserData] = useState(null);
+function PostPicture ({ image, handleGoToProfile }) {
+    var [imageUrl, setImageUrl] = useState("");
 
     useEffect(() => {
-        // Check favorited status from localStorage when component mounts
-        const isFavorited = localStorage.getItem(uid) === 'true';
-        setFavorited(isFavorited);
-    }, [uid]);
+        const getImageUrl = async () => {
+            const storage = getStorage()
+            let url = await getDownloadURL(ref(storage, image));
+            setImageUrl(url);
+        };
+
+        getImageUrl();
+    });
+
+    if(imageUrl == "") {
+        return <Shimmer height={100}></Shimmer>;
+    } else {
+        return <CardItem sx={{display: "inline"}}small={true} imageUrl={imageUrl} onCardClick={() => handleGoToProfile} />;
+    }
+}
+
+function PostPreviews ({ postImages, handleGoToProfile }) {
+    if (!postImages) return <></>;
+
+    let outputObjects = [];
+    for (let i = 0; i < postImages.length; i++) {
+        outputObjects.push(
+            <PostPicture image={postImages[i]} handleGoToProfile={handleGoToProfile}/>
+        );
+    }
+    /*
+
+            */
+    return <Stack direction="row" sx={{ width: "500px" }} spacing={2}>
+        {outputObjects}
+    </Stack>;
+}
+
+function HomePageWidget ({ name, desc, major, year, uid, imageSrc, postImages, isFavorited, handleGoToProfile }) {
+    const [favorited, setFavorited] = useState(false);
+
 
     const toggleFavorite = () => {
         const newFavorited = !favorited;
         setFavorited(newFavorited);
         localStorage.setItem(uid, newFavorited ? 'true' : 'false');
-        // Call updateFirestore with newFavorited
         updateFirestore(newFavorited);
     };
-    
 
     const updateFirestore = async (newFavorited) => {
         try {
@@ -69,22 +98,23 @@ function HomePageWidget ({ name, desc, major, year, uid, imageSrc , isFavorited,
         sx={{
             boxShadow: 'lg',
             px: 4,
-            py: 4
+            py: 4,
+            cursor: "pointer"
         }}
     >
-        <Grid container spacing={2}>
-            <div onClick={handleGoToProfile}>
+        <Grid container spacing={2} onClick={handleGoToProfile}>
             <Grid item>
-                <Stack direction="row" alignItems="center" spacing={5} sx={{ width: 500, height: 200 }}>
-                    <AspectRatio
-                        ratio="1"
-                        sx={{ flex: 1, maxWidth: 180, borderRadius: '100%' }}
-                    >
-                        <Avatar src={imageSrc} sx={{ width: 180, height: 180 }} />
-                        
-                    </AspectRatio>
-                    
-                    <Stack direction="column" alignItems="flex-start" justifyContent="center" spacing={1}>
+                <Stack direction="row" alignItems="center" sx={{ width: 500,mb: 2 }}>
+                    <Box sx={{pr: 4}}>
+                        <AspectRatio
+                            ratio="1"
+                            sx={{ flex: 1, width: 100, borderRadius: '100%' }}
+                        >
+                            <Avatar src={imageSrc} sx={{ width: 120, height: 120 }} />
+                            
+                        </AspectRatio>
+                    </Box>
+                    <Stack direction="column" alignItems="flex-start" justifyContent="center" sx={{width: 400}}>
                         <Typography level="h2" textAlign="start">
                             {name}
                         </Typography>
@@ -92,30 +122,32 @@ function HomePageWidget ({ name, desc, major, year, uid, imageSrc , isFavorited,
                             {desc}
                         </Typography>
                         <Stack direction="row" alignItems="center" spacing={1}>
-                            <BackpackOutlined sx={{ fontSize: 30 }} />
-                            <Typography level="p">
-                                {major}
-                            </Typography>
-                        </Stack>
-                        <Stack direction="row" alignItems="center" spacing={1}>
-                            <SchoolOutlined sx={{ fontSize: 30 }} />
-                            <Typography level="p">
-                                Class of '{year}
-                            </Typography>
+                            <Stack direction="row" alignItems="center" spacing={1}>
+                                <BackpackOutlined sx={{ fontSize: 30 }} />
+                                <Typography level="p">
+                                    {major}
+                                </Typography>
+                            </Stack>
+                            <Stack direction="row" alignItems="center" spacing={1}>
+                                <SchoolOutlined sx={{ fontSize: 30 }} />
+                                <Typography level="p">
+                                    Class of '{year}
+                                </Typography>
+                            </Stack>
                         </Stack>
                     </Stack>
+                    <Box sx={{pl: 4}}>
+                        <IconButton variant="plain" onClick={toggleFavorite}>
+                            {favorited ? (
+                                <FavoriteRounded sx={{ fontSize: 30, color: "red" }} />
+                            ) : (
+                                <FavoriteBorderRounded sx={{ fontSize: 30 }} />
+                            )}
+                        </IconButton>
+                    </Box>
                 </Stack>
             </Grid>
-            </div>
-            <Grid item>
-            <IconButton variant="plain" onClick={toggleFavorite}>
-                        {favorited ? (
-                            <FavoriteRounded sx={{ fontSize: 30, color: "red" }} />
-                        ) : (
-                            <FavoriteBorderRounded sx={{ fontSize: 30 }} />
-                        )}
-                    </IconButton>
-            </Grid>
+            <PostPreviews postImages={postImages} handleGoToProfile={handleGoToProfile}/>
         </Grid>
     </Card>
     </>;

@@ -1,8 +1,10 @@
 // import homepagewidget
 import HomePageWidget from "../components/Home/HomePageWidget";
+import FilterButton from "../components/Home/FilterButton";
+import { useNavigate } from 'react-router-dom';
 
 // import from MUI
-import { Stack } from "@mui/joy";
+import { Stack, Box } from "@mui/joy";
 import NavBar from "../components/NavBar/NavBar";
 import {
   getStorage,
@@ -18,7 +20,7 @@ function HomePage() {
   const [usersList, setUsersList] = useState([])
   const [userWithImageList, setUserWithImageList] = useState([]) //List of users with profile pictures loaded
   const usersCollectionRef = collection(firestore, 'users')
-  //const navigate = useNavigate();
+  const navigate = useNavigate();
   
 
   useEffect(()=>{ 
@@ -26,17 +28,34 @@ function HomePage() {
     const getUsersList= async () => {
       try{
         const data = await getDocs(usersCollectionRef);
-        const filteredData = data.docs.map((doc) => ({
+        const users = data.docs.map((doc) => ({
           ...doc.data(),
           id: doc.id
-      }))
-        setUsersList(filteredData);
+        }))
+
+        // load the post previews
+        const q = collection(firestore, "posts");
+        const querySnapshot = await getDocs(q);
+
+        querySnapshot.forEach(async (doc) => {
+          let post = doc.data()
+            for (let i = 0; i < users.length; i++) {
+              if (!users[i].postImages) {
+                users[i].postImages= [];
+              }
+              if (users[i].uid === post.userId) {
+                users[i].postImages.push(post.image);
+              }
+            }
+        });
+
+        setUsersList(users);
       } catch(err){
         console.error(err)
       }
-      };
+    };
 
-      getUsersList();
+    getUsersList();
   }, []);
 
   useEffect(() => {
@@ -66,36 +85,34 @@ function HomePage() {
     loadImages();
 }, [usersList]);
     
-const handleGoToProfile =()=>{
+const handleGoToProfile =(uid)=>{
   console.log('click')
-  //navigate("/profile")
+  navigate(`/profile?uid=${uid}`)
 }
-
   return (
     <>
+      <NavBar />
+      <FilterButton />
       <Stack direction="row">
-        <NavBar />
+       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '10px' }}>
 
-     
-              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '10px' }}>
-                
-                {userWithImageList.map((user) => (
-                    
-                      <HomePageWidget
-                        key={user.id}
-                        name={user.fullName}
-                        desc={user.bio}
-                        major={user.major}
-                        uid = {user.uid}
-                        year={user.year}
-                        imageSrc={user.profilePicURL}
-                        handleGoToProfile={handleGoToProfile}
-                      />  
-                    
-                ))}
-              </div>
-      </Stack>
-    </>
+        {userWithImageList.map((user) => (
+
+        <HomePageWidget
+          key={user.id}
+          name={user.fullName}
+          desc={user.bio}
+          major={user.major}
+          year={user.year}
+          imageSrc={user.profilePicURL}
+          postImages={user.postImages || []}
+          handleGoToProfile={() => handleGoToProfile(user.id)}
+        />
+
+      ))}
+    </div>
+  </Stack>;
+  </>
   );
 }
 
