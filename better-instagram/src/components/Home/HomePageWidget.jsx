@@ -51,8 +51,14 @@ function PostPreviews ({ postImages, handleGoToProfile }) {
 function HomePageWidget ({ name, desc, major, year, uid, imageSrc, postImages, isFavorited, handleGoToProfile }) {
     const [favorited, setFavorited] = useState(false);
 
+    useEffect(() => {
+        // Fetch favorited status from local storage
+        const isFavoritedLocally = localStorage.getItem(uid) === 'true';
+        setFavorited(isFavoritedLocally);
+    }, [uid]); // Update whenever the uid changes
 
     const toggleFavorite = () => {
+        console.log("Toggle favorite called");
         const newFavorited = !favorited;
         setFavorited(newFavorited);
         localStorage.setItem(uid, newFavorited ? 'true' : 'false');
@@ -137,13 +143,13 @@ function HomePageWidget ({ name, desc, major, year, uid, imageSrc, postImages, i
                         </Stack>
                     </Stack>
                     <Box sx={{pl: 4}}>
-                        <IconButton variant="plain" onClick={toggleFavorite}>
-                            {favorited ? (
-                                <FavoriteRounded sx={{ fontSize: 30, color: "red" }} />
-                            ) : (
-                                <FavoriteBorderRounded sx={{ fontSize: 30 }} />
-                            )}
-                        </IconButton>
+                    <IconButton variant="plain" onClick={(e) => { e.stopPropagation(); toggleFavorite(); }}>
+                        {favorited ? (
+                            <FavoriteRounded sx={{ fontSize: 30, color: "red" }} />
+                        ) : (
+                            <FavoriteBorderRounded sx={{ fontSize: 30 }} />
+                        )}
+                    </IconButton>
                     </Box>
                 </Stack>
             </Grid>

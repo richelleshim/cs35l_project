@@ -51,7 +51,10 @@ export default function Cards({ uid }){
                 let postList = [];
                 querySnapshot.forEach((doc) => {
                     console.log(doc)
-                    postList.push(doc.data())
+                    postList.push({
+                        ... doc.data(),
+                        id: doc.id
+                    })
                 });
                 setPostsList(postList);
 

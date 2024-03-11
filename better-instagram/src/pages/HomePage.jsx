@@ -104,6 +104,7 @@ const handleGoToProfile =(uid)=>{
           desc={user.bio}
           major={user.major}
           year={user.year}
+          uid={user.uid}
           imageSrc={user.profilePicURL}
           postImages={user.postImages || []}
           handleGoToProfile={() => handleGoToProfile(user.id)}
