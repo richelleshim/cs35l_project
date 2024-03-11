@@ -11,19 +11,16 @@ import {
 import { query, collection, where, getDocs } from 'firebase/firestore'
 import { firestore } from "../../firebase/firebase";
 import { SchoolOutlined, BackpackOutlined, FavoriteBorder } from '@mui/icons-material';
-import { useSearchParams } from "react-router-dom";
 
-export default function BottomActionsCard() {
+export default function BottomActionsCard({ uid }) {
   let [imgSrc, setImgSrc] = useState("");
   let [userObj, setUserObj] = useState({});
-  const [searchParams, setSearchParams] = useSearchParams();
   let selfUserObj = useAuthStore((state) => state.user());
 
   useEffect(() => {
     let internalUserObj = userObj;
     //Load in user profile pictures
     const loadUser = async () => {
-      let uid = searchParams.get("uid")
       if (uid == null) {
         // load the user's own profile
         internalUserObj = selfUserObj;
@@ -83,11 +80,10 @@ export default function BottomActionsCard() {
           {
             userObj.uid == selfUserObj.uid ?
             <EditProfilePage></EditProfilePage> /* I own this profile */
-            : null
+            : <IconButton variant="outlined" color="neutral">
+              <FavoriteBorder />
+            </IconButton>
           }
-          <IconButton variant="outlined" color="neutral">
-            <FavoriteBorder />
-          </IconButton>
         </Stack>
         <Typography level="h1">{userObj.fullName}</Typography>
         <Typography level="h4">@{userObj.username}</Typography>

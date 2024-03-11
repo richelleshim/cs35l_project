@@ -7,14 +7,16 @@ import {
     getDocs, 
     collection,
     orderBy,
-    query} from 'firebase/firestore'
+    query,
+    where
+} from 'firebase/firestore'
 import {
     getStorage,
     ref,
     getDownloadURL,
   } from "firebase/storage";
 
-export default function Cards(){
+export default function Cards({ uid }){
     const[likesList, setLikesList] = useState([]);
     const[postsList, setPostsList] = useState([]);
     const[imageUrlList, setImageUrlList] = useState([])
@@ -42,12 +44,16 @@ export default function Cards(){
         //Get the lists of posts
         const getPostsList = async () => {
             try{
-                const data = await getDocs(orderedPostsQuery);
-                const filteredData = data.docs.map((doc) => ({
-                    ...doc.data(),
-                    id: doc.id
-                }))
-                setPostsList(filteredData);
+                // load the uid's profile
+                const q = query(collection(firestore, "posts"), where("userId", "==", uid));
+                const querySnapshot = await getDocs(q);
+
+                let postList = [];
+                querySnapshot.forEach((doc) => {
+                    console.log(doc)
+                    postList.push(doc.data())
+                });
+                setPostsList(postList);
 
             } catch(err){
                 console.error(err)
