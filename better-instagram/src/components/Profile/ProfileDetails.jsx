@@ -13,7 +13,7 @@ import { firestore } from "../../firebase/firebase";
 import { SchoolOutlined, BackpackOutlined, FavoriteBorder } from '@mui/icons-material';
 import { useSearchParams } from "react-router-dom";
 
-export default function BottomActionsCard() {
+export default function BottomActionsCard({uid}) {
   let [imgSrc, setImgSrc] = useState("");
   let [userObj, setUserObj] = useState({});
   const [searchParams, setSearchParams] = useSearchParams();

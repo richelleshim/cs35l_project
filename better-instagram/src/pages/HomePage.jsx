@@ -12,12 +12,13 @@ import {
 import { getDocs, collection} from "firebase/firestore";
 import { firestore } from "../firebase/firebase";
 import { useState, useEffect } from 'react'
+import { useNavigate } from "react-router-dom";
 
 function HomePage() {
   const [usersList, setUsersList] = useState([])
   const [userWithImageList, setUserWithImageList] = useState([]) //List of users with profile pictures loaded
   const usersCollectionRef = collection(firestore, 'users')
-  //const navigate = useNavigate();
+  const navigate = useNavigate();
   
 
   useEffect(()=>{ 
@@ -65,9 +66,9 @@ function HomePage() {
     loadImages();
 }, [usersList]);
     
-const handleGoToProfile =()=>{
+const handleGoToProfile =(uid)=>{
   console.log('click')
-  //navigate("/profile")
+  navigate(`/profile?uid=${uid}`)
 }
 
   return (
@@ -75,9 +76,10 @@ const handleGoToProfile =()=>{
       <Stack direction="row">
         <NavBar />
               <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '10px' }}>
+              
                 
                 {userWithImageList.map((user) => (
-                    
+
                       <HomePageWidget
                         key={user.id}
                         name={user.fullName}
@@ -86,9 +88,8 @@ const handleGoToProfile =()=>{
                         uid = {user.uid}
                         year={user.year}
                         imageSrc={user.profilePicURL}
-                        handleGoToProfile={handleGoToProfile}
-                      />  
-                    
+                        handleGoToProfile={()=>handleGoToProfile(user.id)}
+                      />                      
                 ))}
               </div>
       </Stack>
