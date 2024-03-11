@@ -10,6 +10,7 @@ import { getStorage, ref, getDownloadURL } from "firebase/storage";
 import { getDocs, collection } from "firebase/firestore";
 import { firestore } from "../firebase/firebase";
 import { useState, useEffect } from "react";
+import Logo from "../components/NavBar/Logo";
 
 function HomePage() {
   const [usersList, setUsersList] = useState([]);
@@ -68,6 +69,7 @@ function HomePage() {
   };
   return (
     <>
+      <Logo />
       <FilterButton />
       <Stack direction="row">
         <div
@@ -90,8 +92,7 @@ function HomePage() {
           ))}
         </div>
       </Stack>
-        <NavBar />
-      ;
+      <NavBar />;
     </>
   );
 }
