@@ -14,7 +14,6 @@ import {
 import { getDocs, collection} from "firebase/firestore";
 import { firestore } from "../firebase/firebase";
 import { useState, useEffect } from 'react'
-//import FilterButton from "../components/Home/FilterButton";
 
 function HomePage() {
   const [usersList, setUsersList] = useState([])

@@ -26,7 +26,7 @@ export default function CardItem({imageUrl, onCardClick, small=false}){
 
     return(
         <>
-        <Card sx={{ width: !small ? 250 : 200, height: !small ? 250 : 100, flexGrow: 1}}>
+        <Card sx={{ width: !small ? 250 : 150, height: !small ? 250 : 150, flexGrow: 1}}>
             <CardCover>
                 <img
                     id={"img"+imageUrl}

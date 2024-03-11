@@ -27,12 +27,14 @@ import {
 import { 
   doc, 
   deleteDoc, 
-  getDocs, 
+  getDocs,
+  getDoc,
   collection, 
   addDoc, 
   query, 
   onSnapshot,
   serverTimestamp,
+  where,
   orderBy } from "firebase/firestore";
 import { firestore } from "../../firebase/firebase";
 
@@ -45,13 +47,15 @@ export default function ViewPost({
   goForward,
   likeClick,
   liked,
+  uid
 }) {
   const [isExpanded, setIsExpanded] = useState(false); //expanding the caption
   const [commentsList, setCommentsList] = useState([]) 
   const [commentsWithImageList, setCommentsWithImageList] = useState([]) 
   const [commentInput, setCommentInput] = useState('')
   const [toggleEditCaption, setToggleEditCaption] = useState(false)
-  //const uid = postId.
+  const [ownerUsername, setOwnerUsername] = useState('')
+  const [ownerProfilePic, setOwnerProfilePic] = useState('')
 
   const orderedCommentsQuery = query(collection(firestore, 'comments'), orderBy('timestamp', 'desc'));
 
@@ -59,8 +63,7 @@ export default function ViewPost({
   if (userObj == null) {
       return <h1>Not Logged In</h1>;
   }
-  
-  
+
   useEffect(()=>{  
     //get the list of comments 
     const getCommentsList = async () => { 
@@ -77,17 +80,48 @@ export default function ViewPost({
     };
     getCommentsList();
 
-    //update comments without refreshing the page
+  //update comments without refreshing the page
   const unsubscribe = onSnapshot(orderedCommentsQuery, (snapshot) => { 
     const comments = [];
     snapshot.forEach((doc) => {
       comments.push({ id: doc.id, ...doc.data() });
     });
-
     setCommentsList(comments);
+
+    const getUsernameAndProfilePic = async () => {
+      try {
+        let url
+        console.log(uid)
+        const ownerQuery = query(collection(firestore, 'users'), where("uid", "==", uid));
+        const owner = await getDocs(ownerQuery);
+
+        setOwnerUsername(owner.docs[0].data().username);
+        //console.log()
+
+        //if(owner.docs[0].data().profilePicURL){
+          //url = await getDownloadURL(ref(storage, owner.docs[0].data().profilePicURL));    
+       // }
+       // setOwnerProfilePic(url)
+          
+
+/*
+        
+   
+        }*/
+        //console.log(url)
+        //setOwnerProfilePic(url)
+        //console.log('there')
+
+      } catch (error) {
+        console.error("Cannot get user data of: ", uid);
+      }
+    };
+    
+    getUsernameAndProfilePic();
     });
 
     return () => unsubscribe();
+
   }, [postId]);
 
 
@@ -114,14 +148,14 @@ export default function ViewPost({
         }
         setCommentsWithImageList(newCommentsList);
     };
-
     loadImages();
-}, [commentsList]);
+  }, [commentsList]);
 
   //posting a new comment
   const handlePostComment = async()=>{
       //make sure comment isn't empty
       if (!commentInput.trim()) return;
+
       await addDoc(collection(firestore, "comments"), {
           content: commentInput,
           postID: postId,
@@ -142,6 +176,7 @@ export default function ViewPost({
 
   //deleting a post
   const deletePost = async () => {
+    console.log('delete')
     const storage = getStorage();
     await deleteDoc(doc(firestore, "posts", postId));
 
@@ -236,10 +271,12 @@ export default function ViewPost({
           >
             <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
               {/*User profile*/}
-              <Avatar src={greg} sx={{ size: "lg" }} /> 
+              <Avatar src={ownerProfilePic} sx={{ size: "lg" }} /> 
 
               {/*Username*/}
-              <Typography fontWeight="bold">@jolly_greg</Typography>
+              <Typography fontWeight="bold">
+                {ownerUsername}
+              </Typography>
             </Box>
 
             {/*Delete post and like post section*/}
@@ -316,7 +353,7 @@ export default function ViewPost({
         {/*Comments section*/}
           <Stack>
             {/*Map through list of comments that match the post ID and display*/}
-            {commentsWithImageList.map((comment) => (
+            {commentsWithImageList.map((comment) => ( 
                 postId === comment.postID && (
                 <Box
                   sx={{ 
