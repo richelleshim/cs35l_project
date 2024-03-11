@@ -50,11 +50,7 @@ export default function Cards({uid}){
                 querySnapshot.forEach((doc) => {
                     console.log(doc)
                     postList.push({
-<<<<<<< HEAD
                         ... doc.data(),
-=======
-                        ...doc.data(),
->>>>>>> main
                         id: doc.id
                     })
                 });
