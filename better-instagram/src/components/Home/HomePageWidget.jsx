@@ -43,7 +43,7 @@ function PostPreviews ({ postImages, handleGoToProfile }) {
     /*
 
             */
-    return <Stack direction="row" sx={{ overflowX: "auto", width: "500px" }} spacing={2}>
+    return <Stack direction="row" sx={{ width: "500px" }} spacing={2}>
         {outputObjects}
     </Stack>;
 }
