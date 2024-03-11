@@ -1,98 +1,65 @@
-// import homepagewidget
-import HomePageWidget from "../components/Home/HomePageWidget";
-import FilterButton from "../components/Home/FilterButton";
+import React, { useState, useEffect } from 'react';
+import { collection, getDocs } from 'firebase/firestore';
+import { firestore } from '../firebase/firebase';
+import NavBar from '../components/NavBar/NavBar';
+import FilterButton from '../components/Home/FilterButton';
+import HomePageWidget from '../components/Home/HomePageWidget';
+import { Stack } from '@mui/joy';
 import { useNavigate } from 'react-router-dom';
 
-// import from MUI
-import { Stack, Box } from "@mui/joy";
-import NavBar from "../components/NavBar/NavBar";
-import {
-  getStorage,
-  ref,
-  getDownloadURL,
-} from "firebase/storage";
-import { getDocs, collection} from "firebase/firestore";
-import { firestore } from "../firebase/firebase";
-import { useState, useEffect } from 'react'
-
 function HomePage() {
-  const [usersList, setUsersList] = useState([])
-  const [userWithImageList, setUserWithImageList] = useState([]) //List of users with profile pictures loaded
-  const usersCollectionRef = collection(firestore, 'users')
+  const [usersList, setUsersList] = useState([]);
   const navigate = useNavigate();
-  
-
-  useEffect(()=>{ 
-    //Get list of all users
-    const getUsersList= async () => {
-      try{
-        const data = await getDocs(usersCollectionRef);
-        const filteredData = data.docs.map((doc) => ({
-          ...doc.data(),
-          id: doc.id
-      }))
-        setUsersList(filteredData);
-      } catch(err){
-        console.error(err)
-      }
-      };
-
-      getUsersList();
-  }, []);
 
   useEffect(() => {
-    //Load in user profile pictures
-    const loadImages = async () => {
-        const storage = getStorage();
-        const newUsersList = []; 
-
-        for (const user of usersList) {
-            try {
-                let url
-                if(user.profilePicURL){
-                  url = await getDownloadURL(ref(storage, user.profilePicURL));      
-                }  
-                const newUser = {
-                    ...user,
-                    profilePicURL: url 
-                };
-                newUsersList.push(newUser);
-            } catch (error) {
-                console.error('Error fetching profile picture for user:', user.id);
-            }
-        }
-        setUserWithImageList(newUsersList);
+    const getUsersList = async () => {
+      try {
+        const data = await getDocs(collection(firestore, 'users'));
+        const userListData = data.docs.map(doc => ({ ...doc.data(), id: doc.id }));
+        setUsersList(userListData);
+      } catch (error) {
+        console.error('Error fetching users:', error);
+      }
     };
 
-    loadImages();
-}, [usersList]);
-    
-const handleGoToProfile =(uid)=>{
-  console.log('click')
-  navigate(`/profile?uid=${uid}`)
-}
+    getUsersList();
+  }, []);
+
+  const handleSearch = (major, gradYear) => {
+    // Implement your search logic here
+    const filteredUsers = usersList.filter(user => {
+      const majorMatch = user.major.toLowerCase().includes(major.toLowerCase());
+      const yearMatch = user.year.toString() === gradYear.toString();
+      return majorMatch && yearMatch;
+    });
+    // Update the state with filtered users
+    setUsersList(filteredUsers);
+  };
+
+  const handleGoToProfile = (uid) => {
+    navigate(`/profile?uid=${uid}`);
+  };
+
   return (
     <>
       <NavBar />
-      <FilterButton />
+      <FilterButton onSearch={handleSearch} />
       <Stack direction="row">
-       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '10px' }}>
-
-        {userWithImageList.map((user) => (
-
-          <HomePageWidget
-            key={user.id}
-            name={user.fullName}
-            desc={user.bio}
-            major={user.major}
-            year={user.year}
-            imageSrc={user.profilePicURL}
-            handleGoToProfile={() => handleGoToProfile(user.id)}
-          />
-      ))}
-    </div>
-  </Stack>;
-  </>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '10px' }}>
+          {usersList.map((user) => (
+            <HomePageWidget
+              key={user.id}
+              name={user.fullName}
+              desc={user.bio}
+              major={user.major}
+              year={user.year}
+              imageSrc={user.profilePicURL}
+              handleGoToProfile={() => handleGoToProfile(user.id)}
+            />
+          ))}
+        </div>
+      </Stack>
+    </>
   );
 }
 
