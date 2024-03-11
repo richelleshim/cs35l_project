@@ -31,22 +31,19 @@ function HomePage() {
           ...doc.data(),
           id: doc.id
         }))
-        setUsersList(users);
 
         // load the post previews
         const q = collection(firestore, "posts");
         const querySnapshot = await getDocs(q);
-        const storage = getStorage()
 
         querySnapshot.forEach(async (doc) => {
           let post = doc.data()
             for (let i = 0; i < users.length; i++) {
+              if (!users[i].postImages) {
+                users[i].postImages= [];
+              }
               if (users[i].uid === post.userId) {
-                let imageUrl = await getDownloadURL(ref(storage, post.image));
-                if (!users[i].imageUrls) {
-                  users[i].imageUrls = [];
-                }
-                users[i].imageUrls.push(imageUrl);
+                users[i].postImages.push(post.image);
               }
             }
         });
@@ -108,7 +105,7 @@ const handleGoToProfile =(uid)=>{
           major={user.major}
           year={user.year}
           imageSrc={user.profilePicURL}
-          postImageUrls={user.imageUrls || []}
+          postImages={user.postImages || []}
           handleGoToProfile={() => handleGoToProfile(user.id)}
         />
 

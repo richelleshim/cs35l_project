@@ -1,15 +1,54 @@
 import CardItem from '../Profile/CardItem'
-import { useState, useEffect } from 'react';
+import { useState, useEffect, Suspense } from 'react';
 import { firestore } from '../../firebase/firebase';
 import { addDoc, deleteDoc, collection, doc, query, getDocs, where } from 'firebase/firestore';
 import { getStorage, ref, getDownloadURL } from "firebase/storage";
-import Avatar from "@mui/joy/Avatar";
+import { Avatar } from "@mui/joy";
+import { Shimmer } from 'react-shimmer'
+
 
 // import all custom styling from MUI
 import { Card, Stack, Typography, AspectRatio, Grid, IconButton, Box } from "@mui/joy";
 import { FavoriteRounded, FavoriteBorderRounded, SchoolOutlined, BackpackOutlined } from '@mui/icons-material';
 
-function HomePageWidget ({ name, desc, major, year, uid, imageSrc, postImageUrls, isFavorited, handleGoToProfile }) {
+function PostPicture ({ image, handleGoToProfile }) {
+    var [imageUrl, setImageUrl] = useState("");
+
+    useEffect(() => {
+        const getImageUrl = async () => {
+            const storage = getStorage()
+            let url = await getDownloadURL(ref(storage, image));
+            setImageUrl(url);
+        };
+
+        getImageUrl();
+    });
+
+    if(imageUrl == "") {
+        return <Shimmer height={100}></Shimmer>;
+    } else {
+        return <CardItem sx={{display: "inline"}}small={true} imageUrl={imageUrl} onCardClick={() => handleGoToProfile} />;
+    }
+}
+
+function PostPreviews ({ postImages, handleGoToProfile }) {
+    if (!postImages) return <></>;
+
+    let outputObjects = [];
+    for (let i = 0; i < postImages.length; i++) {
+        outputObjects.push(
+            <PostPicture image={postImages[i]} handleGoToProfile={handleGoToProfile}/>
+        );
+    }
+    /*
+
+            */
+    return <Stack direction="row" sx={{ overflowX: "auto", width: "500px" }} spacing={2}>
+        {outputObjects}
+    </Stack>;
+}
+
+function HomePageWidget ({ name, desc, major, year, uid, imageSrc, postImages, isFavorited, handleGoToProfile }) {
     const [favorited, setFavorited] = useState(false);
 
 
@@ -59,11 +98,11 @@ function HomePageWidget ({ name, desc, major, year, uid, imageSrc, postImageUrls
         sx={{
             boxShadow: 'lg',
             px: 4,
-            py: 4
+            py: 4,
+            cursor: "pointer"
         }}
     >
-        <Grid container spacing={2}>
-            <div onClick={handleGoToProfile}>
+        <Grid container spacing={2} onClick={handleGoToProfile}>
             <Grid item>
                 <Stack direction="row" alignItems="center" sx={{ width: 500,mb: 2 }}>
                     <Box sx={{pr: 4}}>
@@ -108,14 +147,7 @@ function HomePageWidget ({ name, desc, major, year, uid, imageSrc, postImageUrls
                     </Box>
                 </Stack>
             </Grid>
-            </div>
-            <Stack direction="row" sx={{width: 500}} spacing={2}>
-                {postImageUrls.map((url, idx) => {
-                    return <>
-                        <CardItem small={true} imageUrl={url} onCardClick={()=>{}}/>
-                    </>;
-                })}
-            </Stack>             
+            <PostPreviews postImages={postImages} handleGoToProfile={handleGoToProfile}/>
         </Grid>
     </Card>
     </>;
