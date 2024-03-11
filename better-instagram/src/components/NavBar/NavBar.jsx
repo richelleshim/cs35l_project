@@ -12,11 +12,12 @@ import Search from "@mui/icons-material/Search";
 import { ListDivider, ListItem, Stack } from "@mui/joy";
 import { FavoriteRounded, Home, Person } from "@mui/icons-material";
 import { useNavigate } from "react-router-dom";
+import useLogout from "../../hooks/logout";
 
 export default function DrawerMobileNavigation() {
   const [open, setOpen] = useState(false);
   const navigate = useNavigate();
-
+  const logout = useLogout();
   return (
     <Fragment>
       <Box
@@ -101,6 +102,14 @@ export default function DrawerMobileNavigation() {
                 <Person /> Profile
               </ListItemButton>
             </ListItem>
+
+          <ListItem>
+            <ListItemButton
+            onClick={logout}
+            > Testing Logout </ListItemButton>
+          </ListItem>
+        
+            
           </Stack>
         </List>
       </Drawer>
