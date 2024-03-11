@@ -80,11 +80,10 @@ export default function BottomActionsCard({ uid }) {
           {
             userObj.uid == selfUserObj.uid ?
             <EditProfilePage></EditProfilePage> /* I own this profile */
-            : null
+            : <IconButton variant="outlined" color="neutral">
+              <FavoriteBorder />
+            </IconButton>
           }
-          <IconButton variant="outlined" color="neutral">
-            <FavoriteBorder />
-          </IconButton>
         </Stack>
         <Typography level="h1">{userObj.fullName}</Typography>
         <Typography level="h4">@{userObj.username}</Typography>

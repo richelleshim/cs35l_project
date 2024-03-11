@@ -12,6 +12,7 @@ import {
 import { getDocs, collection} from "firebase/firestore";
 import { firestore } from "../firebase/firebase";
 import { useState, useEffect } from 'react'
+import { useNavigate } from "react-router-dom";
 
 function HomePage() {
   const [usersList, setUsersList] = useState([])
@@ -65,9 +66,9 @@ function HomePage() {
     loadImages();
 }, [usersList]);
     
-const handleGoToProfile =()=>{
+const handleGoToProfile =(uid)=>{
   console.log('click')
-  navigate("/profile")
+  navigate(`/profile?uid=${uid}`)
 }
 
   return (
@@ -85,7 +86,7 @@ const handleGoToProfile =()=>{
                         major={user.major}
                         year={user.year}
                         imageSrc={user.profilePicURL}
-                        handleGoToProfile={handleGoToProfile}
+                        handleGoToProfile={() => handleGoToProfile(user.id)}
                       />  
                     
                 ))}
