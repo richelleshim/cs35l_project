@@ -12,6 +12,7 @@ import {
 import { getDocs, collection} from "firebase/firestore";
 import { firestore } from "../firebase/firebase";
 import { useState, useEffect } from 'react'
+import FilterButton from "../components/Home/FilterButton";
 
 function HomePage() {
   const [usersList, setUsersList] = useState([])
@@ -74,6 +75,10 @@ const handleGoToProfile =()=>{
     <>
       <Stack direction="row">
         <NavBar />
+
+        <Stack>
+        <FilterButton />
+      </Stack>
               <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '10px' }}>
                 
                 {userWithImageList.map((user) => (

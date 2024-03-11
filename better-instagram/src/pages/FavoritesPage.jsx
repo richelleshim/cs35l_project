@@ -100,6 +100,55 @@ const FavoritesPage = () => {
   const favoritesCollectionRef = collection(firestore, 'favoritedprofiles')
   //const [currentIndex, setCurrentIndex] = useState(null);
 
+  const [favoriteUsersList, setFavoriteUsersList] = useState([])
+  const [favoriteUserWithImageList, setFavoriteUserWithImageList] = useState([])
+  const usersCollectionRef = collection(firestore, 'users')
+
+  useEffect(()=>{ 
+    //Get list of all users
+    const getFavoriteUsersList= async () => {
+      try{
+        const data = await getDocs(usersCollectionRef);
+        const filteredData = data.docs.map((doc) => ({
+          ...doc.data(),
+          id: doc.id
+      }))
+        setFavoriteUsersList(filteredData);
+      } catch(err){
+        console.error(err)
+      }
+      };
+
+      getFavoriteUsersList();
+  }, []);
+
+  useEffect(() => {
+    //Load in user profile pictures
+    const loadImages = async () => {
+        const storage = getStorage();
+        const newFavoriteUsersList = []; 
+
+        for (const user of usersList) {
+            try {
+                let url
+                if(user.profilePicURL){
+                  url = await getDownloadURL(ref(storage, user.profilePicURL));      
+                }  
+                const newFavoriteUser = {
+                    ...user,
+                    profilePicURL: url 
+                };
+                newFavoriteUsersList.push(newUser);
+            } catch (error) {
+                console.error('Error fetching profile picture for user:', user.id);
+            }
+        }
+        setFavoriteUserWithImageList(newFavoriteUsersList);
+    };
+
+    loadImages();
+}, [usersList]);
+
 
   useEffect(()=> {
     const getFavoritedList = async () => {
@@ -136,8 +185,8 @@ const FavoritesPage = () => {
           <Stack spacing={3}>
           {favoritesList.map((favorite, index) => (
             <HomePageWidget
-              key={index}
-              uid={favorite.favoriteuid}
+              
+            
             />
           ))}
         </Stack> 
