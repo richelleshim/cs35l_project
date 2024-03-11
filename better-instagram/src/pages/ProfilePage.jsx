@@ -2,6 +2,7 @@ import Cards from "../components/Profile/Cards";
 import AddPostButton from "../components/Profile/AddPost";
 import NavBar from "../components/NavBar/NavBar";
 import ProfileDetails from "../components/Profile/ProfileDetails";
+import useAuthStore from "../store/authStore";
 import { Box, Stack } from "@mui/joy";
 import { useSearchParams } from "react-router-dom";
 
@@ -11,6 +12,11 @@ function ProfilePage() {
   };
   const [searchParams, setSearchParams] = useSearchParams();
   let uid = searchParams.get("uid")
+  if (uid == null) {
+    // use self user id
+    let selfUserObj = useAuthStore((state) => state.user());
+    uid = selfUserObj.uid;
+  }
 
   return (
     <>
