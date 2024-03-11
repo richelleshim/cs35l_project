@@ -32,18 +32,21 @@ function PostPicture ({ image, handleGoToProfile }) {
 }
 
 function PostPreviews ({ postImages, handleGoToProfile }) {
-    if (!postImages) return <></>;
-
+    if (postImages.length == 0) return <></>;
     let outputObjects = [];
-    for (let i = 0; i < postImages.length; i++) {
-        outputObjects.push(
-            <PostPicture image={postImages[i]} handleGoToProfile={handleGoToProfile}/>
-        );
+    for (let i = 0; i < 3; i++) {
+        if (i < postImages.length) {
+            outputObjects.push(
+                <PostPicture image={postImages[i]} handleGoToProfile={handleGoToProfile}/>
+            );
+        } else {
+            outputObjects.push(<Box sx={{ width: 180, height: 150}} />);
+        }
     }
     /*
 
             */
-    return <Stack direction="row" sx={{ width: "500px" }} spacing={2}>
+    return <Stack direction="row" sx={{ width: "600px" }} spacing={3}>
         {outputObjects}
     </Stack>;
 }
@@ -102,10 +105,10 @@ function HomePageWidget ({ name, desc, major, year, uid, imageSrc, postImages, i
             cursor: "pointer"
         }}
     >
-        <Grid container spacing={2} onClick={handleGoToProfile}>
+        <Grid container spacing={2}>
             <Grid item>
-                <Stack direction="row" alignItems="center" sx={{ width: 500,mb: 2 }}>
-                    <Box sx={{pr: 4}}>
+                <Stack direction="row" alignItems="center" sx={{ width: 600, height: 120, mb: 2 }}>
+                    <Box sx={{pr: 4}}  onClick={handleGoToProfile}>
                         <AspectRatio
                             ratio="1"
                             sx={{ flex: 1, width: 100, borderRadius: '100%' }}
@@ -114,7 +117,7 @@ function HomePageWidget ({ name, desc, major, year, uid, imageSrc, postImages, i
                             
                         </AspectRatio>
                     </Box>
-                    <Stack direction="column" alignItems="flex-start" justifyContent="center" sx={{width: 400}}>
+                    <Stack direction="column" alignItems="flex-start" justifyContent="center" sx={{width: 500}}  onClick={handleGoToProfile}>
                         <Typography level="h2" textAlign="start">
                             {name}
                         </Typography>
@@ -147,7 +150,9 @@ function HomePageWidget ({ name, desc, major, year, uid, imageSrc, postImages, i
                     </Box>
                 </Stack>
             </Grid>
-            <PostPreviews postImages={postImages} handleGoToProfile={handleGoToProfile}/>
+            <Box onClick={handleGoToProfile}>
+                <PostPreviews  postImages={postImages} handleGoToProfile={handleGoToProfile}/>
+            </Box>
         </Grid>
     </Card>
     </>;
