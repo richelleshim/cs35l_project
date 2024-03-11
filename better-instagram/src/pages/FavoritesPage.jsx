@@ -77,7 +77,7 @@ const FavoritesPage = () => {
   fetchFavoriteUsers();
 }, [favoritesList]);*/
 
-useEffect(() => {
+/*useEffect(() => {
   const fetchFavoriteUsers = async () => {
       try {
           const currentUser = useAuthStore((state) => state.user());
@@ -108,7 +108,7 @@ useEffect(() => {
   };
 
   fetchFavoriteUsers();
-}, []);
+}, []);*/
 
 
 useEffect(() => {
