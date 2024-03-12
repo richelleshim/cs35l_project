@@ -56,7 +56,7 @@ function HomePageWidget ({ name, desc, major, year, uid, imageSrc, postImages, i
     const [favorited, setFavorited] = useState(false);
     //retreive  personaluid using authstore
     const personaluid = useAuthStore((state) => state.user()?.uid);
-
+console.log(uid)
     useEffect(() => {
         // Fetch favorited status from local storage
         const isFavoritedLocally = localStorage.getItem(uid) === 'true';
@@ -66,22 +66,28 @@ function HomePageWidget ({ name, desc, major, year, uid, imageSrc, postImages, i
 
     const toggleFavorite = () => {
         console.log("Toggle favorite called");
+        console.log('personaluid', personaluid)
         const newFavorited = !favorited;
         setFavorited(newFavorited);
         localStorage.setItem(uid, newFavorited ? 'true' : 'false');
         updateFirestore(newFavorited, personaluid); //pass personal uid here
     };
     
-    
+
     const updateFirestore = async (newFavorited, personaluid) => {
         try {
             const favoritedRef = collection(firestore, "favoritedprofiles");
+            console.log('before problem?')
+            console.log(uid + " " + personaluid)
             const favoritedQuery = query(
                 favoritedRef,
                 where("favoriteduid", "==", uid),
                 where("personaluid", "==", personaluid)
             );
+            
+            console.log('does this work, favoriteduid and personal uid', personaluid)
             const favoritedSnapshot = await getDocs(favoritedQuery);
+            console.log('here is the working?')
             
             // Check if the profile is already favorited
             const isAlreadyFavorited = !favoritedSnapshot.empty;
@@ -95,6 +101,7 @@ function HomePageWidget ({ name, desc, major, year, uid, imageSrc, postImages, i
             } else if (!newFavorited && isAlreadyFavorited) {
                 // Profile is already favorited, so remove it from Firestore
                 favoritedSnapshot.forEach(async (doc) => {
+                    console.log('buh')
                     await deleteDoc(doc.ref);
                 });
             }
@@ -106,6 +113,8 @@ function HomePageWidget ({ name, desc, major, year, uid, imageSrc, postImages, i
             console.error("Error updating favorited profile in Firestore: ", error);
         }
     };
+      
+      
     
 
 

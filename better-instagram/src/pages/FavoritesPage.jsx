@@ -141,8 +141,6 @@ useEffect(() => {
 
 
 
-
-
 useEffect(() => {
   //Load in user profile pictures
   const loadImages = async () => {
@@ -172,7 +170,7 @@ useEffect(() => {
 }, [newFavoriteUsersList]);
 
 
-
+console.log(userWithImageList)
   return (
     <>
       <Stack direction="row">
@@ -191,18 +189,15 @@ useEffect(() => {
           <>{console.log(userWithImageList.length)}</>
           <Stack spacing={3}>
           {userWithImageList.map(user => (
-            <>
-            {console.log('hi')}
             <HomePageWidget
-            key={user.id}
+            key={user.uid}
             name={user.fullName}
             desc={user.desc}
             major={user.major}
             year={user.year}
-            uid={user.id}
+            uid={user.uid}
             imageSrc={user.profilePicURL}
             />
-            </>
           ))}
         </Stack> 
         </div>
