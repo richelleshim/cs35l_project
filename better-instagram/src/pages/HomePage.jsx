@@ -100,22 +100,25 @@ function HomePage() {
       <NavBar />
       <FilterButton onSearch={handleSearch} onReset={handleResetSearch} />
       <Stack direction="row">
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '10px' }}>
-          {filteredUserList.map((user) => (
-            <HomePageWidget
-              key={user.id}
-              name={user.fullName}
-              desc={user.bio}
-              major={user.major}
-              year={user.year}
-              imageSrc={user.profilePicURL}
-              postImages={user.postImages || []}
-              handleGoToProfile={() => handleGoToProfile(user.id)}
-            />
-          ))}
-        </div>
-      </Stack>
-    </>
+       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '10px' }}>
+
+        {userWithImageList.map((user) => (
+
+        <HomePageWidget
+          key={user.id}
+          name={user.fullName}
+          desc={user.bio}
+          major={user.major}
+          year={user.year}
+          imageSrc={user.profilePicURL}
+          postImages={user.postImages || []}
+          handleGoToProfile={() => handleGoToProfile(user.id)}
+        />
+
+      ))}
+    </div>
+  </Stack>
+  </>
   );
 }
 

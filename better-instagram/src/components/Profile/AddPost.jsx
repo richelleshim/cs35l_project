@@ -4,6 +4,7 @@ import { firestore } from '../../firebase/firebase';
 import { setDoc, addDoc, collection, serverTimestamp, } from 'firebase/firestore';
 import { getStorage, ref, uploadBytesResumable } from "firebase/storage";
 import useAuthStore from "../../store/authStore";
+import AddIcon from '@mui/icons-material/Add';
 
 
 const storage = getStorage();
@@ -179,7 +180,10 @@ export default function AddPostButton({ addedPost }) {
 
   return (
     <>
-      <Button sx={{ m: 5 }} onClick={() => { click() }}>Create post</Button>
+      <Button variant="outlined" color="neutral" sx={{ m: 5 }} onClick={() => { click() }}>
+        Create post
+        <AddIcon/>
+      </Button>
       {openModal && <PostWidget
         addedPost={() => {
           setOpenModal(false);

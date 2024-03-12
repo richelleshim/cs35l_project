@@ -6,7 +6,7 @@ import Typography from '@mui/joy/Typography';
 import Sheet from '@mui/joy/Sheet';
 import CloseIcon from '@mui/icons-material/Close';
 
-function FilterButton({ onSearch, onReset }) {
+function FilterButton({ onSearch }) {
   const [showModal, setShowModal] = useState(false);
   const [majorInput, setMajorInput] = useState('');
   const [gradYearInput, setGradYearInput] = useState('');
@@ -16,13 +16,8 @@ function FilterButton({ onSearch, onReset }) {
   };
 
   const handleSearchButtonClick = () => {
-    if (majorInput || gradYearInput) {
-      onSearch(majorInput, gradYearInput);
-    } else {
-      // If only one input is provided, perform the search with that input
-      const inputToSearch = majorInput ? majorInput : gradYearInput;
-      onSearch(inputToSearch, inputToSearch);
-    }
+    onSearch(majorInput, gradYearInput);
+    setShowModal(false);
   };
 
   const handleClearAllClick = () => {
@@ -40,7 +35,6 @@ function FilterButton({ onSearch, onReset }) {
       <Button
         variant="outlined"
         color="neutral"
-        size="small"
         onClick={handleFilterButtonClick}
         sx={{ position: 'relative', zIndex: 1 }}
       >
