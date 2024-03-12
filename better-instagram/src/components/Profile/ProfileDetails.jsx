@@ -12,7 +12,7 @@ import { query, collection, where, getDocs } from 'firebase/firestore'
 import { firestore } from "../../firebase/firebase";
 import { SchoolOutlined, BackpackOutlined, FavoriteBorder } from '@mui/icons-material';
 
-export default function BottomActionsCard({ uid }) {
+export default function BottomActionsCard({ uid, setProfileDetails }) {
   let [imgSrc, setImgSrc] = useState("");
   let [userObj, setUserObj] = useState({});
   let selfUserObj = useAuthStore((state) => state.user());
@@ -44,11 +44,19 @@ export default function BottomActionsCard({ uid }) {
     };
 
     loadUser();
+    
 }, []);
+
+  useEffect(()=>{
+    if(userObj){
+        setProfileDetails(userObj.username, imgSrc, userObj.uid == selfUserObj.uid)
+    }
+  }, [userObj])
 
   return <>{
     (userObj == {} || userObj == null) ?
     <h1>Not logged in, or invalid uid</h1> :
+    
     <Stack 
       sx={{mt: 5, mb: 5}}
       direction="row" 

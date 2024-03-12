@@ -2,7 +2,6 @@ import Typography from "@mui/joy/Typography";
 import { useState, useEffect } from "react";
 import Modal from "@mui/joy/Modal";
 import AspectRatio from "@mui/joy/AspectRatio";
-import greg from "../../../assets/images/greg.svg";
 import Box from "@mui/joy/Box";
 import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
 import DeleteOutlinedIcon from "@mui/icons-material/DeleteOutlined";
@@ -34,7 +33,6 @@ import {
   query, 
   onSnapshot,
   serverTimestamp,
-  where,
   orderBy } from "firebase/firestore";
 import { firestore } from "../../firebase/firebase";
 
@@ -47,15 +45,15 @@ export default function ViewPost({
   goForward,
   likeClick,
   liked,
-  uid
+  username,
+  profilePictureURL,
+  isInternalUser
 }) {
   const [isExpanded, setIsExpanded] = useState(false); //expanding the caption
   const [commentsList, setCommentsList] = useState([]) 
   const [commentsWithImageList, setCommentsWithImageList] = useState([]) 
   const [commentInput, setCommentInput] = useState('')
   const [toggleEditCaption, setToggleEditCaption] = useState(false)
-  const [ownerUsername, setOwnerUsername] = useState('')
-  const [ownerProfilePic, setOwnerProfilePic] = useState('')
 
   const orderedCommentsQuery = query(collection(firestore, 'comments'), orderBy('timestamp', 'desc'));
 
@@ -88,36 +86,6 @@ export default function ViewPost({
     });
     setCommentsList(comments);
 
-    const getUsernameAndProfilePic = async () => {
-      try {
-        let url
-        console.log(uid)
-        const ownerQuery = query(collection(firestore, 'users'), where("uid", "==", uid));
-        const owner = await getDocs(ownerQuery);
-
-        setOwnerUsername(owner.docs[0].data().username);
-        //console.log()
-
-        //if(owner.docs[0].data().profilePicURL){
-          //url = await getDownloadURL(ref(storage, owner.docs[0].data().profilePicURL));    
-       // }
-       // setOwnerProfilePic(url)
-          
-
-/*
-        
-   
-        }*/
-        //console.log(url)
-        //setOwnerProfilePic(url)
-        //console.log('there')
-
-      } catch (error) {
-        console.error("Cannot get user data of: ", uid);
-      }
-    };
-    
-    getUsernameAndProfilePic();
     });
 
     return () => unsubscribe();
@@ -135,7 +103,7 @@ export default function ViewPost({
             try {
                 let url
                 if(comment.profilePicture){
-                  url = await getDownloadURL(ref(storage, comment.profilePicture));      
+                  url = await getDownloadURL(ref(storage, comment.profilePicture));    
                 }  
                 const newComment = {
                     ...comment,
@@ -271,25 +239,25 @@ export default function ViewPost({
           >
             <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
               {/*User profile*/}
-              <Avatar src={ownerProfilePic} sx={{ size: "lg" }} /> 
+              <Avatar src={profilePictureURL} sx={{ size: "lg" }} /> 
 
               {/*Username*/}
               <Typography fontWeight="bold">
-                {ownerUsername}
+                {username}
               </Typography>
             </Box>
 
             {/*Delete post and like post section*/}
             <Box sx={{ display: "flex", alignItems: "center", gap: 0 }}>
               {/*Delete post icon*/}
-              <IconButton
+              {isInternalUser && <IconButton
                 size="lg"
                 color="inherit"
                 onClick={deletePost}
                 sx={{ outline: "none !important" }}
               >
                 <DeleteOutlinedIcon />
-              </IconButton>
+              </IconButton>}
 
               {/*Like post icon*/}
               <IconButton
@@ -382,15 +350,16 @@ export default function ViewPost({
                           </Typography>
                       </Stack>
                     
-                    {/*Delete comment button*/}
-                    <IconButton
+                    {/*Delete comment button*/}                
+                    {comment.userID == userObj.uid ? <IconButton
                       size="sm"
                       color="inherit"
                       onClick={()=>deleteComment(comment.id)}
                       sx={{ outline: "none !important", marginLeft: 'auto'}}
                     >
                       <DeleteOutlinedIcon />
-                    </IconButton>          
+                    </IconButton>  : 
+                    <Box sx={{marginLeft: 'auto'}}/>}        
                 </Box>  
                 )  
             ))}
