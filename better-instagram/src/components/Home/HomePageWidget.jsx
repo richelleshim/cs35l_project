@@ -27,7 +27,7 @@ function PostPicture ({ image, handleGoToProfile }) {
     if(imageUrl == "") {
         return <Shimmer height={100}></Shimmer>;
     } else {
-        return <CardItem sx={{display: "inline"}}small={true} imageUrl={imageUrl} onCardClick={() => handleGoToProfile} />;
+        return <CardItem small={true} imageUrl={imageUrl} onCardClick={() => handleGoToProfile} />;
     }
 }
 
@@ -40,7 +40,7 @@ function PostPreviews ({ postImages, handleGoToProfile }) {
                 <PostPicture image={postImages[i]} handleGoToProfile={handleGoToProfile}/>
             );
         } else {
-            outputObjects.push(<Box sx={{ width: 180, height: 150}} />);
+            //outputObjects.push(<Box sx={{ width: 100}} />);
         }
     }
     /*
@@ -106,15 +106,15 @@ function HomePageWidget ({ name, desc, major, year, uid, imageSrc, postImages, i
     <Card 
         sx={{
             boxShadow: 'lg',
-            px: 4,
-            py: 4,
+            px: 3,
+            py: 3,
             cursor: "pointer"
         }}
     >
-        <Grid container spacing={2}>
+        <Grid container spacing={1}>
             <Grid item>
                 <Stack direction="row" alignItems="center" sx={{ width: 600, height: 120, mb: 2 }}>
-                    <Box sx={{pr: 4}}  onClick={handleGoToProfile}>
+                    <Box sx={{pr: 3}}  onClick={handleGoToProfile}>
                         <AspectRatio
                             ratio="1"
                             sx={{ flex: 1, width: 100, borderRadius: '100%' }}
@@ -145,14 +145,14 @@ function HomePageWidget ({ name, desc, major, year, uid, imageSrc, postImages, i
                             </Box>
                         </Box>
                     </Stack>
-                    <Box sx={{pl: 4}}>
-                    <IconButton variant="plain" onClick={(e) => { e.stopPropagation(); toggleFavorite(); }}>
-                        {favorited ? (
-                            <FavoriteRounded sx={{ fontSize: 30, color: "red" }} />
-                        ) : (
-                            <FavoriteBorderRounded sx={{ fontSize: 30 }} />
-                        )}
-                    </IconButton>
+                    <Box sx={{pl: 3}}>
+                        <IconButton variant="plain" onClick={toggleFavorite}>
+                            {favorited ? (
+                                <FavoriteRounded sx={{ fontSize: 30, color: "red" }} />
+                            ) : (
+                                <FavoriteBorderRounded sx={{ fontSize: 30 }} />
+                            )}
+                        </IconButton>
                     </Box>
                 </Stack>
             </Grid>

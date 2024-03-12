@@ -282,12 +282,6 @@ export default function ViewPost({
                 {caption}
               </Typography>
             </div>
-
-            <div onClick={() => editCaption()} style={{marginTop: '1.2vh'}}>
-              <Typography level="body-sm">
-                Edit caption
-              </Typography>
-            </div>
           </Box>
           
         

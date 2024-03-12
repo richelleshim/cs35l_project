@@ -110,7 +110,7 @@ const handleGoToProfile =(uid)=>{
 
       ))}
     </div>
-  </Stack>;
+  </Stack>
   </>
   );
 }
