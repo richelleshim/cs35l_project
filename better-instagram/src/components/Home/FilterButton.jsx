@@ -5,6 +5,7 @@ import ListItem from '@mui/joy/ListItem';
 import Typography from '@mui/joy/Typography';
 import Sheet from '@mui/joy/Sheet';
 import CloseIcon from '@mui/icons-material/Close';
+import SearchIcon from '@mui/icons-material/Search';
 
 function FilterButton({ onSearch }) {
   const [showModal, setShowModal] = useState(false);
@@ -38,7 +39,8 @@ function FilterButton({ onSearch }) {
         onClick={handleFilterButtonClick}
         sx={{ position: 'relative', zIndex: 1 }}
       >
-        Filter
+        Search
+        <SearchIcon sx={{ml:3}}/>
       </Button>
       {showModal && (
         <Sheet
