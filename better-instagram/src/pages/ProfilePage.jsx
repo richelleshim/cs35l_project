@@ -31,19 +31,11 @@ function ProfilePage() {
 
   return (
     <>
+      <ProfileDetails uid={uid} setProfileDetails={getProfileDetails}/>
       <Stack direction="row">
         <NavBar />
         <Box component="main" sx={{ flexGrow: 1, p: 3 }}>
-          <ProfileDetails uid={uid} />
-          {
-            uid == useAuthStore((state) => state.user()).uid ?
-            <AddPostButton
-              addedPost={() => {
-                addedPost();
-              }}
-            /> : <></>
-          }
-          <Cards uid={uid} />
+          <Cards uid={uid} username={username} profilePictureUrl={profilePictureUrl} isInternalUser={isInternalUser}/>
         </Box>
       </Stack>
     </>

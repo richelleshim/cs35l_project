@@ -34,7 +34,6 @@ function FilterButton({ onSearch }) {
       <Button
         variant="outlined"
         color="neutral"
-        size="small"
         onClick={handleFilterButtonClick}
         sx={{ position: 'relative', zIndex: 1 }}
       >
