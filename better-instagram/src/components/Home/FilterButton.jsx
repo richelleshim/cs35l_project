@@ -37,7 +37,6 @@ export default function FilterButton() {
       <Button
         variant="outlined"
         color="neutral"
-        size="small"
         onClick={handleFilterButtonClick}
         sx={{ position: 'relative', zIndex: 1}} 
       >

@@ -31,12 +31,10 @@ function ProfilePage() {
 
   return (
     <>
-    <ProfileDetails uid={uid} setProfileDetails={getProfileDetails}/>
+      <ProfileDetails uid={uid} setProfileDetails={getProfileDetails}/>
       <Stack direction="row">
         <NavBar />
         <Box component="main" sx={{ flexGrow: 1, p: 3 }}>
-          
-          
           <Cards uid={uid} username={username} profilePictureUrl={profilePictureUrl} isInternalUser={isInternalUser}/>
         </Box>
       </Stack>

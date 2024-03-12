@@ -127,23 +127,23 @@ function HomePageWidget ({ name, desc, major, year, uid, imageSrc, postImages, i
                         <Typography level="h2" textAlign="start">
                             {name}
                         </Typography>
-                        <Typography level="p" textAlign="start" sx={{ pb: 1.5 }}>
+                        <Typography level="p" textAlign="start" sx={{ pb: 1.5, mt: 1.5 }}>
                             {desc}
                         </Typography>
-                        <Stack direction="row" alignItems="center" spacing={1}>
-                            <Stack direction="row" alignItems="center" spacing={1}>
-                                <BackpackOutlined sx={{ fontSize: 30 }} />
-                                <Typography level="p">
+                        <Box sx={{display:'flex', mt:1}}>
+                            <Box sx={{display:'flex'}}>
+                                <BackpackOutlined sx={{ fontSize: 30, mr: 1.5 }} />
+                                <Typography level="p" >
                                     {major}
                                 </Typography>
-                            </Stack>
-                            <Stack direction="row" alignItems="center" spacing={1}>
-                                <SchoolOutlined sx={{ fontSize: 30 }} />
-                                <Typography level="p">
+                            </Box>
+                            <Box sx={{display:'flex'}}>
+                                <SchoolOutlined sx={{ fontSize: 30, mr: 1.5, ml: 10}} />
+                                <Typography level="p" >
                                     Class of '{year}
                                 </Typography>
-                            </Stack>
-                        </Stack>
+                            </Box>
+                        </Box>
                     </Stack>
                     <Box sx={{pl: 4}}>
                     <IconButton variant="plain" onClick={(e) => { e.stopPropagation(); toggleFavorite(); }}>

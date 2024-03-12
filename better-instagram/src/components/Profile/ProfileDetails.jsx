@@ -71,40 +71,42 @@ export default function BottomActionsCard({ uid, setProfileDetails }) {
     >
       <Box
         sx={{
-          width: 250
+          width: 225
         }}
       >
         <Avatar src={imgSrc} size="" 
           sx={{
-            width: 250,
-            height: 250,
+            width: 200,
+            height: 200,
           }}
         />
       </Box>
       <Stack 
         direction="column" 
-      >
-        
+      > 
         <Typography level="h1">{userObj.fullName}</Typography>
         <Typography level="h4">@{userObj.username}</Typography>
         <Typography sx={{mt: 2, mb: 2}}>{userObj.bio}</Typography>
-        <Stack direction="row" alignItems="center" spacing={10}>
-          <Stack sx={{mt: 1, mb: 0.5}} direction="row" alignItems="center" spacing={1}>
-              <BackpackOutlined sx={{ fontSize: 30 }} />
-              <Typography>
-                  {userObj.major}
-              </Typography>
+        <Box sx={{width:450}}>
+          <Stack direction="row" alignItems="center" spacing={10} sx={{mt: 1, mb: 0.5 }}>
+            <Stack direction="row" alignItems="center" spacing={1}>
+                <BackpackOutlined sx={{ fontSize: 30 }} />
+                <Typography>
+                    {userObj.major}
+                </Typography>
+            </Stack>
+            <Stack direction="row" alignItems="center" spacing={1}>
+                <SchoolOutlined sx={{ fontSize: 30 }} />
+                <Typography>
+                    Class of '{userObj.year}
+                </Typography>
+            </Stack>
           </Stack>
-          <Stack sx={{mt: 0.5, mb: 2}} direction="row" alignItems="center" spacing={1}>
-              <SchoolOutlined sx={{ fontSize: 30 }} />
-              <Typography>
-                  Class of '{userObj.year}
-              </Typography>
-          </Stack>
-        </Stack>
+        </Box>
+        
         <Stack sx={{mb: 2, mt: 3}} direction="row" spacing={2}>
           {
-            userObj.uid == selfUserObj.uid ?
+            userObj.uid == selfUserObj.uid &&
             <>
             <AddPostButton
             addedPost={() => {
@@ -113,10 +115,6 @@ export default function BottomActionsCard({ uid, setProfileDetails }) {
             />
             <EditProfilePage></EditProfilePage>
             </>
-            : 
-            <IconButton variant="outlined" color="neutral">
-              <FavoriteBorder />
-            </IconButton>
             
           }
         </Stack>
