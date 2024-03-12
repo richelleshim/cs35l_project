@@ -129,7 +129,7 @@ console.log(uid)
     >
         <Grid container spacing={1}>
             <Grid item>
-                <Stack direction="row" alignItems="center" sx={{ width: 300, height: 60, mb: 2 }}>
+                <Stack direction="row" alignItems="center" sx={{ width: 600, height: 120, mb: 2 }}>
                     <Box sx={{pr: 3}}  onClick={handleGoToProfile}>
                         <AspectRatio
                             ratio="1"
