@@ -126,7 +126,7 @@ console.log(uid)
             py: 3,
             cursor: "pointer"
         }}
-    >
+>
         <Grid container spacing={1}>
             <Grid item>
                 <Stack direction="row" alignItems="center" sx={{ width: 600, height: 120, mb: 2 }}>

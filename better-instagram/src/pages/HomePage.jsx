@@ -6,6 +6,7 @@ import NavBar from "../components/NavBar/NavBar";
 import { getStorage, ref, getDownloadURL } from "firebase/storage";
 import { getDocs, collection } from "firebase/firestore";
 import { firestore } from "../firebase/firebase";
+import logo from '../../assets/images/bruingramlogo.png';
 import { useState, useEffect } from 'react'
 
 
@@ -97,9 +98,11 @@ function HomePage() {
   return (
     <>
       <NavBar />
-      <Typography level="h1">
-        Bruingram
-      </Typography>
+
+      <img src={logo}  sx={{ display: "block", height: 100 }}/>
+      <Box sx={{height: 100}}>
+        
+      </Box>
       
       <FilterButton onSearch={handleSearch} onReset={handleResetSearch} />
       
