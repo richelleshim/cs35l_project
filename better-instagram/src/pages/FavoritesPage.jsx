@@ -4,74 +4,16 @@ import HomePageWidget from "../components/Home/HomePageWidget";
 import { styled } from "@mui/joy/styles";
 import { Favorite, FavoriteBorder } from "@mui/icons-material";
 import NavBar from "../components/NavBar/NavBar";
-import {firestore} from '../firebase/firebase';
-import { getDocs, collection} from 'firebase/firestore'
+import { firestore } from '../firebase/firebase';
+import { collection, getDocs, getDoc, doc, query, where } from 'firebase/firestore'
 import {
   getStorage,
   ref,
   getDownloadURL,
   deleteObject,
 } from "firebase/storage";
+import useAuthStore from "../store/authStore";
 
-
-//not using for now, because will pull from homepagewidget styling
-const UserCard = ({ user }) => {
-  const { name, major, year, imageUrl } = user;
-  const [isFavorite, setIsFavorite] = useState(true); // State to track favorite status
-  //const[favoritedProfilesList, setfavoritedProfilesList] = useState([]); //list of which profiles you favorited; fetch from firestore field
-
-  // Function to toggle favorite status (for now get rid of: only show the favorited profiles from firestore; enable deleting later)
-  /*const handleFavoriteToggle = () => {
-    setIsFavorite((prev) => !prev);
-  };*/
-
-  return (
-    <Card
-      sx={{
-        display: "flex",
-        flexDirection: "row",
-        justifyContent: "space-between",
-        alignItems: "center",
-        position: "relative",
-        // width: '120%',
-        minWidth: "500px",
-        maxWidth: "800px",
-        mb: 2,
-        p: 2,
-      }}
-    >
-      {/* Absolute positioned heart icon */}
-      <IconButton
-        sx={{ position: "absolute", top: "8px", right: "8px" }} // Adjust position
-        size="small"
-        //onClick={handleFavoriteToggle} // Toggle favorite status on click (update later)
-      >
-        {isFavorite ? <Favorite /> : <FavoriteBorder />}
-      </IconButton>
-
-      <AspectRatio flex ratio="16/9" sx={{ minWidth: 200, maxWidth: 300 }}>
-        <img
-          src={imageUrl}
-          loading="lazy"
-          alt=""
-          style={{ width: "100%", height: "100%", objectFit: "cover" }}
-        />
-      </AspectRatio>
-
-      <CardContent sx={{ flex: 1 }}>
-        <Typography fontSize="xl" fontWeight="lg">
-          {name}
-        </Typography>
-        <Typography level="body-sm" fontWeight="lg" textColor="text.tertiary">
-          {major}
-        </Typography>
-        <Typography level="body-sm" fontWeight="lg" textColor="text.tertiary">
-          {year}
-        </Typography>
-      </CardContent>
-    </Card>
-  );
-};
 
 const Item = styled("div")(({ theme }) => ({
   ...theme.typography["body-sm"],
@@ -88,30 +30,152 @@ const FavoritesPage = () => {
   // Define an array of user data (for demonstration purposes) **not used right now
   
   const[favoritesList, setFavoritesList] = useState([]);
+  const[favoriteUsersList, setFavoriteUsersList] = useState([]);
   const favoritesCollectionRef = collection(firestore, 'favoritedprofiles')
-  //const [currentIndex, setCurrentIndex] = useState(null);
+  const[newFavoriteUsersList, setNewFavoriteUsersList] = useState([]);
+  const [userWithImageList, setUserWithImageList] = useState([]) //List of users with profile pictures loaded
+ 
+  const personaluid = useAuthStore((state) => state.user()?.uid); //get the personal uid
+  //console.log(personaluid)
 
-
-  useEffect(()=> {
-    const getFavoritedList = async () => {
-        try{
-            const data = await getDocs(favoritesCollectionRef);
-            const filteredData = data.docs.map((doc) => ({
-                ...doc.data(),
-                id: doc.id
-            }))
-            setFavoritesList(filteredData);
-        } catch(err){
-            console.error(err)
+  
+  useEffect(() => {
+    const fetchFavorites = async () => {
+        try {
+            const favoritesData = await getDocs(collection(firestore, 'favoritedprofiles'));
+            const favorites = favoritesData.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+            setFavoritesList(favorites);
+        } catch (error) {
+            console.error('Error fetching favorites:', error);
         }
     };
 
-    getFavoritedList();
+    fetchFavorites();
 }, []);
 
+
+useEffect(() => {
+  const fetchFavoriteUsers = async () => {
+    try {
+
+      if (!personaluid) {
+        return; // Exit early if personaluid is undefined
+      }
+      // Construct a query to get favorited profiles for the current user
+      const q = query(
+        collection(firestore, "favoritedprofiles"),
+        where("personaluid", "==", personaluid)
+      );
+      const querySnapshot = await getDocs(q);
+      
+      let favoriteUsers = [];
+      // Iterate through the query snapshot to extract favorited profiles
+      querySnapshot.forEach((doc) => {
+        
+        const data = doc.data();
+        
+        // Extract the favorited profile ID (uid) from the document data
+        const uid = data.favoriteduid;
+        
+        //console.log(uid)
+        favoriteUsers.push({
+          id: doc.id,
+          uid: uid,
+          ...data,
+        });
+        console.log(favoriteUsers)
+      });
+      // Update the state with the favorited profiles
+      setFavoriteUsersList(favoriteUsers);
+    } catch (error) {
+      console.error('Error fetching favorite users:', error);
+    }
+  };
+
+  //console.log(personaluid);
+  fetchFavoriteUsers();
+}, [personaluid]);
+
+
+/*useEffect(() => {
+  const fetchTheFavoriteUsers = async() => {
+    const newFavoriteUsersList= [];
+    try {
+
+        favoriteUsersList.map(async favorite => {
+          const userDoc = await getDoc(doc(collection(firestore,'users'), favorite.favoriteduid));
+          const filteredUsers = userDoc.data()
+          newFavoriteUsersList.push(filteredUsers)
+          
+        },
+
+        //console.log(newFavoriteUsersList)
+      );
+    }
+    catch (error) {
+
+    }
+
+    setNewFavoriteUsersList(newFavoriteUsersList)
+  }
+  fetchTheFavoriteUsers();
+}, [favoriteUsersList])*/
+
+
+useEffect(() => {
+  const fetchTheFavoriteUsers = async () => {
+    try {
+      const newFavoriteUsersList = await Promise.all(favoriteUsersList.map(async favorite => {
+        const userDoc = await getDoc(doc(collection(firestore, 'users'), favorite.favoriteduid));
+        return userDoc.data();
+      }));
+      setNewFavoriteUsersList(newFavoriteUsersList);
+    } catch (error) {
+      console.error('Error fetching favorite users:', error);
+    }
+  };
+
+  fetchTheFavoriteUsers();
+}, [favoriteUsersList]);
+
+
+
+
+useEffect(() => {
+  //Load in user profile pictures
+  const loadImages = async () => {
+      const storage = getStorage();
+      const newFavUsersList = []; 
+
+      for (const favoriteuser of newFavoriteUsersList) {
+          try {
+              let url = null;
+              if(favoriteuser.profilePicURL){
+                url = await getDownloadURL(ref(storage, favoriteuser.profilePicURL));      
+              }  
+              const newfavUser = {
+                  ...favoriteuser,
+                  profilePicURL: url 
+              };
+              newFavUsersList.push(newfavUser);
+              //console.log('url', url);
+          } catch (error) {
+              console.error('Error fetching profile picture for user:', user.id);
+          }
+      }
+      setUserWithImageList(newFavUsersList);
+  };
+
+  loadImages();
+}, [newFavoriteUsersList]);
+
+
+console.log(userWithImageList)
   return (
     <>
       <Stack direction="row">
+        <NavBar />
+
         <div className="FavoritesPage">
           <Favorite
             sx={{
@@ -122,17 +186,21 @@ const FavoritesPage = () => {
               color: "black",
             }}
           />
+          <>{console.log(userWithImageList.length)}</>
           <Stack spacing={3}>
-          {favoritesList.map((favorite, index) => (
+          {userWithImageList.map(user => (
             <HomePageWidget
-              key={index}
-              uid={favorite.favoriteuid}
-              postImages={[]}
+            key={user.uid}
+            name={user.fullName}
+            desc={user.desc}
+            major={user.major}
+            year={user.year}
+            uid={user.uid}
+            imageSrc={user.profilePicURL}
             />
           ))}
         </Stack> 
         </div>
-        <NavBar />
       </Stack>
     </>
   );
