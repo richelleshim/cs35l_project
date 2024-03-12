@@ -6,7 +6,7 @@ import NavBar from "../components/NavBar/NavBar";
 import { getStorage, ref, getDownloadURL } from "firebase/storage";
 import { getDocs, collection } from "firebase/firestore";
 import { firestore } from "../firebase/firebase";
-import logo from '../../public/bruingram.png';
+import logo from '../../public/Bruingram.png';
 import { useState, useEffect } from 'react'
 
 
