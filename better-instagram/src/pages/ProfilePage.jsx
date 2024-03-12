@@ -24,11 +24,14 @@ function ProfilePage() {
         <NavBar />
         <Box component="main" sx={{ flexGrow: 1, p: 3 }}>
           <ProfileDetails uid={uid} />
-          <AddPostButton
-            addedPost={() => {
-              addedPost();
-            }}
-          />
+          {
+            uid == useAuthStore((state) => state.user()).uid ?
+            <AddPostButton
+              addedPost={() => {
+                addedPost();
+              }}
+            /> : <></>
+          }
           <Cards uid={uid} />
         </Box>
       </Stack>

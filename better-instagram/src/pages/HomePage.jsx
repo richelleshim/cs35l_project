@@ -97,7 +97,6 @@ const handleGoToProfile =(uid)=>{
        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '10px' }}>
 
         {userWithImageList.map((user) => (
-
         <HomePageWidget
           key={user.id}
           name={user.fullName}
@@ -111,7 +110,7 @@ const handleGoToProfile =(uid)=>{
 
       ))}
     </div>
-  </Stack>;
+  </Stack>
   </>
   );
 }

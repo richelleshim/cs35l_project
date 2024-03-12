@@ -1,14 +1,10 @@
 import React, { useState, Fragment } from "react";
 import Box from "@mui/joy/Box";
-import IconButton from "@mui/joy/IconButton";
 import Drawer from "@mui/joy/Drawer";
-import Input from "@mui/joy/Input";
 import List from "@mui/joy/List";
 import ListItemButton from "@mui/joy/ListItemButton";
 import Typography from "@mui/joy/Typography";
 import ModalClose from "@mui/joy/ModalClose";
-import Menu from "@mui/icons-material/Menu";
-import Search from "@mui/icons-material/Search";
 import { ListDivider, ListItem, Stack } from "@mui/joy";
 import { FavoriteRounded, Home, Person } from "@mui/icons-material";
 import { useNavigate } from "react-router-dom";
@@ -24,7 +20,7 @@ export default function DrawerMobileNavigation() {
         onClick={() => setOpen(true)}
         sx={{ "&:hover": { cursor: "pointer" } }}
       >
-        <Stack direction="row" spacing={2}>
+        <Stack direction="row" spacing={1}>
           <img src="./bruinicon.png" alt="Bruingram" width={40} height={40} />
           <Box>
             <img

@@ -3,8 +3,6 @@ import CardCover from '@mui/joy/CardCover';
 import Link from '@mui/joy/Link';
 import { useState, useEffect } from 'react'
 
-import { getStorage, ref, getDownloadURL } from "firebase/storage";
-
 export default function CardItem({imageUrl, onCardClick, small=false}){
     const [imgSrc, setImgSrc] = useState('');
 /*
@@ -26,7 +24,7 @@ export default function CardItem({imageUrl, onCardClick, small=false}){
 
     return(
         <>
-        <Card sx={{ width: !small ? 250 : 150, height: !small ? 250 : 150, flexGrow: 1}}>
+        <Card sx={{ width: !small ? 250 : 50, height: !small ? 250 : 100, flexGrow: 1}}>
             <CardCover>
                 <img
                     id={"img"+imageUrl}
