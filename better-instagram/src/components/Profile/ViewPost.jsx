@@ -45,15 +45,19 @@ export default function ViewPost({
   goForward,
   likeClick,
   liked,
+  likeCounts,
   username,
   profilePictureURL,
-  isInternalUser
+  isInternalUser,
+  uid
 }) {
   const [isExpanded, setIsExpanded] = useState(false); //expanding the caption
   const [commentsList, setCommentsList] = useState([]) 
   const [commentsWithImageList, setCommentsWithImageList] = useState([]) 
   const [commentInput, setCommentInput] = useState('')
   const [toggleEditCaption, setToggleEditCaption] = useState(false)
+  const [internalLiked, setInternalLiked] = useState(liked)
+  const [internalLikeCounts, setInternalLikeCounts] = useState(likeCounts)
 
   const orderedCommentsQuery = query(collection(firestore, 'comments'), orderBy('timestamp', 'desc'));
 
@@ -117,6 +121,8 @@ export default function ViewPost({
         setCommentsWithImageList(newCommentsList);
     };
     loadImages();
+    setInternalLikeCounts(likeCounts);
+    setInternalLiked(liked);
   }, [commentsList]);
 
   //posting a new comment
@@ -199,6 +205,16 @@ export default function ViewPost({
     marginLeft: "2%",
   };
 
+  const handleLikeClick = () => {
+    setInternalLiked(!internalLiked);
+    if (internalLiked) {
+      setInternalLikeCounts(internalLikeCounts - 1);
+    } else {
+      setInternalLikeCounts(internalLikeCounts + 1);
+    }
+    likeClick();
+  }
+
   return (
     <>
     <Modal
@@ -208,6 +224,7 @@ export default function ViewPost({
         display: "flex",
         justifyContent: "center",
         alignItems: "center",
+        mb: 10
       }}
     >
       <Box sx={{ outline: "none !important" }}>
@@ -263,13 +280,14 @@ export default function ViewPost({
               <IconButton
                 size="lg"
                 color="inherit"
-                onClick={likeClick}
+                onClick={handleLikeClick}
                 sx={{ outline: "none !important" }}
               >
-                {liked ? (
-                  <FavoriteIcon sx={{ color: "#ed1d24" }} />
+                {internalLikeCounts}
+                {internalLiked ? (
+                  <FavoriteIcon sx={{ pl: 1, color: "#ed1d24" }} />
                 ) : (
-                  <FavoriteBorderIcon />
+                  <FavoriteBorderIcon sx={{ pl: 1 }}/>
                 )}
               </IconButton>
             </Box>

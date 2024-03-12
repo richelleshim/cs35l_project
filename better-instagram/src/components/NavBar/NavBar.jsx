@@ -9,14 +9,16 @@ import {
   Box,
   ListItem,
   ListItemButton,
+  Button,
   Paper,
   Stack,
 } from "@mui/material";
+import useLogout from "../../hooks/logout";
 
-function NavBar() {
+export function NavBar() {
   // const [selected, setSelected] = useState("/home");
   const navigate = useNavigate();
-
+  const logout = useLogout();
   const handleChange = (newRoute) => {
     navigate(newRoute);
     setValue(newRoute);
@@ -48,12 +50,7 @@ function NavBar() {
       elevation={3}
     >
       <Stack direction="row" justifyContent="center" alignContent='center'>
-        {/* <BottomNavigation
-          showLabels
-          sx={{ width: "100vh" }}
-          value={value}
-          onChange={handleChange}
-        > */}
+   
         <BottomNavigation
           showLabels
           value={value}
@@ -79,6 +76,8 @@ function NavBar() {
             onClick={() => handleChange("/profile")}
           />
         </BottomNavigation>
+
+        <Button onCLick={logout}>Logout</Button>
       </Stack>
     </Paper>
   );
