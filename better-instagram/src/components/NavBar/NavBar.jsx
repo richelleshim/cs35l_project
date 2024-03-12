@@ -9,15 +9,16 @@ import {
   Box,
   ListItem,
   ListItemButton,
+  Button,
   Paper,
   Stack,
 } from "@mui/material";
-
+import useLogout from "../../hooks/logout";
 
 export function NavBar() {
   // const [selected, setSelected] = useState("/home");
   const navigate = useNavigate();
-
+  const logout = useLogout();
   const handleChange = (newRoute) => {
     navigate(newRoute);
     setValue(newRoute);
@@ -75,6 +76,8 @@ export function NavBar() {
             onClick={() => handleChange("/profile")}
           />
         </BottomNavigation>
+
+        <Button onCLick={logout}>Logout</Button>
       </Stack>
     </Paper>
   );

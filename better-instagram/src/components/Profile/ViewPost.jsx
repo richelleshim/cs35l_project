@@ -44,7 +44,8 @@ export default function ViewPost({
   goBack,
   goForward,
   likeClick,
-  likes,
+  liked,
+  likeCounts,
   username,
   profilePictureURL,
   isInternalUser,
@@ -55,6 +56,8 @@ export default function ViewPost({
   const [commentsWithImageList, setCommentsWithImageList] = useState([]) 
   const [commentInput, setCommentInput] = useState('')
   const [toggleEditCaption, setToggleEditCaption] = useState(false)
+  const [internalLiked, setInternalLiked] = useState(liked)
+  const [internalLikeCounts, setInternalLikeCounts] = useState(likeCounts)
 
   const orderedCommentsQuery = query(collection(firestore, 'comments'), orderBy('timestamp', 'desc'));
 
@@ -118,6 +121,8 @@ export default function ViewPost({
         setCommentsWithImageList(newCommentsList);
     };
     loadImages();
+    setInternalLikeCounts(likeCounts);
+    setInternalLiked(liked);
   }, [commentsList]);
 
   //posting a new comment
@@ -200,6 +205,16 @@ export default function ViewPost({
     marginLeft: "2%",
   };
 
+  const handleLikeClick = () => {
+    setInternalLiked(!internalLiked);
+    if (internalLiked) {
+      setInternalLikeCounts(internalLikeCounts - 1);
+    } else {
+      setInternalLikeCounts(internalLikeCounts + 1);
+    }
+    likeClick();
+  }
+
   return (
     <>
     <Modal
@@ -265,11 +280,11 @@ export default function ViewPost({
               <IconButton
                 size="lg"
                 color="inherit"
-                onClick={likeClick}
+                onClick={handleLikeClick}
                 sx={{ outline: "none !important" }}
               >
-                {likes && likes.length || 0}
-                {likes && likes.includes(uid) ? (
+                {internalLikeCounts}
+                {internalLiked ? (
                   <FavoriteIcon sx={{ pl: 1, color: "#ed1d24" }} />
                 ) : (
                   <FavoriteBorderIcon sx={{ pl: 1 }}/>
