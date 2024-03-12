@@ -15,6 +15,7 @@ import {
   deleteObject,
 } from "firebase/storage";
 import useAuthStore from "../store/authStore";
+import logo from '../../public/bruingram_favorites.png';
 
 
 const Item = styled("div")(({ theme }) => ({
@@ -164,7 +165,7 @@ useEffect(() => {
                   profilePicURL: url 
               };
               newFavUsersList.push(newfavUser);
-              //console.log('url', url);
+              
           } catch (error) {
               console.error('Error fetching profile picture for user:', user.id);
           }
@@ -179,6 +180,7 @@ useEffect(() => {
 console.log(userWithImageList)
   return (
     <>
+      <img src={logo} style={{height: '150px', marginTop: 30, marginBottom:30}} />
       <Stack direction="row">
         <NavBar />
 
