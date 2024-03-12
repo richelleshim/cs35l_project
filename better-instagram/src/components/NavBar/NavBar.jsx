@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import Home from "@mui/icons-material/Home";
 import FavoriteIcon from '@mui/icons-material/Favorite';
+import Logout from '@mui/icons-material/Logout';
 import Person from "@mui/icons-material/Person";
 import { useNavigate } from "react-router-dom";
 import {
@@ -45,7 +46,7 @@ export function NavBar() {
         height: 80, 
         border: "1px solid #e0e0e0",
         display: "flex",
-        justifyContent: "center", 
+        justifyContent: "center",
         alignItems: "center" }}
       elevation={3}
     >
@@ -75,9 +76,14 @@ export function NavBar() {
             icon={<Person style={{color: "#000000", fontSize:40}}/>}
             onClick={() => handleChange("/profile")}
           />
-        </BottomNavigation>
 
-        <Button onCLick={logout}>Logout</Button>
+          <BottomNavigationAction
+          sx={{position: "absolute", right:0, mt: 1}}
+            value="/"
+            icon={<Logout style={{color: "#000000", fontSize:40}}/>}
+            onClick={() => logout()}
+          />
+        </BottomNavigation>
       </Stack>
     </Paper>
   );
