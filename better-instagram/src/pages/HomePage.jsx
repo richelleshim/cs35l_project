@@ -100,7 +100,7 @@ function HomePage() {
       <NavBar />
       
       <FilterButton onSearch={handleSearch} onReset={handleResetSearch} />
-      
+      <Box height={50}></Box>
       <Stack direction="row">
        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '10px' }}>
 
