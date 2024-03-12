@@ -4,7 +4,9 @@ import HomePageWidget from "../components/Home/HomePageWidget";
 import { styled } from "@mui/joy/styles";
 import { Favorite, FavoriteBorder } from "@mui/icons-material";
 import NavBar from "../components/NavBar/NavBar";
+import { useNavigate } from 'react-router-dom';
 import { firestore } from '../firebase/firebase';
+import { Box } from "@mui/joy";
 import { collection, getDocs, getDoc, doc, query, where } from 'firebase/firestore'
 import {
   getStorage,
@@ -34,10 +36,14 @@ const FavoritesPage = () => {
   const favoritesCollectionRef = collection(firestore, 'favoritedprofiles')
   const[newFavoriteUsersList, setNewFavoriteUsersList] = useState([]);
   const [userWithImageList, setUserWithImageList] = useState([]) //List of users with profile pictures loaded
+  const navigate = useNavigate();
  
   const personaluid = useAuthStore((state) => state.user()?.uid); //get the personal uid
   //console.log(personaluid)
 
+  const handleGoToProfile = (uid) => {
+    navigate(`/profile?uid=${uid}`)
+  };
   
   useEffect(() => {
     const fetchFavorites = async () => {
@@ -197,11 +203,13 @@ console.log(userWithImageList)
             year={user.year}
             uid={user.uid}
             imageSrc={user.profilePicURL}
+            handleGoToProfile={() => handleGoToProfile(user.uid)}
             />
           ))}
         </Stack> 
         </div>
       </Stack>
+      <Box sx={{height:100}}/>
     </>
   );
 };
