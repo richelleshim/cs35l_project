@@ -224,6 +224,7 @@ export default function ViewPost({
         display: "flex",
         justifyContent: "center",
         alignItems: "center",
+        mb: 10
       }}
     >
       <Box sx={{ outline: "none !important" }}>
