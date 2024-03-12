@@ -57,7 +57,7 @@ function FilterButton({ onSearch, onReset }) {
   };
 
   return (
-    <div style={{ position: 'relative', paddingTop: '50px', paddingBottom: '20px' }}>
+    <div style={{ position: 'relative', paddingTop: '50px', paddingBottom: '20px', alignContent: 'center' }}>
       <Stack spacing={2} direction="row" sx={{ width: '100%', justifyContent: 'center' }}>
         <StyledTextField
           label="Name"
@@ -72,15 +72,15 @@ function FilterButton({ onSearch, onReset }) {
           sx={{ width: 250, borderRadius: '30px', height: '36px' }}
         />
         <StyledTextField
-          label="Enter Grad Year"
+          label="Grad Year"
           value={gradYearInput}
           onChange={(event) => setGradYearInput(event.target.value)}
           sx={{ width: 125, borderRadius: '30px', height: '36px' }}
         />
-        <StyledButton variant="outlined" color="neutral" onClick={handleSearchButtonClick}>
+        <StyledButton variant="variant" color="neutral" onClick={handleSearchButtonClick}>
           <SearchIcon />
         </StyledButton>
-        <StyledButton variant="outlined" color="neutral" onClick={handleResetButtonClick}>
+        <StyledButton variant="variant" color="neutral" onClick={handleResetButtonClick}>
           Reset
         </StyledButton>
       </Stack>
@@ -107,7 +107,7 @@ function FilterButton({ onSearch, onReset }) {
               cursor: 'pointer',
             }}
           />
-          <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignContent: 'center' }}>
             <StyledButton
               variant="outlined"
               color="neutral"
