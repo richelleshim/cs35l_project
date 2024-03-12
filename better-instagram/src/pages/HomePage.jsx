@@ -25,6 +25,21 @@ function HomePage() {
           id: doc.id
         }));
 
+        // load the post previews
+        const q = collection(firestore, "posts");
+        const querySnapshot = await getDocs(q);
+
+        querySnapshot.forEach(async (doc) => {
+          let post = doc.data()
+          for (let i = 0; i < users.length; i++) {
+            if (!users[i].postImages) {
+              users[i].postImages = [];
+            }
+            if (users[i].uid === post.userId) {
+              users[i].postImages.push(post.image);
+            }
+          }
+        });
         setUsersList(users);
       } catch(err) {
         console.error(err)
@@ -86,6 +101,7 @@ function HomePage() {
       </Box>
       
       <FilterButton onSearch={handleSearch} onReset={handleResetSearch} setNameInput={setNameInput} />
+      <Box sx={{height:50}}/>
       
       <Stack direction="row">
        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '10px' }}>
