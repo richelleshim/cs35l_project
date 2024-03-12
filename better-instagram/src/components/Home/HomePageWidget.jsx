@@ -54,8 +54,14 @@ function PostPreviews ({ postImages, handleGoToProfile }) {
 function HomePageWidget ({ name, desc, major, year, uid, imageSrc, postImages, isFavorited, handleGoToProfile }) {
     const [favorited, setFavorited] = useState(false);
 
+    useEffect(() => {
+        // Fetch favorited status from local storage
+        const isFavoritedLocally = localStorage.getItem(uid) === 'true';
+        setFavorited(isFavoritedLocally);
+    }, [uid]); // Update whenever the uid changes
 
     const toggleFavorite = () => {
+        console.log("Toggle favorite called");
         const newFavorited = !favorited;
         setFavorited(newFavorited);
         localStorage.setItem(uid, newFavorited ? 'true' : 'false');

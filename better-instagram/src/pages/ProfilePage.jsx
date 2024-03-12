@@ -5,6 +5,7 @@ import ProfileDetails from "../components/Profile/ProfileDetails";
 import useAuthStore from "../store/authStore";
 import { Box, Stack } from "@mui/joy";
 import { useSearchParams } from "react-router-dom";
+import { useState } from "react";
 
 function ProfilePage() {
   const addedPost = () => {
@@ -16,6 +17,16 @@ function ProfilePage() {
     // use self user id
     let selfUserObj = useAuthStore((state) => state.user());
     uid = selfUserObj.uid;
+  }
+
+  const [username, setUsername] = useState('');
+  const [profilePictureUrl, setProfilePictureUrl] = useState('');
+  const [isInternalUser, setInternalUser] = useState(false)
+
+  const getProfileDetails =(username, profilePictureUrl, isInternalUser)=>{
+      setUsername(username)
+      setProfilePictureUrl(profilePictureUrl)
+      setInternalUser(isInternalUser)
   }
 
   return (

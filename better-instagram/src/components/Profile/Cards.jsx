@@ -8,15 +8,14 @@ import {
     collection,
     orderBy,
     query,
-    where
-} from 'firebase/firestore'
+    where} from 'firebase/firestore'
 import {
     getStorage,
     ref,
     getDownloadURL,
   } from "firebase/storage";
 
-export default function Cards({ uid }){
+export default function Cards({uid, username, profilePictureUrl, isInternalUser}){
     const[likesList, setLikesList] = useState([]);
     const[postsList, setPostsList] = useState([]);
     const[imageUrlList, setImageUrlList] = useState([])
@@ -44,17 +43,18 @@ export default function Cards({ uid }){
         //Get the lists of posts
         const getPostsList = async () => {
             try{
-                // load the uid's profile
                 const q = query(collection(firestore, "posts"), where("userId", "==", uid));
                 const querySnapshot = await getDocs(q);
 
                 let postList = [];
                 querySnapshot.forEach((doc) => {
                     console.log(doc)
-                    postList.push(doc.data())
+                    postList.push({
+                        ... doc.data(),
+                        id: doc.id
+                    })
                 });
                 setPostsList(postList);
-
             } catch(err){
                 console.error(err)
             }
@@ -122,7 +122,9 @@ export default function Cards({ uid }){
     return( <>
 
         <div className="postLayout"> 
+
             {postsList.map((_, index) => {
+                console.log(postsList[0].caption)
                 return <>
                     <CardItem imageUrl={imageUrlList[index]} onCardClick={()=>toggleModal(index)}/>
                     {viewPost && <ViewPost 
@@ -134,6 +136,9 @@ export default function Cards({ uid }){
                         goForward={goForward}
                         likeClick={()=>toggleLike(currentIndex)}
                         liked={likes[currentIndex]}
+                        username={username}
+                        profilePictureURL={profilePictureUrl}
+                        isInternalUser={isInternalUser}
                     />} 
                 </>;
             })}
