@@ -80,19 +80,15 @@ function HomePage() {
   const handleSearch = (majorInput, gradYearInput) => {
     const filteredUsers = userWithImageList.filter(user => {
       const majorMatch = majorInput === '' || user.major.toLowerCase().includes(majorInput.toLowerCase());
-      const yearMatch = gradYearInput === '' || user.year.toString().includes(gradYearInput) || user.year.toString().includes(gradYearInput.slice(-2)); // Check for partial matching
+      const yearMatch = gradYearInput === '' || user.year.toString().includes(gradYearInput) || user.year.toString().includes(gradYearInput.slice(-2));
   
-      if (majorMatch && (gradYearInput === '' || yearMatch)) {
-        return true; // Include user if major matches and either graduation year is not specified or matches
-      } else {
-        return false; // Exclude user otherwise
-      }
+      return majorMatch && yearMatch;
     });
     setFilteredUserList(filteredUsers);
   };
 
   const handleResetSearch = () => {
-    setFilteredUserList(userWithImageList); // Reset filtered list to all users
+    setFilteredUserList(userWithImageList); 
   };
 
   return (
@@ -102,7 +98,7 @@ function HomePage() {
       <Stack direction="row">
        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '10px' }}>
 
-        {userWithImageList.map((user) => (
+        {filteredUserList.map((user) => (
 
         <HomePageWidget
           key={user.id}

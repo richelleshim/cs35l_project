@@ -6,7 +6,7 @@ import Typography from '@mui/joy/Typography';
 import Sheet from '@mui/joy/Sheet';
 import CloseIcon from '@mui/icons-material/Close';
 
-function FilterButton({ onSearch }) {
+function FilterButton({ onSearch, onReset }) {
   const [showModal, setShowModal] = useState(false);
   const [majorInput, setMajorInput] = useState('');
   const [gradYearInput, setGradYearInput] = useState('');
@@ -16,14 +16,17 @@ function FilterButton({ onSearch }) {
   };
 
   const handleSearchButtonClick = () => {
-    onSearch(majorInput, gradYearInput);
-    setShowModal(false);
+    if (majorInput || gradYearInput) {
+      onSearch(majorInput, gradYearInput);
+    } else {
+      onReset(); // If both inputs are empty, reset the homepage
+    }
   };
 
   const handleClearAllClick = () => {
     setMajorInput('');
     setGradYearInput('');
-    onReset();
+    onReset(); // Clear filters and reset the homepage
   };
 
   const handleCloseModal = () => {
@@ -70,7 +73,7 @@ function FilterButton({ onSearch }) {
                 type="text"
                 value={majorInput}
                 onChange={(event) => setMajorInput(event.target.value)}
-                placeholder="Search Majors"
+                placeholder="Search Major"
                 style={{ width: '100%' }}
               />
             </ListItem>
@@ -92,7 +95,7 @@ function FilterButton({ onSearch }) {
               size="small"
               onClick={handleClearAllClick}
             >
-              Clear All
+              Reset
             </Button>
             <Button
               variant="solid"
