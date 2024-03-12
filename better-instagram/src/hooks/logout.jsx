@@ -6,6 +6,7 @@ export default function useLogout() {
 
   // This function can be called in an event handler like onClick
   const logout = () => {
+    console.log("out")
     localStorage.removeItem('user-info');
     navigate('/');
   };

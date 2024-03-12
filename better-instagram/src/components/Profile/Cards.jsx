@@ -5,9 +5,12 @@ import './ProfilePage.css';
 import {firestore} from '../../firebase/firebase';
 import { 
     getDocs, 
+    addDoc,
     collection,
     orderBy,
     query,
+    doc,
+    deleteDoc,
     where} from 'firebase/firestore'
 import {
     getStorage,
@@ -118,11 +121,36 @@ export default function Cards({uid, username, profilePictureUrl, isInternalUser}
     }
 
     //Like and unlike posts
-    const toggleLike=(index)=>{
-        const updateLikes = [...likes];
-        updateLikes[index] = !updateLikes[index];
-
-        setLikes(updateLikes);
+    const toggleLike=async (postId)=>{
+        let likesCopy = likes;
+        if (!likesCopy[postId]) {
+            likesCopy[postId] = [];
+        }
+        let isLiked = likesCopy[postId].includes(uid);
+        if (isLiked) {
+            // remove uid from that postId
+            for (let i = 0; i < likesCopy[postId].length; i++) {
+                if (likesCopy[postId][i] === uid) {
+                    likesCopy[postId] = likesCopy[postId].slice(i + 1);
+                    i = 0;
+                }
+            }
+            const q = query(collection(firestore, "likes"), where("userId", "==", uid), where("postId", "==", postId));
+            const querySnapshot = await getDocs(q);
+            querySnapshot.forEach(async (d) => {
+                console.log(d.id);
+                const deleteLike = doc(firestore, 'likes', d.id)
+                await deleteDoc(deleteLike);
+            });
+        } else {
+            // add uid to that postId
+            likesCopy[postId].push(uid);
+            await addDoc(collection(firestore, "likes"), {
+                userId: uid, 
+                postId: postId
+            });
+        }
+        setLikes(likesCopy);
     }
 
     return( <>
@@ -130,7 +158,6 @@ export default function Cards({uid, username, profilePictureUrl, isInternalUser}
         <div className="postLayout"> 
 
             {postsList.map((_, index) => {
-                console.log(likes[postsList[index].id]);
                 return <>
                     <CardItem imageUrl={imageUrlList[index]} onCardClick={()=>toggleModal(index)}/>
                     {viewPost && <ViewPost 
@@ -140,8 +167,9 @@ export default function Cards({uid, username, profilePictureUrl, isInternalUser}
                         caption={postsList[currentIndex].caption} 
                         goBack={goBack} 
                         goForward={goForward}
-                        likeClick={()=>toggleLike(currentIndex)}
-                        likes={likes[postsList[currentIndex].id]}
+                        likeClick={()=>toggleLike(postsList[currentIndex].id)}
+                        liked={likes[postsList[currentIndex].id] && likes[postsList[currentIndex].id].includes(uid)}
+                        likeCounts={(likes[postsList[currentIndex].id] && likes[postsList[currentIndex].id].length) || 0}
                         username={username}
                         uid={uid}
                         profilePictureURL={profilePictureUrl}

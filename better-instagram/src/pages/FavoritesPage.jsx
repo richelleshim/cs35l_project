@@ -127,6 +127,7 @@ const FavoritesPage = () => {
             <HomePageWidget
               key={index}
               uid={favorite.favoriteuid}
+              postImages={[]}
             />
           ))}
         </Stack> 

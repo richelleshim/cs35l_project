@@ -1,5 +1,4 @@
 import Cards from "../components/Profile/Cards";
-import AddPostButton from "../components/Profile/AddPost";
 import NavBar from "../components/NavBar/NavBar";
 import ProfileDetails from "../components/Profile/ProfileDetails";
 import useAuthStore from "../store/authStore";
@@ -38,6 +37,7 @@ function ProfilePage() {
           <Cards uid={uid} username={username} profilePictureUrl={profilePictureUrl} isInternalUser={isInternalUser}/>
         </Box>
       </Stack>
+      <Box sx={{height:100}}/>
     </>
   );
 }
