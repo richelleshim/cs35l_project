@@ -5,7 +5,7 @@ import { useState, useEffect } from 'react'
 
 import { getStorage, ref, getDownloadURL } from "firebase/storage";
 
-export default function CardItem({imageUrl, onCardClick}){
+export default function CardItem({imageUrl, onCardClick, small=false}){
     const [imgSrc, setImgSrc] = useState('');
 /*
     useEffect(()=>{
@@ -26,7 +26,7 @@ export default function CardItem({imageUrl, onCardClick}){
 
     return(
         <>
-        <Card sx={{ width:250, height:250, flexGrow: 1}}>
+        <Card sx={{ width: !small ? 250 : 150, height: !small ? 250 : 150, flexGrow: 1}}>
             <CardCover>
                 <img
                     id={"img"+imageUrl}

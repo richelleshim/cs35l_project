@@ -23,13 +23,13 @@ function HomePage() {
     const getUsersList = async () => {
       try {
         const data = await getDocs(usersCollectionRef);
-        const filteredData = data.docs.map((doc) => ({
+        const users = data.docs.map((doc) => ({
           ...doc.data(),
-          id: doc.id,
-        }));
+          id: doc.id
+      }))
         setUsersList(filteredData);
-      } catch (err) {
-        console.error(err);
+      } catch(err){
+        console.error(err)
       }
     };
 
@@ -72,28 +72,23 @@ function HomePage() {
       <Logo />
       <FilterButton />
       <Stack direction="row">
-        <div
-          style={{
-            display: "grid",
-            gridTemplateColumns: "repeat(2, 1fr)",
-            gap: "10px",
-          }}
-        >
-          {userWithImageList.map((user) => (
-            <HomePageWidget
-              key={user.id}
-              name={user.fullName}
-              desc={user.bio}
-              major={user.major}
-              year={user.year}
-              imageSrc={user.profilePicURL}
-              handleGoToProfile={() => handleGoToProfile(user.id)}
-            />
-          ))}
-        </div>
-      </Stack>
-      <NavBar />;
-    </>
+       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '10px' }}>
+
+        {userWithImageList.map((user) => (
+
+          <HomePageWidget
+            key={user.id}
+            name={user.fullName}
+            desc={user.bio}
+            major={user.major}
+            year={user.year}
+            imageSrc={user.profilePicURL}
+            handleGoToProfile={() => handleGoToProfile(user.id)}
+          />
+      ))}
+    </div>
+  </Stack>;
+  </>
   );
 }
 

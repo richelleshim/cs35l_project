@@ -21,22 +21,17 @@ export default function BottomActionsCard({ uid }) {
     let internalUserObj = userObj;
     //Load in user profile pictures
     const loadUser = async () => {
-      if (uid == null) {
-        // load the user's own profile
-        internalUserObj = selfUserObj;
-      } else {
-        // load the uid's profile
-        const q = query(collection(firestore, "users"), where("uid", "==", uid));
-        const querySnapshot = await getDocs(q);
+      // load the uid's profile
+      const q = query(collection(firestore, "users"), where("uid", "==", uid));
+      const querySnapshot = await getDocs(q);
 
-        if(querySnapshot.empty) {
-          console.log("user not found");
-          internalUserObj = null;
-        }
-        querySnapshot.forEach((doc) => {
-          internalUserObj = doc.data();
-        });
+      if (querySnapshot.empty) {
+        console.log("user not found");
+        internalUserObj = null;
       }
+      querySnapshot.forEach((doc) => {
+        internalUserObj = doc.data();
+      });
 
       // load profile picture
       const storage = getStorage();
