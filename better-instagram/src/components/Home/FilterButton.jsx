@@ -77,10 +77,10 @@ function FilterButton({ onSearch, onReset }) {
           onChange={(event) => setGradYearInput(event.target.value)}
           sx={{ width: 125, borderRadius: '30px', height: '36px' }}
         />
-        <StyledButton variant="variant" color="neutral" onClick={handleSearchButtonClick}>
+        <StyledButton variant="variant" color="neutral" sx={{pt: 2}} onClick={handleSearchButtonClick}>
           <SearchIcon />
         </StyledButton>
-        <StyledButton variant="variant" color="neutral" onClick={handleResetButtonClick}>
+        <StyledButton variant="variant" color="neutral" sx={{pt: 2}} onClick={handleResetButtonClick}>
           Reset
         </StyledButton>
       </Stack>
