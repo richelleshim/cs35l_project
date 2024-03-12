@@ -5,6 +5,7 @@ import { addDoc, deleteDoc, collection, doc, query, getDocs, where } from 'fireb
 import { getStorage, ref, getDownloadURL } from "firebase/storage";
 import { Avatar } from "@mui/joy";
 import { Shimmer } from 'react-shimmer'
+import useAuthStore from "../../store/authStore";
 
 
 // import all custom styling from MUI
@@ -32,7 +33,7 @@ function PostPicture ({ image, handleGoToProfile }) {
 }
 
 function PostPreviews ({ postImages, handleGoToProfile }) {
-    if (postImages.length == 0) return <></>;
+    if (!postImages || postImages.length === 0) return <></>;
     let outputObjects = [];
     for (let i = 0; i < 3; i++) {
         if (i < postImages.length) {
@@ -53,53 +54,68 @@ function PostPreviews ({ postImages, handleGoToProfile }) {
 
 function HomePageWidget ({ name, desc, major, year, uid, imageSrc, postImages, isFavorited, handleGoToProfile }) {
     const [favorited, setFavorited] = useState(false);
-
+    //retreive  personaluid using authstore
+    const personaluid = useAuthStore((state) => state.user()?.uid);
+console.log(uid)
     useEffect(() => {
         // Fetch favorited status from local storage
         const isFavoritedLocally = localStorage.getItem(uid) === 'true';
         setFavorited(isFavoritedLocally);
     }, [uid]); // Update whenever the uid changes
 
+
     const toggleFavorite = () => {
         console.log("Toggle favorite called");
+        console.log('personaluid', personaluid)
         const newFavorited = !favorited;
         setFavorited(newFavorited);
         localStorage.setItem(uid, newFavorited ? 'true' : 'false');
-        updateFirestore(newFavorited);
+        updateFirestore(newFavorited, personaluid); //pass personal uid here
     };
+    
 
-    const updateFirestore = async (newFavorited) => {
+    const updateFirestore = async (newFavorited, personaluid) => {
         try {
             const favoritedRef = collection(firestore, "favoritedprofiles");
+            console.log('before problem?')
+            console.log(uid + " " + personaluid)
             const favoritedQuery = query(
                 favoritedRef,
-                where("favoriteduid", "==", uid)
+                where("favoriteduid", "==", uid),
+                where("personaluid", "==", personaluid)
             );
+            
+            console.log('does this work, favoriteduid and personal uid', personaluid)
             const favoritedSnapshot = await getDocs(favoritedQuery);
+            console.log('here is the working?')
             
             // Check if the profile is already favorited
             const isAlreadyFavorited = !favoritedSnapshot.empty;
     
-            if (isAlreadyFavorited) {
-                // Profile is already favorited, so remove it from Firestore
-                favoritedSnapshot.forEach(async (doc) => {
-                    await deleteDoc(doc.ref);
-                });
-                localStorage.setItem(uid, 'false'); // Update local storage
-                setFavorited(false); // Update local state to reflect unfavorited status
-            } else {
+            if (newFavorited && !isAlreadyFavorited) {
                 // Profile is not favorited, so add it to Firestore
                 await addDoc(favoritedRef, {
                     favoriteduid: uid,
-                    personaluid: "TODO"
+                    personaluid: personaluid
                 });
-                localStorage.setItem(uid, 'true'); // Update local storage
-                setFavorited(true); // Update local state to reflect favorited status
+            } else if (!newFavorited && isAlreadyFavorited) {
+                // Profile is already favorited, so remove it from Firestore
+                favoritedSnapshot.forEach(async (doc) => {
+                    console.log('buh')
+                    await deleteDoc(doc.ref);
+                });
             }
+    
+            // Update local storage and state based on the new favorited status
+            localStorage.setItem(uid, newFavorited ? 'true' : 'false');
+            setFavorited(newFavorited);
         } catch (error) {
             console.error("Error updating favorited profile in Firestore: ", error);
         }
     };
+      
+      
+    
 
 
     return <>
@@ -146,13 +162,13 @@ function HomePageWidget ({ name, desc, major, year, uid, imageSrc, postImages, i
                         </Box>
                     </Stack>
                     <Box sx={{pl: 3}}>
-                        <IconButton variant="plain" onClick={toggleFavorite}>
-                            {favorited ? (
-                                <FavoriteRounded sx={{ fontSize: 30, color: "red" }} />
-                            ) : (
-                                <FavoriteBorderRounded sx={{ fontSize: 30 }} />
-                            )}
-                        </IconButton>
+                    <IconButton variant="plain" onClick={(e) => { e.stopPropagation(); toggleFavorite(); }}>
+                        {favorited ? (
+                            <FavoriteRounded sx={{ fontSize: 30, color: "red" }} />
+                        ) : (
+                            <FavoriteBorderRounded sx={{ fontSize: 30 }} />
+                        )}
+                    </IconButton>
                     </Box>
                 </Stack>
             </Grid>

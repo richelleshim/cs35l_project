@@ -109,6 +109,7 @@ function HomePage() {
 
           <HomePageWidget
             key={user.id}
+            uid={user.id}
             name={user.fullName}
             desc={user.bio}
             major={user.major}
