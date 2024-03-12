@@ -1,12 +1,13 @@
 import HomePageWidget from "../components/Home/HomePageWidget";
 import FilterButton from "../components/Home/FilterButton";
 import { useNavigate } from 'react-router-dom';
-import { Stack, Box } from "@mui/joy";
+import { Stack, Box, Typography } from "@mui/joy";
 import NavBar from "../components/NavBar/NavBar";
 import { getStorage, ref, getDownloadURL } from "firebase/storage";
 import { getDocs, collection } from "firebase/firestore";
 import { firestore } from "../firebase/firebase";
 import { useState, useEffect } from 'react'
+
 
 function HomePage() {
   const [usersList, setUsersList] = useState([]);
@@ -78,10 +79,15 @@ function HomePage() {
   };
 
   const handleSearch = (majorInput, gradYearInput) => {
+    console.log(majorInput)
+    console.log(gradYearInput)
     const filteredUsers = userWithImageList.filter(user => {
       const majorMatch = majorInput === '' || user.major.toLowerCase().includes(majorInput.toLowerCase());
       const yearMatch = gradYearInput === '' || user.year.toString().includes(gradYearInput) || user.year.toString().includes(gradYearInput.slice(-2)); // Check for partial matching
   
+      console.log(majorMatch)
+      //console.log(yearMatch)
+
       if (majorMatch && (gradYearInput === '' || yearMatch)) {
         return true; // Include user if major matches and either graduation year is not specified or matches
       } else {
@@ -98,26 +104,32 @@ function HomePage() {
   return (
     <>
       <NavBar />
+      <Typography level="h1">
+        Bruingram
+      </Typography>
+      
       <FilterButton onSearch={handleSearch} onReset={handleResetSearch} />
+      
       <Stack direction="row">
        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '10px' }}>
 
-        {userWithImageList.map((user) => (
+          {userWithImageList.map((user) => (
 
-        <HomePageWidget
-          key={user.id}
-          name={user.fullName}
-          desc={user.bio}
-          major={user.major}
-          year={user.year}
-          imageSrc={user.profilePicURL}
-          postImages={user.postImages || []}
-          handleGoToProfile={() => handleGoToProfile(user.id)}
-        />
+          <HomePageWidget
+            key={user.id}
+            name={user.fullName}
+            desc={user.bio}
+            major={user.major}
+            year={user.year}
+            imageSrc={user.profilePicURL}
+            postImages={user.postImages || []}
+            handleGoToProfile={() => handleGoToProfile(user.id)}
+          />
 
-      ))}
-    </div>
-  </Stack>
+          ))}
+        </div>
+      </Stack>
+      <Box sx={{height:100}}/>
   </>
   );
 }
