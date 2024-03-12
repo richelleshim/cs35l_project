@@ -19,7 +19,9 @@ function FilterButton({ onSearch, onReset }) {
     if (majorInput || gradYearInput) {
       onSearch(majorInput, gradYearInput);
     } else {
-      onReset();
+      // If only one input is provided, perform the search with that input
+      const inputToSearch = majorInput ? majorInput : gradYearInput;
+      onSearch(inputToSearch, inputToSearch);
     }
   };
 

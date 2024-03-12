@@ -79,10 +79,15 @@ function HomePage() {
 
   const handleSearch = (majorInput, gradYearInput) => {
     const filteredUsers = userWithImageList.filter(user => {
-      const hasMatchingMajor = user.major.toLowerCase().includes(majorInput.toLowerCase());
-      const hasMatchingYear = user.year.toString().includes(gradYearInput) || user.year.toString().includes(gradYearInput.slice(-2)); // Check for partial matching
-      return hasMatchingMajor || hasMatchingYear;
-  });
+      const majorMatch = majorInput === '' || user.major.toLowerCase().includes(majorInput.toLowerCase());
+      const yearMatch = gradYearInput === '' || user.year.toString().includes(gradYearInput) || user.year.toString().includes(gradYearInput.slice(-2)); // Check for partial matching
+  
+      if (majorMatch && (gradYearInput === '' || yearMatch)) {
+        return true; // Include user if major matches and either graduation year is not specified or matches
+      } else {
+        return false; // Exclude user otherwise
+      }
+    });
     setFilteredUserList(filteredUsers);
   };
 
