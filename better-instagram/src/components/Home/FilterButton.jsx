@@ -27,8 +27,8 @@ const StyledTextField = styled(TextField)(({ theme }) => ({
 const StyledButton = styled(Button)(({ theme }) => ({
   borderRadius: 30,
   height: '36px',
-  minWidth: 'unset', 
-  padding: 0, 
+  minWidth: 'unset', // Ensure button width adjusts to its content
+  padding: 0, // Removed padding
   '& .MuiButton-label': {
     width: '100%',
     justifyContent: 'center',
@@ -74,13 +74,13 @@ function FilterButton({ onSearch, onReset }) {
           sx={{ width: 250, borderRadius: '30px', height: '36px' }}
         />
         <StyledTextField
-          label="Grad Year"
+          label="Enter Grad Year"
           value={gradYearInput}
           onChange={(event) => setGradYearInput(event.target.value)}
-          sx={{ width: 125, borderRadius: '30px', height: '50px' }}
+          sx={{ width: 125, borderRadius: '30px', height: '36px' }}
         />
-        <StyledButton variant="solid" color="primary" onClick={handleSearchButtonClick}>
-          Search <SearchIcon />
+        <StyledButton variant="outlined" color="neutral" onClick={handleSearchButtonClick}>
+          <SearchIcon />
         </StyledButton>
         <StyledButton variant="outlined" color="neutral" onClick={handleResetButtonClick}>
           Reset

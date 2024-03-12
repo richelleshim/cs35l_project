@@ -90,6 +90,7 @@ function HomePage() {
         {filteredUserList.map((user) => (
           <HomePageWidget
             key={user.id}
+            uid={user.id}
             name={user.fullName}
             desc={user.bio}
             major={user.major}
