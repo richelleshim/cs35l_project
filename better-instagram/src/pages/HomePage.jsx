@@ -6,6 +6,7 @@ import NavBar from "../components/NavBar/NavBar";
 import { getStorage, ref, getDownloadURL } from "firebase/storage";
 import { getDocs, collection } from "firebase/firestore";
 import { firestore } from "../firebase/firebase";
+import logo from '../../public/bruingram.png';
 import { useState, useEffect } from 'react'
 
 
@@ -78,12 +79,13 @@ function HomePage() {
     navigate(`/profile?uid=${uid}`)
   };
 
-  const handleSearch = (majorInput, gradYearInput) => {
+  const handleSearch = (majorInput, gradYearInput, nameInput) => {
     const filteredUsers = userWithImageList.filter(user => {
       const majorMatch = majorInput === '' || user.major.toLowerCase().includes(majorInput.toLowerCase());
       const yearMatch = gradYearInput === '' || user.year.toString().includes(gradYearInput) || user.year.toString().includes(gradYearInput.slice(-2)); // Check for partial matching
+      const nameMatch = nameInput === '' || user.fullName.toLowerCase().includes(nameInput.toLowerCase());
 
-      return majorMatch && yearMatch;
+      return majorMatch && yearMatch && nameMatch;
     });
     setFilteredUserList(filteredUsers);
   };
@@ -96,12 +98,9 @@ function HomePage() {
   return (
     <>
       <NavBar />
-      <Typography level="h1">
-        Bruingram
-      </Typography>
       
       <FilterButton onSearch={handleSearch} onReset={handleResetSearch} />
-      
+      <Box height={50}></Box>
       <Stack direction="row">
        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '10px' }}>
 
@@ -109,6 +108,7 @@ function HomePage() {
 
           <HomePageWidget
             key={user.id}
+            uid={user.id}
             name={user.fullName}
             desc={user.bio}
             major={user.major}

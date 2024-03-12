@@ -1,33 +1,55 @@
 import React, { useState } from 'react';
 import Button from '@mui/joy/Button';
-import List from '@mui/joy/List';
-import ListItem from '@mui/joy/ListItem';
-import Typography from '@mui/joy/Typography';
+import Stack from '@mui/material/Stack';
 import Sheet from '@mui/joy/Sheet';
 import CloseIcon from '@mui/icons-material/Close';
 import SearchIcon from '@mui/icons-material/Search';
+import TextField from '@mui/material/TextField';
+import Autocomplete from '@mui/material/Autocomplete';
+import { styled } from '@mui/material/styles';
+
+const StyledTextField = styled(TextField)(({ theme }) => ({
+  '& .MuiOutlinedInput-root': {
+    borderRadius: 30, 
+    '&:hover fieldset': {
+      borderColor: theme.palette.primary.main,
+    },
+    '&.Mui-focused fieldset': {
+      borderColor: theme.palette.primary.main,
+    },
+    '& .MuiOutlinedInput-input': {
+      paddingTop: 14,
+      lineHeight: '20px',
+    },
+  },
+}));
+
+const StyledButton = styled(Button)(({ theme }) => ({
+  borderRadius: 30,
+  height: '36px',
+  minWidth: 'unset', // Ensure button width adjusts to its content
+  padding: 0, // Removed padding
+  '& .MuiButton-label': {
+    width: '100%',
+    justifyContent: 'center',
+  },
+}));
 
 function FilterButton({ onSearch, onReset }) {
   const [showModal, setShowModal] = useState(false);
+  const [nameInput, setNameInput] = useState('');
   const [majorInput, setMajorInput] = useState('');
   const [gradYearInput, setGradYearInput] = useState('');
 
-  const handleFilterButtonClick = () => {
-    setShowModal(true);
-  };
-
   const handleSearchButtonClick = () => {
-    if (majorInput || gradYearInput) {
-      onSearch(majorInput, gradYearInput);
-    } else {
-      onReset(); // If both inputs are empty, reset the homepage
-    }
+    onSearch(nameInput, majorInput, gradYearInput);
   };
 
-  const handleClearAllClick = () => {
+  const handleResetButtonClick = () => {
+    setNameInput('');
     setMajorInput('');
     setGradYearInput('');
-    onReset(); // Clear filters and reset the homepage
+    onReset();
   };
 
   const handleCloseModal = () => {
@@ -35,16 +57,33 @@ function FilterButton({ onSearch, onReset }) {
   };
 
   return (
-    <div style={{ position: 'relative', paddingTop: '50px', paddingBottom: '0px' }}>
-      <Button
-        variant="outlined"
-        color="neutral"
-        onClick={handleFilterButtonClick}
-        sx={{ position: 'relative', zIndex: 1 }}
-      >
-        Search
-        <SearchIcon sx={{ml:3}}/>
-      </Button>
+    <div style={{ position: 'relative', paddingTop: '50px', paddingBottom: '20px', alignContent: 'center' }}>
+      <Stack spacing={2} direction="row" sx={{ width: '100%', justifyContent: 'center' }}>
+        <StyledTextField
+          label="Name"
+          value={nameInput}
+          onChange={(event) => setNameInput(event.target.value)}
+          sx={{ width: 250, borderRadius: '30px', height: '36px' }}
+        />
+        <StyledTextField
+          label="Major"
+          value={majorInput}
+          onChange={(event) => setMajorInput(event.target.value)}
+          sx={{ width: 250, borderRadius: '30px', height: '36px' }}
+        />
+        <StyledTextField
+          label="Grad Year"
+          value={gradYearInput}
+          onChange={(event) => setGradYearInput(event.target.value)}
+          sx={{ width: 125, borderRadius: '30px', height: '36px' }}
+        />
+        <StyledButton variant="variant" color="neutral" onClick={handleSearchButtonClick}>
+          <SearchIcon />
+        </StyledButton>
+        <StyledButton variant="variant" color="neutral" onClick={handleResetButtonClick}>
+          Reset
+        </StyledButton>
+      </Stack>
       {showModal && (
         <Sheet
           variant="outlined"
@@ -68,45 +107,23 @@ function FilterButton({ onSearch, onReset }) {
               cursor: 'pointer',
             }}
           />
-          <List>
-            <ListItem>
-              <Typography sx={{ fontSize: 'small' }}>Major</Typography>
-              <input
-                type="text"
-                value={majorInput}
-                onChange={(event) => setMajorInput(event.target.value)}
-                placeholder="Search Major"
-                style={{ width: '100%' }}
-              />
-            </ListItem>
-            <ListItem>
-              <Typography sx={{ fontSize: 'small' }}>Graduation Year</Typography>
-              <input
-                type="number"
-                value={gradYearInput}
-                onChange={(event) => setGradYearInput(event.target.value)}
-                placeholder="Enter Graduation Year"
-                style={{ width: '100%' }}
-              />
-            </ListItem>
-          </List>
-          <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-            <Button
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignContent: 'center' }}>
+            <StyledButton
               variant="outlined"
               color="neutral"
               size="small"
-              onClick={handleClearAllClick}
+              onClick={handleResetButtonClick}
             >
               Reset
-            </Button>
-            <Button
+            </StyledButton>
+            <StyledButton
               variant="solid"
               color="primary"
               size="small"
               onClick={handleSearchButtonClick}
             >
               Search
-            </Button>
+            </StyledButton>
           </div>
         </Sheet>
       )}
