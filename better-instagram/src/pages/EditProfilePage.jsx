@@ -58,7 +58,7 @@ export function EditProfilePage ({ close }) {
 
             const storage = getStorage();
             const storageRef = ref(storage, `profilePictures/${imageId}.png`);
-            const uploadTask = uploadBytesResumable(storageRef, file, metadata);
+            const uploadTask = await uploadBytesResumable(storageRef, file, metadata);
             setImgSrc(profilePicURL);
             const docSnap = await getDoc(userRef);
             localStorage.setItem("user-info", JSON.stringify(docSnap.data()));
