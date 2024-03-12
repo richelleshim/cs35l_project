@@ -50,7 +50,7 @@ export default function Cards({uid, username, profilePictureUrl, isInternalUser}
                 querySnapshot.forEach((doc) => {
                     console.log(doc)
                     postList.push({
-                        ...doc.data(),
+                        ... doc.data(),
                         id: doc.id
                     })
                 });
