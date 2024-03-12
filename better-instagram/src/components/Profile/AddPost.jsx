@@ -4,6 +4,7 @@ import { firestore } from '../../firebase/firebase';
 import { setDoc, addDoc, collection, serverTimestamp, } from 'firebase/firestore';
 import { getStorage, ref, uploadBytesResumable } from "firebase/storage";
 import useAuthStore from "../../store/authStore";
+import AddIcon from '@mui/icons-material/Add';
 
 
 const storage = getStorage();
@@ -94,20 +95,20 @@ return <Modal
       sx={{
         bgcolor: '#FFFFFF',
         borderRadius: 10,
+        height:500,
         p: 1.5,
         width: '60vh',
         overflowY: 'auto',
         display: 'flex',
         flexDirection: 'column',
         alignItems: 'center',
+        mt: -10
       }}
     >
-      <Typography
-        level="h1"
-        sx={{ pt: 3 }}
-      >
+      <Typography level="h4" sx={{mt:1.5}}>
         Create Post
       </Typography>
+      
       <Box
         width={"50vh"}
       >
@@ -122,6 +123,7 @@ return <Modal
             borderRadius: 5
           }}
         >
+          
           {/*File selection window*/}
           <Box sx={{ display: 'flex', gap: 2, flexWrap: 'wrap' }}>
             <input
@@ -131,13 +133,14 @@ return <Modal
               onChange={handleFileInputChange}
             />
           </Box>
+          
           {/* Render selected image */}
           {selectedFileURL &&
             <img style={{ width: "100%" }} src={selectedFileURL} alt="Selected image" />
           }
           {/* Button to upload image */}
           {!selectedFileURL &&
-            <Button onClick={() => inputRef.current.click()}>Add image</Button>
+            <Button variant="outlined" color="neutral" onClick={() => inputRef.current.click()} >Add image</Button>
           }
         </Box>
 
@@ -157,13 +160,13 @@ return <Modal
         />
         {/* Post button !! */}
         {selectedFileURL &&
-          <Button sx={{ mt: 3, pt: 1.5, pb: 1.5, width: "100%" }} onClick={() => post()}>Post!</Button>
+          <Button 
+            sx={{ mt: 3, width: 100, mr: 2}} onClick={() => post()}>Post!</Button>
         }
-        <Button sx={{ mt: 3 }} variant="outlined" color="neutral" onClick={close}>
+        <Button sx={{ mt: 3, width: 100 }} variant="outlined" color="neutral" onClick={close}>
           Cancel
         </Button>
-        {/* Aesthetic margin */}
-        <Box sx={{ mb: 5 }} />
+        
       </Box>
     </Box>
   </Modal>;
@@ -179,7 +182,10 @@ export default function AddPostButton({ addedPost }) {
 
   return (
     <>
-      <Button sx={{ m: 5 }} onClick={() => { click() }}>Create post</Button>
+      <Button variant="outlined" color="neutral" sx={{ m: 5 }} onClick={() => { click() }}>
+        Create post
+        <AddIcon/>
+      </Button>
       {openModal && <PostWidget
         addedPost={() => {
           setOpenModal(false);

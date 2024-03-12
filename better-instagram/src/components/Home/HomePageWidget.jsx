@@ -28,7 +28,7 @@ function PostPicture ({ image, handleGoToProfile }) {
     if(imageUrl == "") {
         return <Shimmer height={100}></Shimmer>;
     } else {
-        return <CardItem sx={{display: "inline"}}small={true} imageUrl={imageUrl} onCardClick={() => handleGoToProfile} />;
+        return <CardItem small={true} imageUrl={imageUrl} onCardClick={() => handleGoToProfile} />;
     }
 }
 
@@ -41,7 +41,7 @@ function PostPreviews ({ postImages, handleGoToProfile }) {
                 <PostPicture image={postImages[i]} handleGoToProfile={handleGoToProfile}/>
             );
         } else {
-            outputObjects.push(<Box sx={{ width: 180, height: 150}} />);
+            //outputObjects.push(<Box sx={{ width: 100}} />);
         }
     }
     /*
@@ -122,15 +122,15 @@ console.log(uid)
     <Card 
         sx={{
             boxShadow: 'lg',
-            px: 4,
-            py: 4,
+            px: 3,
+            py: 3,
             cursor: "pointer"
         }}
     >
-        <Grid container spacing={2}>
+        <Grid container spacing={1}>
             <Grid item>
                 <Stack direction="row" alignItems="center" sx={{ width: 600, height: 120, mb: 2 }}>
-                    <Box sx={{pr: 4}}  onClick={handleGoToProfile}>
+                    <Box sx={{pr: 3}}  onClick={handleGoToProfile}>
                         <AspectRatio
                             ratio="1"
                             sx={{ flex: 1, width: 100, borderRadius: '100%' }}
@@ -143,25 +143,25 @@ console.log(uid)
                         <Typography level="h2" textAlign="start">
                             {name}
                         </Typography>
-                        <Typography level="p" textAlign="start" sx={{ pb: 1.5 }}>
+                        <Typography level="p" textAlign="start" sx={{ pb: 1.5, mt: 1.5 }}>
                             {desc}
                         </Typography>
-                        <Stack direction="row" alignItems="center" spacing={1}>
-                            <Stack direction="row" alignItems="center" spacing={1}>
-                                <BackpackOutlined sx={{ fontSize: 30 }} />
-                                <Typography level="p">
+                        <Box sx={{display:'flex', mt:1}}>
+                            <Box sx={{display:'flex'}}>
+                                <BackpackOutlined sx={{ fontSize: 30, mr: 1.5 }} />
+                                <Typography level="p" >
                                     {major}
                                 </Typography>
-                            </Stack>
-                            <Stack direction="row" alignItems="center" spacing={1}>
-                                <SchoolOutlined sx={{ fontSize: 30 }} />
-                                <Typography level="p">
+                            </Box>
+                            <Box sx={{display:'flex'}}>
+                                <SchoolOutlined sx={{ fontSize: 30, mr: 1.5, ml: 10}} />
+                                <Typography level="p" >
                                     Class of '{year}
                                 </Typography>
-                            </Stack>
-                        </Stack>
+                            </Box>
+                        </Box>
                     </Stack>
-                    <Box sx={{pl: 4}}>
+                    <Box sx={{pl: 3}}>
                     <IconButton variant="plain" onClick={(e) => { e.stopPropagation(); toggleFavorite(); }}>
                         {favorited ? (
                             <FavoriteRounded sx={{ fontSize: 30, color: "red" }} />

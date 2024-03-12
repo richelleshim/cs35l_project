@@ -1,199 +1,92 @@
-import React, { useState, Fragment } from "react";
-import Box from "@mui/joy/Box";
-import IconButton from "@mui/joy/IconButton";
-import Drawer from "@mui/joy/Drawer";
-import Input from "@mui/joy/Input";
-import List from "@mui/joy/List";
-import ListItemButton from "@mui/joy/ListItemButton";
-import Typography from "@mui/joy/Typography";
-import ModalClose from "@mui/joy/ModalClose";
-import Menu from "@mui/icons-material/Menu";
-import Search from "@mui/icons-material/Search";
-import { ListDivider, ListItem, Stack } from "@mui/joy";
-import { FavoriteRounded, Home, Person } from "@mui/icons-material";
+import React, { useState } from "react";
+import Home from "@mui/icons-material/Home";
+import FavoriteIcon from '@mui/icons-material/Favorite';
+import Logout from '@mui/icons-material/Logout';
+import Person from "@mui/icons-material/Person";
 import { useNavigate } from "react-router-dom";
+import {
+  BottomNavigation,
+  BottomNavigationAction,
+  Box,
+  ListItem,
+  ListItemButton,
+  Button,
+  Paper,
+  Stack,
+} from "@mui/material";
 import useLogout from "../../hooks/logout";
 
-export default function DrawerMobileNavigation() {
-  const [open, setOpen] = useState(false);
+export function NavBar() {
+  // const [selected, setSelected] = useState("/home");
   const navigate = useNavigate();
   const logout = useLogout();
+  const handleChange = (newRoute) => {
+    navigate(newRoute);
+    setValue(newRoute);
+  };
+
+  // const [value, setValue] = React.useState(0);
+  // const handleChange = (event, newValue) => {
+  //   setValue(newValue);
+  // };
+  const [value, setValue] = React.useState("/home");
+
+  // const handleChange = (event, newValue) => {
+  //   setValue(newValue);
+  // };
+
   return (
-    <Fragment>
-      <Box
-        onClick={() => setOpen(true)}
-        sx={{ "&:hover": { cursor: "pointer" } }}
-      >
-        <Stack direction="row" spacing={2}>
-          <img src="./bruinicon.png" alt="Bruingram" width={40} height={40} />
-          <Box>
-            <img
-              src="public/Bruingram.png"
-              loading="lazy"
-              alt=""
-              // height={xs:}
-            />
-          </Box>
-        </Stack>
-      </Box>
-      <Drawer open={open} onClose={() => setOpen(false)}>
-        <Box
-          sx={{
-            display: "flex",
-            alignItems: "center",
-            gap: 0.5,
-            ml: "auto",
-            mt: 1,
-            mr: 2,
-          }}
+    <Paper
+      sx={{ 
+        position: "fixed",
+        bottom: 0, 
+        left: 0, 
+        right: 0, 
+        zIndex: 9999, 
+        height: 80, 
+        border: "1px solid #e0e0e0",
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center" }}
+      elevation={3}
+    >
+      <Stack direction="row" justifyContent="center" alignContent='center'>
+   
+        <BottomNavigation
+          showLabels
+          value={value}
+          sx={{ width: 500 }}
+          onChange={handleChange}
         >
-          <Typography
-            component="label"
-            htmlFor="close-icon"
-            fontSize="sm"
-            fontWeight="lg"
-            sx={{ cursor: "pointer" }}
-          >
-            Close
-          </Typography>
-          <ModalClose id="close-icon" sx={{ position: "initial" }} />
-        </Box>
+          
+          <BottomNavigationAction
+            value="/favorites"
+            icon={<FavoriteIcon style={{color: "#000000", fontSize:36}}/>}
+            onClick={() => handleChange("/favorites")}
+          />
 
-        <List
-          size="lg"
-          component="nav"
-          sx={{
-            flex: "none",
-            fontSize: "xl",
-            "& > div": { justifyContent: "center" },
-          }}
-          role="menubar"
-        >
-          <Stack direction="column">
-            <ListItem role="none">
-              <ListItemButton
-                onClick={() => navigate("/home")}
-                role="menuitem"
-                component="a"
-                aria-label="Home"
-              >
-                <Home /> Home
-              </ListItemButton>
-            </ListItem>
-            <ListDivider />
-            <ListItem role="none">
-              <ListItemButton
-                onClick={() => navigate("/favorites")}
-                role="menuitem"
-                component="a"
-                aria-label="Favorite"
-              >
-                <FavoriteRounded /> Favorites
-              </ListItemButton>
-            </ListItem>
-            <ListDivider />
-            <ListItem role="none">
-              <ListItemButton
-                onClick={() => navigate("/profile")}
-                role="menuitem"
-                component="a"
-                aria-label="Profile"
-              >
-                <Person /> Profile
-              </ListItemButton>
-            </ListItem>
+          <BottomNavigationAction
+            value="/home"
+            icon={<Home style={{color: "#000000", fontSize:40}}/>}
+            onClick={() => handleChange("/home")}
+          />
 
-          <ListItem>
-            <ListItemButton
-            onClick={logout}
-            > Testing Logout </ListItemButton>
-          </ListItem>
-        
-            
-          </Stack>
-        </List>
-      </Drawer>
-    </Fragment>
+          <BottomNavigationAction
+            value="/profile"
+            icon={<Person style={{color: "#000000", fontSize:40}}/>}
+            onClick={() => handleChange("/profile")}
+          />
+
+          <BottomNavigationAction
+          sx={{position: "absolute", right:0, mt: 1}}
+            value="/"
+            icon={<Logout style={{color: "#000000", fontSize:40}}/>}
+            onClick={() => logout()}
+          />
+        </BottomNavigation>
+      </Stack>
+    </Paper>
   );
 }
 
-{
-  /* <IconButton
-variant="outlined"
-color="neutral"
-onClick={() => setOpen(true)}
->
-<Menu />
-</IconButton> */
-}
-// import React from "react";
-// import { useNavigate } from "react-router-dom";
-// import Box from "@mui/joy/Box";
-// import List from "@mui/joy/List";
-// import ListDivider from "@mui/joy/ListDivider";
-// import ListItem from "@mui/joy/ListItem";
-// import ListItemButton from "@mui/joy/ListItemButton";
-// import { FavoriteRounded, Person, Home } from "@mui/icons-material";
-// import { Stack } from "@mui/joy";
-
-// const NavBar = () => {
-//   const navigate = useNavigate();
-//   return (
-//     <Box component="nav" aria-label="My site" sx={{ flexGrow: 1 }}>
-//       <Box
-//         onClick={() => navigate("/home")}
-//         sx={{ "&:hover": { cursor: "pointer" } }}
-//       >
-//         <Stack direction="row" spacing={2}>
-//           <img src="./bruinicon.png" alt="Bruingram" width={40} height={40} />
-//           <Box>
-//             <img
-//               src="public/Bruingram.png"
-//               loading="lazy"
-//               alt=""
-//               // height={xs:}
-//             />
-//           </Box>
-//         </Stack>
-//       </Box>
-// <List role="menubar">
-//   <Stack direction="column">
-//     <ListItem role="none">
-//       <ListItemButton
-//         onClick={() => navigate("/home")}
-//         role="menuitem"
-//         component="a"
-//         aria-label="Home"
-//       >
-//         <Home /> Home
-//       </ListItemButton>
-//     </ListItem>
-//     <ListDivider />
-//     <ListItem role="none">
-//       <ListItemButton
-//         onClick={() => navigate("/favorites")}
-//         role="menuitem"
-//         component="a"
-//         aria-label="Favorite"
-//       >
-//         <FavoriteRounded /> Favorites
-//       </ListItemButton>
-//     </ListItem>
-//     <ListDivider />
-//     <ListItem role="none">
-//       <ListItemButton
-//         onClick={() => navigate("/profile")}
-//         role="menuitem"
-//         component="a"
-//         aria-label="Profile"
-//       >
-//         <Person /> Profile
-//       </ListItemButton>
-//     </ListItem>
-//   </Stack>
-// </List>
-//     </Box>
-//   );
-// };
-
-// export default NavBar;
+export default NavBar;

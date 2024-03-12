@@ -1,31 +1,33 @@
-import * as React from 'react';
+import React, { useState } from 'react';
 import Button from '@mui/joy/Button';
 import List from '@mui/joy/List';
 import ListItem from '@mui/joy/ListItem';
 import Typography from '@mui/joy/Typography';
 import Sheet from '@mui/joy/Sheet';
 import CloseIcon from '@mui/icons-material/Close';
+import SearchIcon from '@mui/icons-material/Search';
 
-export default function FilterButton() {
-  const [showModal, setShowModal] = React.useState(false);
-  const [selectedMajor, setSelectedMajor] = React.useState('');
-  const [selectedGradYear, setSelectedGradYear] = React.useState('');
-  const [majorInput, setMajorInput] = React.useState('');
-  const [gradYearInput, setGradYearInput] = React.useState('');
+function FilterButton({ onSearch, onReset }) {
+  const [showModal, setShowModal] = useState(false);
+  const [majorInput, setMajorInput] = useState('');
+  const [gradYearInput, setGradYearInput] = useState('');
 
   const handleFilterButtonClick = () => {
     setShowModal(true);
   };
 
   const handleSearchButtonClick = () => {
-    console.log('Searching with Major:', selectedMajor, 'and Graduation Year:', selectedGradYear);
+    if (majorInput || gradYearInput) {
+      onSearch(majorInput, gradYearInput);
+    } else {
+      onReset(); // If both inputs are empty, reset the homepage
+    }
   };
 
   const handleClearAllClick = () => {
-    setSelectedMajor('');
-    setSelectedGradYear('');
     setMajorInput('');
     setGradYearInput('');
+    onReset(); // Clear filters and reset the homepage
   };
 
   const handleCloseModal = () => {
@@ -33,15 +35,15 @@ export default function FilterButton() {
   };
 
   return (
-    <div style={{ position: 'relative', paddingTop: '50px', paddingBottom: '0px'}}>
+    <div style={{ position: 'relative', paddingTop: '50px', paddingBottom: '0px' }}>
       <Button
         variant="outlined"
         color="neutral"
-        size="small"
         onClick={handleFilterButtonClick}
-        sx={{ position: 'relative', zIndex: 1}} 
+        sx={{ position: 'relative', zIndex: 1 }}
       >
-        Filter
+        Search
+        <SearchIcon sx={{ml:3}}/>
       </Button>
       {showModal && (
         <Sheet
@@ -54,7 +56,7 @@ export default function FilterButton() {
             top: '100%',
             left: '100%',
             transform: 'translate(-50%, -50%)',
-            zIndex: 1000, 
+            zIndex: 1000,
           }}
         >
           <CloseIcon
@@ -68,17 +70,17 @@ export default function FilterButton() {
           />
           <List>
             <ListItem>
-              <Typography sx={{fontSize: 'small'}}>Major</Typography>
+              <Typography sx={{ fontSize: 'small' }}>Major</Typography>
               <input
                 type="text"
                 value={majorInput}
                 onChange={(event) => setMajorInput(event.target.value)}
-                placeholder="Search Majors"
+                placeholder="Search Major"
                 style={{ width: '100%' }}
               />
             </ListItem>
             <ListItem>
-              <Typography sx={{fontSize: 'small'}} >Graduation Year</Typography>
+              <Typography sx={{ fontSize: 'small' }}>Graduation Year</Typography>
               <input
                 type="number"
                 value={gradYearInput}
@@ -95,7 +97,7 @@ export default function FilterButton() {
               size="small"
               onClick={handleClearAllClick}
             >
-              Clear All
+              Reset
             </Button>
             <Button
               variant="solid"
@@ -111,3 +113,5 @@ export default function FilterButton() {
     </div>
   );
 }
+
+export default FilterButton;
