@@ -1,37 +1,29 @@
-// import homepagewidget
 import HomePageWidget from "../components/Home/HomePageWidget";
 import FilterButton from "../components/Home/FilterButton";
 import { useNavigate } from 'react-router-dom';
-
-// import from MUI
 import { Stack, Box } from "@mui/joy";
 import NavBar from "../components/NavBar/NavBar";
-import {
-  getStorage,
-  ref,
-  getDownloadURL,
-} from "firebase/storage";
-import { getDocs, collection} from "firebase/firestore";
+import { getStorage, ref, getDownloadURL } from "firebase/storage";
+import { getDocs, collection } from "firebase/firestore";
 import { firestore } from "../firebase/firebase";
 import { useState, useEffect } from 'react'
 
 function HomePage() {
-  const [usersList, setUsersList] = useState([])
-  const [userWithImageList, setUserWithImageList] = useState([]) //List of users with profile pictures loaded
-  const usersCollectionRef = collection(firestore, 'users')
+  const [usersList, setUsersList] = useState([]);
+  const [userWithImageList, setUserWithImageList] = useState([]);
+  const [filteredUserList, setFilteredUserList] = useState([]); // New state to hold filtered users
+  const usersCollectionRef = collection(firestore, 'users');
   const navigate = useNavigate();
-  
 
-  useEffect(()=>{ 
-    //Get list of all users
-    const getUsersList= async () => {
-      try{
+  useEffect(() => {
+    const getUsersList = async () => {
+      try {
         const data = await getDocs(usersCollectionRef);
         const users = data.docs.map((doc) => ({
           ...doc.data(),
           id: doc.id
-        }))
-
+        }));
+        
         // load the post previews
         const q = collection(firestore, "posts");
         const querySnapshot = await getDocs(q);
@@ -49,69 +41,76 @@ function HomePage() {
         });
 
         setUsersList(users);
-      } catch(err){
+      } catch(err) {
         console.error(err)
       }
     };
-
     getUsersList();
   }, []);
 
   useEffect(() => {
-    //Load in user profile pictures
     const loadImages = async () => {
-        const storage = getStorage();
-        const newUsersList = []; 
-
-        for (const user of usersList) {
-            try {
-                let url
-                if(user.profilePicURL){
-                  url = await getDownloadURL(ref(storage, user.profilePicURL));      
-                }  
-                const newUser = {
-                    ...user,
-                    profilePicURL: url 
-                };
-                newUsersList.push(newUser);
-            } catch (error) {
-                console.error('Error fetching profile picture for user:', user.id);
-            }
+      const storage = getStorage();
+      const newUsersList = [];
+      for (const user of usersList) {
+        try {
+          let url;
+          if (user.profilePicURL) {
+            url = await getDownloadURL(ref(storage, user.profilePicURL));
+          }
+          const newUser = {
+            ...user,
+            profilePicURL: url
+          };
+          newUsersList.push(newUser);
+        } catch (error) {
+          console.error('Error fetching profile picture for user:', user.id);
         }
-        setUserWithImageList(newUsersList);
+      }
+      setUserWithImageList(newUsersList);
+      setFilteredUserList(newUsersList); // Initialize filtered list with all users
     };
-
     loadImages();
-}, [usersList]);
-    
-const handleGoToProfile =(uid)=>{
-  console.log('click')
-  navigate(`/profile?uid=${uid}`)
-}
+  }, [usersList]);
+
+  const handleGoToProfile = (uid) => {
+    navigate(`/profile?uid=${uid}`)
+  };
+
+  const handleSearch = (majorInput, gradYearInput) => {
+    const filteredUsers = userWithImageList.filter(user => {
+      const hasMatchingMajor = user.major.toLowerCase().includes(majorInput.toLowerCase());
+      const hasMatchingYear = user.year.toString().includes(gradYearInput) || user.year.toString().includes(gradYearInput.slice(-2)); // Check for partial matching
+      return hasMatchingMajor || hasMatchingYear;
+  });
+    setFilteredUserList(filteredUsers);
+  };
+
+  const handleResetSearch = () => {
+    setFilteredUserList(userWithImageList); // Reset filtered list to all users
+  };
+
   return (
     <>
       <NavBar />
-      <FilterButton />
+      <FilterButton onSearch={handleSearch} onReset={handleResetSearch} />
       <Stack direction="row">
-       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '10px' }}>
-
-        {userWithImageList.map((user) => (
-
-        <HomePageWidget
-          key={user.id}
-          name={user.fullName}
-          desc={user.bio}
-          major={user.major}
-          year={user.year}
-          imageSrc={user.profilePicURL}
-          postImages={user.postImages || []}
-          handleGoToProfile={() => handleGoToProfile(user.id)}
-        />
-
-      ))}
-    </div>
-  </Stack>;
-  </>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '10px' }}>
+          {filteredUserList.map((user) => (
+            <HomePageWidget
+              key={user.id}
+              name={user.fullName}
+              desc={user.bio}
+              major={user.major}
+              year={user.year}
+              imageSrc={user.profilePicURL}
+              postImages={user.postImages || []}
+              handleGoToProfile={() => handleGoToProfile(user.id)}
+            />
+          ))}
+        </div>
+      </Stack>
+    </>
   );
 }
 
