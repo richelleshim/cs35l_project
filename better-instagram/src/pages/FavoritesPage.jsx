@@ -34,6 +34,8 @@ const FavoritesPage = () => {
   const favoritesCollectionRef = collection(firestore, 'favoritedprofiles')
   const [userWithImageList, setUserWithImageList] = useState([]) //List of users with profile pictures loaded
  
+
+  
   useEffect(() => {
     const fetchFavorites = async () => {
         try {
@@ -187,7 +189,6 @@ useEffect(() => {
             year={user.year}
             uid={user.id}
             imageSrc={user.profilePicURL}
-            
             />
           ))}
         </Stack> 
