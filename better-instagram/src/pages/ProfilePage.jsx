@@ -37,6 +37,7 @@ function ProfilePage() {
           <Cards uid={uid} username={username} profilePictureUrl={profilePictureUrl} isInternalUser={isInternalUser}/>
         </Box>
       </Stack>
+      <Box sx={{height:100}}/>
     </>
   );
 }

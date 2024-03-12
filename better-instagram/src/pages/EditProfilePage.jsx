@@ -120,10 +120,13 @@ export function EditProfilePage ({ close }) {
             sx={{
                 bgcolor: '#FFFFFF',
                 borderRadius: 10,
+                overflowY: 'auto',
                 display: 'flex',
                 flexDirection: 'column',
                 alignItems: 'center',
-                p: 8
+                p: 8,
+                height:400,
+                mt: -10
             }}
         >
             <Stack 
