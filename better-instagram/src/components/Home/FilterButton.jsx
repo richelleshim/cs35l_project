@@ -40,7 +40,6 @@ function FilterButton({ onSearch, onReset }) {
   const [nameInput, setNameInput] = useState('');
   const [majorInput, setMajorInput] = useState('');
   const [gradYearInput, setGradYearInput] = useState('');
-  const [peopleInput, setPeopleInput] = useState('');
 
   const handleSearchButtonClick = () => {
     onSearch(nameInput, majorInput, gradYearInput);
@@ -50,7 +49,6 @@ function FilterButton({ onSearch, onReset }) {
     setNameInput('');
     setMajorInput('');
     setGradYearInput('');
-    setPeopleInput('');
     onReset();
   };
 
@@ -62,9 +60,9 @@ function FilterButton({ onSearch, onReset }) {
     <div style={{ position: 'relative', paddingTop: '50px', paddingBottom: '20px' }}>
       <Stack spacing={2} direction="row" sx={{ width: '100%', justifyContent: 'center' }}>
         <StyledTextField
-          label="People"
-          value={peopleInput}
-          onChange={(event) => setPeopleInput(event.target.value)}
+          label="Name"
+          value={nameInput}
+          onChange={(event) => setNameInput(event.target.value)}
           sx={{ width: 250, borderRadius: '30px', height: '36px' }}
         />
         <StyledTextField
