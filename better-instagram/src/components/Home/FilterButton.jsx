@@ -23,6 +23,7 @@ function FilterButton({ onSearch }) {
   const handleClearAllClick = () => {
     setMajorInput('');
     setGradYearInput('');
+    onReset();
   };
 
   const handleCloseModal = () => {
