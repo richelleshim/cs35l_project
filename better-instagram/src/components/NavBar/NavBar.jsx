@@ -13,7 +13,8 @@ import {
   Stack,
 } from "@mui/material";
 
-function NavBar() {
+
+export function NavBar() {
   // const [selected, setSelected] = useState("/home");
   const navigate = useNavigate();
 
@@ -48,12 +49,7 @@ function NavBar() {
       elevation={3}
     >
       <Stack direction="row" justifyContent="center" alignContent='center'>
-        {/* <BottomNavigation
-          showLabels
-          sx={{ width: "100vh" }}
-          value={value}
-          onChange={handleChange}
-        > */}
+   
         <BottomNavigation
           showLabels
           value={value}

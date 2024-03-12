@@ -26,4 +26,4 @@ Daniel Fenex
 Elizabeth Moh
 Jennifer Lee
 Richelle Shim
-Yousra I need to find out her last name
+Yousra Merzougui

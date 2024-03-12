@@ -44,10 +44,11 @@ export default function ViewPost({
   goBack,
   goForward,
   likeClick,
-  liked,
+  likes,
   username,
   profilePictureURL,
-  isInternalUser
+  isInternalUser,
+  uid
 }) {
   const [isExpanded, setIsExpanded] = useState(false); //expanding the caption
   const [commentsList, setCommentsList] = useState([]) 
@@ -208,6 +209,7 @@ export default function ViewPost({
         display: "flex",
         justifyContent: "center",
         alignItems: "center",
+        mb: 10
       }}
     >
       <Box sx={{ outline: "none !important" }}>
@@ -266,10 +268,11 @@ export default function ViewPost({
                 onClick={likeClick}
                 sx={{ outline: "none !important" }}
               >
-                {liked ? (
-                  <FavoriteIcon sx={{ color: "#ed1d24" }} />
+                {likes && likes.length || 0}
+                {likes && likes.includes(uid) ? (
+                  <FavoriteIcon sx={{ pl: 1, color: "#ed1d24" }} />
                 ) : (
-                  <FavoriteBorderIcon />
+                  <FavoriteBorderIcon sx={{ pl: 1 }}/>
                 )}
               </IconButton>
             </Box>
