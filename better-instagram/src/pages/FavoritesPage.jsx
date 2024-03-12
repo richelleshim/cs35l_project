@@ -5,7 +5,7 @@ import { styled } from "@mui/joy/styles";
 import { Favorite, FavoriteBorder } from "@mui/icons-material";
 import NavBar from "../components/NavBar/NavBar";
 import { firestore } from '../firebase/firebase';
-import { collection, getDocs, doc, getDoc } from 'firebase/firestore'
+import { collection, getDocs, getDoc, doc, query, where } from 'firebase/firestore'
 import {
   getStorage,
   ref,
@@ -32,8 +32,11 @@ const FavoritesPage = () => {
   const[favoritesList, setFavoritesList] = useState([]);
   const[favoriteUsersList, setFavoriteUsersList] = useState([]);
   const favoritesCollectionRef = collection(firestore, 'favoritedprofiles')
+  const[newFavoriteUsersList, setNewFavoriteUsersList] = useState([]);
   const [userWithImageList, setUserWithImageList] = useState([]) //List of users with profile pictures loaded
  
+  const personaluid = useAuthStore((state) => state.user()?.uid); //get the personal uid
+  //console.log(personaluid)
 
   
   useEffect(() => {
@@ -51,87 +54,93 @@ const FavoritesPage = () => {
 }, []);
 
 
-/*useEffect(() => {
+useEffect(() => {
   const fetchFavoriteUsers = async () => {
-      try {
-          const currentUser = useAuthStore((state) => state.user());
-          if (!currentUser) {
-              console.log("User not logged in");
-              return;
-          }
+    try {
 
-          const filteredFavorites = favoritesList.filter(favorite => favorite.personaluid === currentUser.uid);
-
-          const usersData = await Promise.all(
-              filteredFavorites.map(async favorite => {
-                  const userDoc = await getDoc(doc(collection(firestore, 'users'), favorite.favoriteduid));
-                  return userDoc.exists() ? { id: userDoc.id, ...userDoc.data() } : null;
-              })
-          );
-          const filteredUsers = usersData.filter(user => user !== null);
-          console.log("Filtered users:", filteredUsers);
-          setFavoriteUsersList(filteredUsers);
-      } catch (error) {
-          console.error('Error fetching favorite users:', error);
+      if (!personaluid) {
+        return; // Exit early if personaluid is undefined
       }
+      // Construct a query to get favorited profiles for the current user
+      const q = query(
+        collection(firestore, "favoritedprofiles"),
+        where("personaluid", "==", personaluid)
+      );
+      const querySnapshot = await getDocs(q);
+      
+      let favoriteUsers = [];
+      // Iterate through the query snapshot to extract favorited profiles
+      querySnapshot.forEach((doc) => {
+        
+        const data = doc.data();
+        
+        // Extract the favorited profile ID (uid) from the document data
+        const uid = data.favoriteduid;
+        
+        //console.log(uid)
+        favoriteUsers.push({
+          id: doc.id,
+          uid: uid,
+          ...data,
+        });
+        console.log(favoriteUsers)
+      });
+      // Update the state with the favorited profiles
+      setFavoriteUsersList(favoriteUsers);
+    } catch (error) {
+      console.error('Error fetching favorite users:', error);
+    }
   };
 
+  //console.log(personaluid);
   fetchFavoriteUsers();
-}, [favoritesList]);*/
+}, [personaluid]);
+
 
 /*useEffect(() => {
-  const fetchFavoriteUsers = async () => {
-      try {
-          const currentUser = useAuthStore((state) => state.user());
-          if (!currentUser) {
-              console.log("User not logged in");
-              return;
-          }
+  const fetchTheFavoriteUsers = async() => {
+    const newFavoriteUsersList= [];
+    try {
 
-          const userFavoritesQuery = query(
-              collection(firestore, 'favoritedprofiles'),
-              where("personaluid", "==", currentUser.uid)
-          );
-          const userFavoritesSnapshot = await getDocs(userFavoritesQuery);
-          const userFavorites = userFavoritesSnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+        favoriteUsersList.map(async favorite => {
+          const userDoc = await getDoc(doc(collection(firestore,'users'), favorite.favoriteduid));
+          const filteredUsers = userDoc.data()
+          newFavoriteUsersList.push(filteredUsers)
+          
+        },
 
-          const usersData = await Promise.all(
-              userFavorites.map(async favorite => {
-                  const userDoc = await getDoc(doc(collection(firestore, 'users'), favorite.favoriteduid));
-                  return userDoc.exists() ? { id: userDoc.id, ...userDoc.data() } : null;
-              })
-          );
-          const filteredUsers = usersData.filter(user => user !== null);
-          console.log("Filtered users:", filteredUsers);
-          setFavoriteUsersList(filteredUsers);
-      } catch (error) {
-          console.error('Error fetching favorite users:', error);
-      }
-  };
+        //console.log(newFavoriteUsersList)
+      );
+    }
+    catch (error) {
 
-  fetchFavoriteUsers();
-}, []);*/
+    }
+
+    setNewFavoriteUsersList(newFavoriteUsersList)
+  }
+  fetchTheFavoriteUsers();
+}, [favoriteUsersList])*/
 
 
 useEffect(() => {
-    const fetchFavoriteUsers = async () => {
-        try {
-            const usersData = await Promise.all(
-                favoritesList.map(async favorite => {
-                    const userDoc = await getDoc(doc(collection(firestore, 'users'), favorite.favoriteduid));
-                    return userDoc.exists() ? { id: userDoc.id, ...userDoc.data() } : null;
-                })
-            );
-            const filteredUsers = usersData.filter(user => user !== null);
-            console.log("Filtered users:", filteredUsers);
-            setFavoriteUsersList(filteredUsers);
-        } catch (error) {
-            console.error('Error fetching favorite users:', error);
-        }
-    };
+  const fetchTheFavoriteUsers = async () => {
+    try {
+      const newFavoriteUsersList = await Promise.all(favoriteUsersList.map(async favorite => {
+        const userDoc = await getDoc(doc(collection(firestore, 'users'), favorite.favoriteduid));
+        return userDoc.data();
+      }));
+      setNewFavoriteUsersList(newFavoriteUsersList);
+    } catch (error) {
+      console.error('Error fetching favorite users:', error);
+    }
+  };
 
-    fetchFavoriteUsers();
-}, [favoritesList]);
+  fetchTheFavoriteUsers();
+}, [favoriteUsersList]);
+
+
+
+
 
 
 useEffect(() => {
@@ -140,7 +149,7 @@ useEffect(() => {
       const storage = getStorage();
       const newFavUsersList = []; 
 
-      for (const favoriteuser of favoriteUsersList) {
+      for (const favoriteuser of newFavoriteUsersList) {
           try {
               let url = null;
               if(favoriteuser.profilePicURL){
@@ -151,7 +160,7 @@ useEffect(() => {
                   profilePicURL: url 
               };
               newFavUsersList.push(newfavUser);
-              console.log('url', url);
+              //console.log('url', url);
           } catch (error) {
               console.error('Error fetching profile picture for user:', user.id);
           }
@@ -160,7 +169,7 @@ useEffect(() => {
   };
 
   loadImages();
-}, [favoriteUsersList]);
+}, [newFavoriteUsersList]);
 
 
 
@@ -179,8 +188,11 @@ useEffect(() => {
               color: "black",
             }}
           />
+          <>{console.log(userWithImageList.length)}</>
           <Stack spacing={3}>
           {userWithImageList.map(user => (
+            <>
+            {console.log('hi')}
             <HomePageWidget
             key={user.id}
             name={user.fullName}
@@ -190,6 +202,7 @@ useEffect(() => {
             uid={user.id}
             imageSrc={user.profilePicURL}
             />
+            </>
           ))}
         </Stack> 
         </div>
