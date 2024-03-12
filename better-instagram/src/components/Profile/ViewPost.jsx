@@ -2,7 +2,6 @@ import Typography from "@mui/joy/Typography";
 import { useState, useEffect } from "react";
 import Modal from "@mui/joy/Modal";
 import AspectRatio from "@mui/joy/AspectRatio";
-import greg from "../../../assets/images/greg.svg";
 import Box from "@mui/joy/Box";
 import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
 import DeleteOutlinedIcon from "@mui/icons-material/DeleteOutlined";
@@ -27,7 +26,8 @@ import {
 import { 
   doc, 
   deleteDoc, 
-  getDocs, 
+  getDocs,
+  getDoc,
   collection, 
   addDoc, 
   query, 
@@ -45,13 +45,15 @@ export default function ViewPost({
   goForward,
   likeClick,
   liked,
+  username,
+  profilePictureURL,
+  isInternalUser
 }) {
   const [isExpanded, setIsExpanded] = useState(false); //expanding the caption
   const [commentsList, setCommentsList] = useState([]) 
   const [commentsWithImageList, setCommentsWithImageList] = useState([]) 
   const [commentInput, setCommentInput] = useState('')
   const [toggleEditCaption, setToggleEditCaption] = useState(false)
-  //const uid = postId.
 
   const orderedCommentsQuery = query(collection(firestore, 'comments'), orderBy('timestamp', 'desc'));
 
@@ -59,8 +61,7 @@ export default function ViewPost({
   if (userObj == null) {
       return <h1>Not Logged In</h1>;
   }
-  
-  
+
   useEffect(()=>{  
     //get the list of comments 
     const getCommentsList = async () => { 
@@ -77,17 +78,18 @@ export default function ViewPost({
     };
     getCommentsList();
 
-    //update comments without refreshing the page
+  //update comments without refreshing the page
   const unsubscribe = onSnapshot(orderedCommentsQuery, (snapshot) => { 
     const comments = [];
     snapshot.forEach((doc) => {
       comments.push({ id: doc.id, ...doc.data() });
     });
-
     setCommentsList(comments);
+
     });
 
     return () => unsubscribe();
+
   }, [postId]);
 
 
@@ -101,7 +103,7 @@ export default function ViewPost({
             try {
                 let url
                 if(comment.profilePicture){
-                  url = await getDownloadURL(ref(storage, comment.profilePicture));      
+                  url = await getDownloadURL(ref(storage, comment.profilePicture));    
                 }  
                 const newComment = {
                     ...comment,
@@ -114,14 +116,14 @@ export default function ViewPost({
         }
         setCommentsWithImageList(newCommentsList);
     };
-
     loadImages();
-}, [commentsList]);
+  }, [commentsList]);
 
   //posting a new comment
   const handlePostComment = async()=>{
       //make sure comment isn't empty
       if (!commentInput.trim()) return;
+
       await addDoc(collection(firestore, "comments"), {
           content: commentInput,
           postID: postId,
@@ -142,6 +144,7 @@ export default function ViewPost({
 
   //deleting a post
   const deletePost = async () => {
+    console.log('delete')
     const storage = getStorage();
     await deleteDoc(doc(firestore, "posts", postId));
 
@@ -236,23 +239,25 @@ export default function ViewPost({
           >
             <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
               {/*User profile*/}
-              <Avatar src={greg} sx={{ size: "lg" }} /> 
+              <Avatar src={profilePictureURL} sx={{ size: "lg" }} /> 
 
               {/*Username*/}
-              <Typography fontWeight="bold">@jolly_greg</Typography>
+              <Typography fontWeight="bold">
+                {username}
+              </Typography>
             </Box>
 
             {/*Delete post and like post section*/}
             <Box sx={{ display: "flex", alignItems: "center", gap: 0 }}>
               {/*Delete post icon*/}
-              <IconButton
+              {isInternalUser && <IconButton
                 size="lg"
                 color="inherit"
                 onClick={deletePost}
                 sx={{ outline: "none !important" }}
               >
                 <DeleteOutlinedIcon />
-              </IconButton>
+              </IconButton>}
 
               {/*Like post icon*/}
               <IconButton
@@ -316,7 +321,7 @@ export default function ViewPost({
         {/*Comments section*/}
           <Stack>
             {/*Map through list of comments that match the post ID and display*/}
-            {commentsWithImageList.map((comment) => (
+            {commentsWithImageList.map((comment) => ( 
                 postId === comment.postID && (
                 <Box
                   sx={{ 
@@ -345,15 +350,16 @@ export default function ViewPost({
                           </Typography>
                       </Stack>
                     
-                    {/*Delete comment button*/}
-                    <IconButton
+                    {/*Delete comment button*/}                
+                    {comment.userID == userObj.uid ? <IconButton
                       size="sm"
                       color="inherit"
                       onClick={()=>deleteComment(comment.id)}
                       sx={{ outline: "none !important", marginLeft: 'auto'}}
                     >
                       <DeleteOutlinedIcon />
-                    </IconButton>          
+                    </IconButton>  : 
+                    <Box sx={{marginLeft: 'auto'}}/>}        
                 </Box>  
                 )  
             ))}

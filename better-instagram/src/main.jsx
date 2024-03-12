@@ -9,6 +9,7 @@ import ProfilePage from './pages/ProfilePage.jsx'
 import FavoritesPage from './pages/FavoritesPage.jsx'
 import { Children } from 'react';
 import { Box, Typography } from '@mui/joy';
+import ProtectedRoute from './hooks/ProtectedRoute.jsx';
 
 
 
@@ -41,18 +42,29 @@ const router = createBrowserRouter([
   },
   {
     path: '/home',
-    element: <HomePage/>,
+    element: (
+      <ProtectedRoute>
+          <HomePage/>
+      </ProtectedRoute>
+    ),
   },
   {
     path: '/profile',
-    element: <ProfilePage/>,
+    element: (
+              <ProtectedRoute>
+                  <ProfilePage/>
+              </ProtectedRoute>
+    ),
   },
   {
     path: '/favorites',
-    element: <FavoritesPage/>,
+    element: (
+      <ProtectedRoute>
+          <FavoritesPage/>
+      </ProtectedRoute>
+    ),
   },
 ])
-
 ReactDOM.createRoot(document.getElementById("root")).render(
   <React.StrictMode>
         <App />

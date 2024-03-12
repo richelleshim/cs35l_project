@@ -1,16 +1,7 @@
 import { useState, useEffect } from "react";
 import Stack from "@mui/joy/Stack";
-import Box from "@mui/joy/Box";
 import HomePageWidget from "../components/Home/HomePageWidget";
 import { styled } from "@mui/joy/styles";
-import {
-  AspectRatio,
-  Card,
-  CardContent,
-  Typography,
-  Sheet,
-  IconButton,
-} from "@mui/joy";
 import { Favorite, FavoriteBorder } from "@mui/icons-material";
 import NavBar from "../components/NavBar/NavBar";
 import {firestore} from '../firebase/firebase';
@@ -121,8 +112,6 @@ const FavoritesPage = () => {
   return (
     <>
       <Stack direction="row">
-        <NavBar />
-
         <div className="FavoritesPage">
           <Favorite
             sx={{
@@ -142,6 +131,7 @@ const FavoritesPage = () => {
           ))}
         </Stack> 
         </div>
+        <NavBar />
       </Stack>
     </>
   );
