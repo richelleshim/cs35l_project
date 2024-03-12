@@ -78,12 +78,13 @@ function HomePage() {
     navigate(`/profile?uid=${uid}`)
   };
 
-  const handleSearch = (majorInput, gradYearInput) => {
+  const handleSearch = (majorInput, gradYearInput, nameInput) => {
     const filteredUsers = userWithImageList.filter(user => {
       const majorMatch = majorInput === '' || user.major.toLowerCase().includes(majorInput.toLowerCase());
       const yearMatch = gradYearInput === '' || user.year.toString().includes(gradYearInput) || user.year.toString().includes(gradYearInput.slice(-2)); // Check for partial matching
+      const nameMatch = nameInput === '' || user.fullName.toLowerCase().includes(nameInput.toLowerCase());
 
-      return majorMatch && yearMatch;
+      return majorMatch && yearMatch && nameMatch;
     });
     setFilteredUserList(filteredUsers);
   };

@@ -11,14 +11,15 @@ function FilterButton({ onSearch, onReset }) {
   const [showModal, setShowModal] = useState(false);
   const [majorInput, setMajorInput] = useState('');
   const [gradYearInput, setGradYearInput] = useState('');
+  const [nameInput, setNameInput] = useState('')
 
   const handleFilterButtonClick = () => {
     setShowModal(true);
   };
 
   const handleSearchButtonClick = () => {
-    if (majorInput || gradYearInput) {
-      onSearch(majorInput, gradYearInput);
+    if (majorInput || gradYearInput || nameInput) {
+      onSearch(majorInput, gradYearInput, nameInput);
     } else {
       onReset(); // If both inputs are empty, reset the homepage
     }
@@ -27,6 +28,7 @@ function FilterButton({ onSearch, onReset }) {
   const handleClearAllClick = () => {
     setMajorInput('');
     setGradYearInput('');
+    setNameInput('')
     onReset(); // Clear filters and reset the homepage
   };
 
@@ -86,6 +88,16 @@ function FilterButton({ onSearch, onReset }) {
                 value={gradYearInput}
                 onChange={(event) => setGradYearInput(event.target.value)}
                 placeholder="Enter Graduation Year"
+                style={{ width: '100%' }}
+              />
+            </ListItem>
+            <ListItem>
+              <Typography sx={{ fontSize: 'small' }}>Name</Typography>
+              <input
+                type="text"
+                value={nameInput}
+                onChange={(event) => setNameInput(event.target.value)}
+                placeholder="Enter Name"
                 style={{ width: '100%' }}
               />
             </ListItem>
