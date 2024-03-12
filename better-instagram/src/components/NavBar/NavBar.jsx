@@ -473,12 +473,13 @@ onClick={() => setOpen(true)}
 //   </ListItem>
 // </Stack>;
 
-import React, { useState } from "react";
+//import React, { useState } from "react";
 // import { BottomNavigation, BottomNavigationAction, Stack } from "@mui/material";
-import Home from "@mui/icons-material/Home";
-import FavoriteRounded from "@mui/icons-material/FavoriteRounded";
-import Person from "@mui/icons-material/Person";
-import { useNavigate } from "react-router-dom";
+//import Home from "@mui/icons-material/Home";
+//import FavoriteRounded from "@mui/icons-material/FavoriteRounded";
+//import Person from "@mui/icons-material/Person";
+//import { useNavigate } from "react-router-dom";
+/*
 import {
   BottomNavigation,
   BottomNavigationAction,
@@ -488,8 +489,9 @@ import {
   Paper,
   Stack,
 } from "@mui/material";
+*/
 
-function NavBar() {
+export function NavBar() {
   // const [selected, setSelected] = useState("/home");
   const navigate = useNavigate();
 
@@ -561,5 +563,3 @@ function NavBar() {
     </Paper>
   );
 }
-
-export default NavBar;
