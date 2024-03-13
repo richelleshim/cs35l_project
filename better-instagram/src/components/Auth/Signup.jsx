@@ -24,10 +24,6 @@ const SignUp = () => {
     year: "",
   });
 
-  function handleClick(inputs) {
-    signup(inputs);
-    setOpen(true);
-  }
   return (
     <>
       <FormControl>
@@ -104,13 +100,16 @@ const SignUp = () => {
         color="primary"
         size="sm"
         fontSize={14}
-        onClick={handleClick}
+        onClick={() => {
+          signup(inputs);
+          setOpen(true);
+        }}
         isLoading={loading}
       >
         Sign Up
       </Button>
       <Snackbar
-        autoHideDuration={3000}
+        autoHideDuration={2000}
         open={open}
         size={"md"}
         onClose={(event, reason) => {
