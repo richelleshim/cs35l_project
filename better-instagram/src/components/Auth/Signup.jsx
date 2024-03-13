@@ -5,6 +5,7 @@ import {
   IconButton,
   Input,
   Stack,
+  Snackbar,
 } from "@mui/joy";
 import { useState } from "react";
 import { Visibility, VisibilityOff } from "@mui/icons-material";
@@ -13,7 +14,7 @@ import useSignUpWithEmailAndPassword from "../../hooks/useSignUpWithEmailandPass
 const SignUp = () => {
   const [showPassword, setShowPassword] = useState(false);
   const { loading, error, signup } = useSignUpWithEmailAndPassword();
-
+  const [open, setOpen] = useState(false);
   const [inputs, setInputs] = useState({
     email: "",
     password: "",
@@ -23,6 +24,10 @@ const SignUp = () => {
     year: "",
   });
 
+  function handleClick(inputs) {
+    signup(inputs);
+    setOpen(true);
+  }
   return (
     <>
       <FormControl>
@@ -99,11 +104,25 @@ const SignUp = () => {
         color="primary"
         size="sm"
         fontSize={14}
-        onClick={() => signup(inputs)}
+        onClick={handleClick}
         isLoading={loading}
       >
         Sign Up
       </Button>
+      <Snackbar
+        autoHideDuration={3000}
+        open={open}
+        size={"md"}
+        onClose={(event, reason) => {
+          if (reason === "clickaway") {
+            return;
+          }
+          setOpen(false);
+        }}
+      >
+        Congrats! You have now created an account. Please click Log In below and
+        log in again!{" "}
+      </Snackbar>
     </>
   );
 };
