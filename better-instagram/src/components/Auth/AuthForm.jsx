@@ -77,7 +77,6 @@ export default function AuthForm() {
             <Typography>Have an account?</Typography>
           )}
         </Typography>
-        <GoogleAuth prefix={isLogin ? "Log in" : "Sign up"} />
       </Sheet>
     </main>
   );
