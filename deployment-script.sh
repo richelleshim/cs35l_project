@@ -17,6 +17,7 @@ export REACT_APP_FIREBASE_MESSAGING_SENDER_ID=$MESSAGING_SENDER_ID
 export REACT_APP_FIREBASE_APP_ID=$APP_ID
 export REACT_APP_FIREBASE_MEASUREMENT_ID=$MEASUREMENT_ID
 
+cd better-instagram
 
 npm install
 echo "dependencies installed correctly"

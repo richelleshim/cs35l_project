@@ -92,18 +92,6 @@ export default function Cards({uid, username, profilePictureUrl, isInternalUser}
         loadImages()
     }, [postsList]); 
 
-    const likeUnlike = async (userID, postID) => {
-        const isLiked = likesList.find((likedPost) => likedPost.postID == postID && likedPost.userID == userID);
-        if (isLiked) {
-            const deleteLike = doc(firestore, 'likes', isLiked.id)
-            await deleteDoc(deleteLike);
-        } else {
-            await addDoc(likesCollectionRef, {
-                userID : userID, 
-                postID : postID})
-        }
-    }
-
     //Open and close the modal for viewing the post
     const toggleModal=(index)=>{
         setViewPost(!viewPost);
@@ -158,6 +146,7 @@ export default function Cards({uid, username, profilePictureUrl, isInternalUser}
         <div className="postLayout"> 
 
             {postsList.map((_, index) => {
+                console.log(likes);
                 return <>
                     <CardItem imageUrl={imageUrlList[index]} onCardClick={()=>toggleModal(index)}/>
                     {viewPost && <ViewPost 
