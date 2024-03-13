@@ -87,7 +87,7 @@ const SignUp = () => {
         />
       </FormControl>
       <FormControl>
-        <FormLabel>Year (20-)</FormLabel>
+        <FormLabel>Year</FormLabel>
         <Input
           placeholder="Year"
           fontSize="14"
