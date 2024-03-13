@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/sh
 echo "Please enter your Firebase authentication keys:"
 read -p "API Key: " API_KEY
 read -p "Auth Domain: " AUTH_DOMAIN
