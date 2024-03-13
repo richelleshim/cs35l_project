@@ -1,8 +1,13 @@
 import { create } from "zustand";
 
 function getUser() {
-  let a = localStorage.getItem("user-info");
-  return JSON.parse(a);
+  try {
+    let a = localStorage.getItem("user-info");
+    return a ? JSON.parse(a) : null;
+  } catch (error) {
+    console.error("Error parsing user info:", error);
+    return null;
+  }
 }
 
 const useAuthStore = create((set) => ({
