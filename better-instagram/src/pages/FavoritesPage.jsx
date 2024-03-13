@@ -15,7 +15,7 @@ import {
   deleteObject,
 } from "firebase/storage";
 import useAuthStore from "../store/authStore";
-import logo from '../../public/bruingram_favorites.png';
+import logo from '/bruingram_favorites.png';
 
 
 const Item = styled("div")(({ theme }) => ({

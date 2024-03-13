@@ -51,7 +51,7 @@ export default function Cards({uid, username, profilePictureUrl, isInternalUser}
         //Get the lists of posts
         const getPostsList = async () => {
             try{
-                const q = query(collection(firestore, "posts"), where("userId", "==", uid));
+                const q = query(collection(firestore, "posts"), where("userId", "==", uid), orderBy("timestamp", "desc"));
                 const querySnapshot = await getDocs(q);
 
                 let postList = [];

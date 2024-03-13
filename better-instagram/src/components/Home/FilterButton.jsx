@@ -21,6 +21,10 @@ const StyledTextField = styled(TextField)(({ theme }) => ({
       paddingTop: 14,
       lineHeight: '20px',
     },
+    '& fieldset': {
+      borderColor: '#000000',
+      borderWidth: '1.5px', 
+    },
   },
 }));
 
