@@ -72,6 +72,9 @@ export function PostWidget({ close, addedPost }) {
       (error) => {},
       () => {
         addedPost();
+        console.log("gg")
+        console.log("gg")
+        window.location.reload();
       }
     );
     console.log("Document written with ID: ", postRef.id);

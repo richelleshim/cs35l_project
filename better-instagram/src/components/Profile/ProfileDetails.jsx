@@ -110,6 +110,7 @@ export default function BottomActionsCard({ uid, setProfileDetails }) {
             <>
             <AddPostButton
             addedPost={() => {
+              console.log("boop")
               addedPost();
             }}
             />
