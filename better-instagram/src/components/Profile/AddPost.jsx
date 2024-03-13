@@ -72,8 +72,6 @@ export function PostWidget({ close, addedPost }) {
       (error) => {},
       () => {
         addedPost();
-        console.log("gg")
-        console.log("gg")
         window.location.reload();
       }
     );

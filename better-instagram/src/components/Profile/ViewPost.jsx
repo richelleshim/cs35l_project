@@ -351,7 +351,6 @@ export default function ViewPost({
                             <Typography level="title-md">
                                 {comment && comment.username}
                             </Typography>
-
                             <Typography level="body-sm" sx={{marginLeft:'1vh'}}>
                                 {comment.timestamp && moment(comment.timestamp.toDate()).fromNow()}   
                             </Typography>
