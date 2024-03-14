@@ -26,9 +26,14 @@ A link to a local hosting of our 'Bruingram' should generate!
 
 Contributors
 
-Chaidhat Chaimongkol                   
+Chaidhat Chaimongkol
+
 Daniel Fenex
+
 Elizabeth Moh
+
 Jennifer Lee
+
 Richelle Shim
+
 Yousra Merzougui
